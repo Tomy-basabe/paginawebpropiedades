@@ -2,8 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useData } from "@/context/DataContext";
+import BrandLogo from "./BrandLogo";
 import { 
   Building2, 
   MapPin, 
@@ -25,24 +25,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Columna 1: Marca y Autoridad */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="relative w-12 h-12 rounded-sm bg-white p-1 shadow-md shrink-0 border border-white/20">
-                <Image
-                  src="/logo.png"
-                  alt="99 Propiedades"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <div>
-                <span className="font-serif text-lg font-bold tracking-tight text-white block">
-                  99 PROPIEDADES
-                </span>
-                <span className="block text-[10px] tracking-[0.2em] text-neutral-400 uppercase">
-                  Desarrollos & Real Estate
-                </span>
-              </div>
-            </div>
+            <BrandLogo variant="light" size="md" />
             <p className="text-xs leading-relaxed text-neutral-400">
               {agentProfile.shortBio}
             </p>

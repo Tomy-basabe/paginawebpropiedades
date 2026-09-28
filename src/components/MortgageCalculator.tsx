@@ -148,10 +148,10 @@ export default function MortgageCalculator() {
                     key={years}
                     type="button"
                     onClick={() => setTermYears(years)}
-                    className={`py-2 text-xs font-medium rounded-sm border transition-colors ${
+                    className={`py-2 text-xs font-semibold rounded-sm border transition-all duration-200 btn-tactile ${
                       termYears === years
-                        ? "bg-neutral-900 text-white border-neutral-900"
-                        : "bg-white text-neutral-700 border-neutral-300 hover:border-neutral-500"
+                        ? "bg-neutral-900 text-white border-neutral-900 shadow-sm"
+                        : "bg-white text-neutral-700 border-neutral-300 hover:border-gold-500 hover:bg-stone-50"
                     }`}
                   >
                     {years}a

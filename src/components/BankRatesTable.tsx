@@ -64,7 +64,7 @@ export default function BankRatesTable() {
       {/* Vista de Tarjetas para Móviles (Thumb-friendly & Legible) */}
       <div className="grid grid-cols-1 gap-3 md:hidden">
         {sortedRates.map((bank) => (
-          <div key={bank.id} className="bg-white p-4 rounded-sm border border-neutral-200 shadow-sm space-y-3">
+          <div key={bank.id} className="bg-white p-4 rounded-sm border border-neutral-200/90 shadow-sm space-y-3 card-hover-lift hover:border-gold-400/60">
             <div className="flex items-start justify-between gap-2">
               <div>
                 <h4 className="font-bold text-neutral-900 text-sm">{bank.bankName}</h4>

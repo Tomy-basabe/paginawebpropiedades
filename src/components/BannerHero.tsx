@@ -71,15 +71,15 @@ export default function BannerHero() {
           <div className="flex flex-wrap items-center gap-4">
             <Link
               href={current.ctaLink || "/propiedades"}
-              className="bg-gold-500 hover:bg-gold-400 text-luxury-black font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-sm transition-all shadow-lg shadow-gold-500/10 hover:shadow-gold-500/30 flex items-center gap-2"
+              className="group bg-gold-500 hover:bg-gold-400 text-luxury-black font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-sm transition-all duration-200 shadow-lg shadow-gold-500/10 hover:shadow-xl hover:shadow-gold-500/30 flex items-center gap-2 btn-tactile"
             >
               <span>{current.ctaText || "Descubrir Oportunidad"}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
             </Link>
 
             <Link
               href="/contacto?asunto=desarrollo"
-              className="text-white hover:text-gold-300 text-xs font-medium tracking-wide border-b border-white/30 hover:border-gold-300 pb-1 transition-colors"
+              className="text-white hover:text-gold-300 text-xs font-medium tracking-wide border-b border-white/30 hover:border-gold-300 pb-1 transition-all duration-200 hover:translate-x-0.5"
             >
               Solicitar Dossier de Inversión
             </Link>

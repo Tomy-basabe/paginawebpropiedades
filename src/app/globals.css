@@ -61,3 +61,50 @@ h1, h2, h3, .font-serif {
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+/* Microinteracciones Hover de Nivel Senior (Anti-AI Slop) */
+.nav-link-hover {
+  position: relative;
+  transition: color 180ms ease-out;
+}
+
+.nav-link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #B58E55;
+  border-radius: 9999px;
+  transition: width 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-link-hover:hover::after,
+.nav-link-hover.active::after {
+  width: 100%;
+}
+
+.card-hover-lift {
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 200ms ease-out;
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.08), 0 8px 16px -6px rgba(0, 0, 0, 0.04);
+}
+
+.btn-tactile {
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-tactile:hover {
+  transform: translateY(-1px);
+}
+
+.btn-tactile:active {
+  transform: translateY(1px) scale(0.98);
+}
+

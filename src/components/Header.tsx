@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useData } from "@/context/DataContext";
+import BrandLogo from "./BrandLogo";
 import { 
   Building2, 
   Menu, 
@@ -57,61 +57,44 @@ export default function Header({ onOpenValuation }: HeaderProps) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo y Marca Personal 99 PROPIEDADES */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-11 w-11 sm:h-12 sm:w-12 shrink-0 bg-white/95 rounded-sm p-1 shadow-sm border border-white/20 transition-transform group-hover:scale-105">
-              <Image
-                src="/logo.png"
-                alt="99 Propiedades"
-                fill
-                priority
-                className="object-contain"
-              />
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white group-hover:text-gold-300 transition-colors">
-                  99 PROPIEDADES
-                </span>
-              </div>
-              <span className="text-[10px] tracking-[0.2em] text-neutral-300 uppercase font-sans font-medium">
-                {agentProfile.name} • Desarrollos
-              </span>
-            </div>
-          </Link>
+          {/* Logo y Marca Personal Tipográfica de Alta Gama */}
+          <BrandLogo variant="light" size="md" />
 
-          {/* Desktop Nav */}
+          {/* Desktop Nav con Microinteracciones Subrayadas Fluidas */}
           <nav className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`text-sm tracking-wide transition-colors ${
-                  isActive(link.href)
-                    ? "text-gold-400 font-medium"
-                    : "text-neutral-300 hover:text-white"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`text-sm tracking-wide py-1 nav-link-hover ${
+                    active
+                      ? "active text-gold-400 font-semibold"
+                      : "text-neutral-300 hover:text-white"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Botones de Acción */}
           <div className="hidden md:flex items-center gap-4">
             <Link
               href="/admin"
-              className="text-xs text-neutral-400 hover:text-gold-400 transition-colors flex items-center gap-1.5 px-2.5 py-1 rounded border border-white/10 hover:border-gold-400/30"
+              className="text-xs text-neutral-400 hover:text-gold-400 transition-all duration-200 flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-white/10 hover:border-gold-400/40 hover:bg-white/5 btn-tactile"
               title="Panel de Gestión de Contenido"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <SlidersHorizontal className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-45" />
               <span>Admin</span>
             </Link>
 
             {onOpenValuation ? (
               <button
                 onClick={onOpenValuation}
-                className="bg-gold-500 hover:bg-gold-600 text-luxury-black font-medium text-xs tracking-wider uppercase px-4 py-2.5 rounded-sm transition-all shadow-sm hover:shadow hover:shadow-gold-500/20 flex items-center gap-2"
+                className="bg-gold-500 hover:bg-gold-400 text-luxury-black font-semibold text-xs tracking-wider uppercase px-4 py-2.5 rounded-sm shadow-sm hover:shadow-lg hover:shadow-gold-500/20 flex items-center gap-2 btn-tactile cursor-pointer"
               >
                 <FileCheck className="w-3.5 h-3.5" />
                 <span>Tasá tu Propiedad</span>
@@ -119,7 +102,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
             ) : (
               <Link
                 href="/contacto?asunto=tasacion"
-                className="bg-gold-500 hover:bg-gold-600 text-luxury-black font-medium text-xs tracking-wider uppercase px-4 py-2.5 rounded-sm transition-all shadow-sm hover:shadow hover:shadow-gold-500/20 flex items-center gap-2"
+                className="bg-gold-500 hover:bg-gold-400 text-luxury-black font-semibold text-xs tracking-wider uppercase px-4 py-2.5 rounded-sm shadow-sm hover:shadow-lg hover:shadow-gold-500/20 flex items-center gap-2 btn-tactile"
               >
                 <FileCheck className="w-3.5 h-3.5" />
                 <span>Tasá tu Propiedad</span>

@@ -163,7 +163,7 @@ export default function SobreMiPage() {
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {agentProfile.pillars.map((pillar, idx) => (
-                <div key={idx} className="p-4 bg-white border border-neutral-200 rounded-sm">
+                <div key={idx} className="p-4 bg-white border border-neutral-200/90 rounded-sm card-hover-lift hover:border-gold-400/60">
                   <h4 className="font-serif text-sm font-bold text-neutral-900 mb-1 flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-gold-500" />
                     <span>{pillar.title}</span>
@@ -191,7 +191,7 @@ export default function SobreMiPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((t, idx) => (
-            <div key={idx} className="bg-white p-6 rounded-sm border border-neutral-200 shadow-sm flex flex-col justify-between">
+            <div key={idx} className="bg-white p-6 rounded-sm border border-neutral-200/90 shadow-sm flex flex-col justify-between card-hover-lift hover:border-gold-400/60">
               <div>
                 <div className="flex gap-1 text-gold-500 mb-3">
                   {[...Array(5)].map((_, i) => (

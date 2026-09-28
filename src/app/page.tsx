@@ -64,22 +64,11 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-t from-luxury-black via-luxury-black/70 to-luxury-black/90" />
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          {/* Logo y Badge institucional */}
-          <div className="flex flex-col items-center gap-3">
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-white p-1 rounded-sm shadow-2xl border border-white/20">
-              <Image
-                src="/logo.png"
-                alt="99 Propiedades"
-                fill
-                priority
-                className="object-contain"
-              />
-            </div>
-            <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-xs tracking-widest uppercase text-gold-300 backdrop-blur-md">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-red animate-pulse" />
-              <span>99 Propiedades • Desarrollos & Real Estate</span>
-            </div>
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+          {/* Badge institucional de alta gama */}
+          <div className="inline-flex items-center gap-2.5 bg-luxury-dark/90 border border-gold-400/30 px-5 py-2 rounded-full text-xs tracking-[0.2em] uppercase text-gold-300 backdrop-blur-md shadow-lg transition-all duration-300 hover:border-gold-400 hover:scale-105">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse" />
+            <span className="font-medium">99 PROPIEDADES • DESARROLLOS & BIENES RAÍCES</span>
           </div>
 
           {/* Título de impacto editorial */}

@@ -8,8 +8,8 @@ export const metadata: Metadata = {
   description: "99 Propiedades: Comercialización exclusiva de residencias singulares, loteos premium, emprendimientos en pozo y asesoría en créditos hipotecarios UVA.",
   keywords: "99 propiedades, inmobiliaria, propiedades de lujo, nordelta, palermo chico, san isidro, creditos hipotecarios uva, loteos, pozo, ignacio valenzuela",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
   },
 };
 

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useData } from "@/context/DataContext";
+import BrandLogo from "@/components/BrandLogo";
 import { Property, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus } from "@/lib/types";
 import { 
   SlidersHorizontal, 
@@ -294,14 +295,8 @@ export default function AdminPage() {
       <div className="max-w-md mx-auto px-4 py-20">
         <div className="bg-white p-8 rounded-sm border border-neutral-200 shadow-xl space-y-6">
           <div className="text-center space-y-3">
-            <div className="relative w-16 h-16 rounded-sm bg-white p-1 border border-neutral-200 shadow-md mx-auto">
-              <Image
-                src="/logo.png"
-                alt="99 Propiedades"
-                fill
-                priority
-                className="object-contain"
-              />
+            <div className="flex justify-center pb-2">
+              <BrandLogo variant="dark" size="lg" withLink={false} />
             </div>
             <h1 className="font-serif text-2xl font-bold text-neutral-900">
               Panel de Administración
@@ -337,7 +332,7 @@ export default function AdminPage() {
 
             <button
               type="submit"
-              className="w-full bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold uppercase tracking-wider py-3 rounded-sm transition-colors shadow-sm"
+              className="w-full bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold uppercase tracking-wider py-3 rounded-sm transition-colors shadow-sm btn-tactile cursor-pointer"
             >
               Ingresar al Gestor
             </button>
@@ -353,26 +348,7 @@ export default function AdminPage() {
       {/* Cabecera del Panel */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200 pb-6">
         <div className="flex items-center gap-4">
-          <div className="relative w-12 h-12 bg-white p-1 rounded-sm border border-neutral-200 shadow-sm shrink-0">
-            <Image
-              src="/logo.png"
-              alt="99 Propiedades"
-              fill
-              className="object-contain"
-            />
-          </div>
-          <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold-600 bg-gold-50 px-2.5 py-0.5 rounded-sm mb-1">
-              <SlidersHorizontal className="w-3 h-3" />
-              <span>CMS 99 Propiedades</span>
-            </div>
-            <h1 className="font-serif text-xl sm:text-2xl font-bold text-neutral-900">
-              Centro de Gestión de Contenidos
-            </h1>
-            <p className="text-xs text-neutral-500">
-              Actualice propiedades, banners comerciales y tasas bancarias en tiempo real.
-            </p>
-          </div>
+          <BrandLogo variant="dark" size="md" withLink={false} />
         </div>
 
         <div className="flex items-center gap-3">
