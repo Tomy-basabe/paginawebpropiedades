@@ -1,0 +1,359 @@
+"use client";
+
+import React, { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useData } from "@/context/DataContext";
+import PropertyCard from "@/components/PropertyCard";
+import PropertyDetailModal from "@/components/PropertyDetailModal";
+import BannerHero from "@/components/BannerHero";
+import MortgageCalculator from "@/components/MortgageCalculator";
+import BankRatesTable from "@/components/BankRatesTable";
+import { Property } from "@/lib/types";
+import { 
+  Search, 
+  MapPin, 
+  Building, 
+  ArrowRight, 
+  Award, 
+  ShieldCheck, 
+  TrendingUp, 
+  CheckCircle2, 
+  FileText,
+  Phone,
+  MessageCircle,
+  Sparkles
+} from "lucide-react";
+
+export default function HomePage() {
+  const router = useRouter();
+  const { properties, agentProfile } = useData();
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+
+  // Filtros rápidos del Hero
+  const [heroOperation, setHeroOperation] = useState("venta");
+  const [heroType, setHeroType] = useState("todos");
+  const [heroLocation, setHeroLocation] = useState("");
+
+  const handleHeroSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (heroOperation) params.set("operation", heroOperation);
+    if (heroType && heroType !== "todos") params.set("type", heroType);
+    if (heroLocation) params.set("location", heroLocation);
+    router.push(`/propiedades?${params.toString()}`);
+  };
+
+  // Propiedades destacadas
+  const featuredProperties = properties.filter((p) => p.isFeatured).slice(0, 6);
+
+  return (
+    <div className="space-y-16 sm:space-y-24">
+      {/* 1. HERO SECTION PRINCIPAL DE ALTA GAMA */}
+      <section className="relative min-h-[85vh] flex items-center justify-center -mt-20 pt-28 pb-16 bg-luxury-black text-white overflow-hidden">
+        {/* Fondo con imagen arquitectónica sublime */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=85"
+            alt="Arquitectura moderna y residencial de lujo"
+            fill
+            priority
+            className="object-cover opacity-25 scale-100"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-luxury-black via-luxury-black/70 to-luxury-black/90" />
+        </div>
+
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+          {/* Badge institucional */}
+          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-xs tracking-widest uppercase text-gold-300 backdrop-blur-md">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
+            <span>Consultoría Patrimonial & Bienes Raíces Singulares</span>
+          </div>
+
+          {/* Título de impacto editorial */}
+          <div className="space-y-3">
+            <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight text-white">
+              Propiedades Singulares & <br />
+              <span className="text-gold-400 italic">Estrategia Inmobiliaria</span>
+            </h1>
+            <p className="max-w-2xl mx-auto text-sm sm:text-base text-neutral-300 leading-relaxed font-light">
+              Gestión inmobiliaria personalizada dirigida por {agentProfile.name}. Comercialización exclusiva de residencias, loteos campestres y desarrollos en pozo con respaldo financiero.
+            </p>
+          </div>
+
+          {/* Motor de Búsqueda Rápida Integrado */}
+          <div className="bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-sm shadow-2xl text-neutral-900 text-left border border-white/20 max-w-4xl mx-auto">
+            {/* Tabs de Operación */}
+            <div className="flex gap-2 mb-4 border-b border-neutral-200 pb-3">
+              {[
+                { id: "venta", label: "Comprar" },
+                { id: "alquiler", label: "Alquilar" },
+                { id: "pozo", label: "Preventa en Pozo" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setHeroOperation(tab.id)}
+                  className={`text-xs font-semibold uppercase tracking-wider px-3.5 py-1.5 rounded-sm transition-colors ${
+                    heroOperation === tab.id
+                      ? "bg-neutral-900 text-white"
+                      : "text-neutral-500 hover:text-neutral-900 bg-neutral-100"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Formulario de Búsqueda */}
+            <form onSubmit={handleHeroSearch} className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+              <div className="sm:col-span-5">
+                <label className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-1">
+                  Ubicación o Barrio
+                </label>
+                <div className="relative">
+                  <MapPin className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                  <input
+                    type="text"
+                    placeholder="Ej: Nordelta, Palermo, San Isidro..."
+                    value={heroLocation}
+                    onChange={(e) => setHeroLocation(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2.5 text-xs bg-stone-50 border border-neutral-300 rounded-sm focus:outline-none focus:border-gold-500 text-neutral-800"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-4">
+                <label className="block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-1">
+                  Tipo de Propiedad
+                </label>
+                <div className="relative">
+                  <Building className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                  <select
+                    value={heroType}
+                    onChange={(e) => setHeroType(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2.5 text-xs bg-stone-50 border border-neutral-300 rounded-sm focus:outline-none focus:border-gold-500 text-neutral-800"
+                  >
+                    <option value="todos">Todos los Tipos</option>
+                    <option value="casa">Casas & Residencias</option>
+                    <option value="departamento">Departamentos & Penthouses</option>
+                    <option value="loteo">Loteos & Terrenos</option>
+                    <option value="desarrollo">Desarrollos & Emprendimientos</option>
+                    <option value="comercial">Comerciales</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="sm:col-span-3 flex items-end">
+                <button
+                  type="submit"
+                  className="w-full bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs uppercase tracking-wider py-3 px-4 rounded-sm transition-all shadow-md hover:shadow-gold-500/20 flex items-center justify-center gap-2"
+                >
+                  <Search className="w-4 h-4" />
+                  <span>Buscar</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Quick Metrics debajo del hero */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-4 text-neutral-300 border-t border-white/10 max-w-4xl mx-auto">
+            <div>
+              <span className="block font-serif text-2xl font-bold text-gold-400">
+                +{agentProfile.metrics.yearsExperience} Años
+              </span>
+              <span className="text-[11px] uppercase tracking-wider text-neutral-400">
+                Trayectoria en el sector
+              </span>
+            </div>
+            <div>
+              <span className="block font-serif text-2xl font-bold text-gold-400">
+                USD {agentProfile.metrics.volumeSoldUSD}
+              </span>
+              <span className="text-[11px] uppercase tracking-wider text-neutral-400">
+                Volumen transaccionado
+              </span>
+            </div>
+            <div>
+              <span className="block font-serif text-2xl font-bold text-gold-400">
+                +{agentProfile.metrics.propertiesClosed}
+              </span>
+              <span className="text-[11px] uppercase tracking-wider text-neutral-400">
+                Operaciones concluidas
+              </span>
+            </div>
+            <div>
+              <span className="block font-serif text-2xl font-bold text-gold-400">
+                {agentProfile.metrics.clientSatisfactionRate}%
+              </span>
+              <span className="text-[11px] uppercase tracking-wider text-neutral-400">
+                Satisfacción auditada
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. SECCIÓN DESTACADA DINÁMICA: OPORTUNIDADES & DESARROLLOS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <BannerHero />
+      </section>
+
+      {/* 3. CATÁLOGO INTERACTIVO: PROPIEDADES DESTACADAS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold-600 bg-gold-50 px-2.5 py-1 rounded-sm mb-2">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Colección Exclusiva</span>
+            </div>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900">
+              Inmuebles Seleccionados
+            </h2>
+            <p className="text-xs sm:text-sm text-neutral-500 mt-1">
+              Cartera curada de propiedades residenciales, comerciales y loteos en las ubicaciones más codiciadas.
+            </p>
+          </div>
+
+          <Link
+            href="/propiedades"
+            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-neutral-900 hover:text-gold-600 border-b border-neutral-900 hover:border-gold-600 pb-1 transition-colors"
+          >
+            <span>Ver Catálogo Completo ({properties.length})</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {/* Grid de Propiedades */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {featuredProperties.map((prop) => (
+            <PropertyCard
+              key={prop.id}
+              property={prop}
+              onSelectProperty={(p) => setSelectedProperty(p)}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* 4. MARCA PERSONAL & VALOR AGREGADO: SECCIÓN "SOBRE MÍ" */}
+      <section className="bg-stone-100 py-16 sm:py-24 border-y border-neutral-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {/* Fotografía y credenciales del agente */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="relative h-[480px] w-full rounded-sm overflow-hidden shadow-xl border border-neutral-300">
+                <Image
+                  src={agentProfile.photoUrl}
+                  alt={agentProfile.name}
+                  fill
+                  className="object-cover object-top"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <div className="font-serif text-2xl font-bold">{agentProfile.name}</div>
+                  <div className="text-xs text-gold-400 font-medium tracking-wide">
+                    {agentProfile.roleTitle}
+                  </div>
+                  <div className="text-[11px] text-neutral-300 font-mono mt-1">
+                    {agentProfile.licenseNumber}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Biografía y Pilares */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold-600 bg-gold-50 px-2.5 py-1 rounded-sm">
+                <Award className="w-3.5 h-3.5" />
+                <span>Marca Personal & Trayectoria</span>
+              </div>
+
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900 leading-tight">
+                Asesoramiento Estratégico, Rigor Técnico y Respaldo Personal
+              </h2>
+
+              <p className="text-sm text-neutral-700 leading-relaxed">
+                {agentProfile.bio}
+              </p>
+
+              {/* Pilares de trabajo */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                {agentProfile.pillars.map((pillar, idx) => (
+                  <div key={idx} className="p-4 bg-white border border-neutral-200 rounded-sm">
+                    <h4 className="font-serif text-sm font-bold text-neutral-900 mb-1 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold-500" />
+                      {pillar.title}
+                    </h4>
+                    <p className="text-xs text-neutral-600 leading-relaxed">
+                      {pillar.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTAs de Contacto */}
+              <div className="pt-4 flex flex-wrap items-center gap-4">
+                <Link
+                  href="/contacto"
+                  className="bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold uppercase tracking-wider px-6 py-3 rounded-sm transition-colors"
+                >
+                  Agendar Consulta Privada
+                </Link>
+
+                <a
+                  href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20conversar%20sobre%20asesoramiento%20inmobiliario`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-700 hover:text-emerald-800 font-semibold text-xs flex items-center gap-1.5"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Conversar directamente por WhatsApp</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. SECCIÓN INFORMATIVA / FINANCIERA: SIMULADOR & COMPARADOR DE TASAS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <MortgageCalculator />
+        <BankRatesTable />
+      </section>
+
+      {/* 6. BANNER DE TASACIÓN PROFESIONAL */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="bg-luxury-black text-white p-8 sm:p-12 rounded-sm border border-white/10 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="relative z-10 max-w-xl space-y-3 text-center md:text-left">
+            <span className="text-xs uppercase tracking-widest text-gold-400 font-semibold">
+              Servicio para Propietarios
+            </span>
+            <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white">
+              ¿Deseas conocer el valor real de mercado de tu propiedad?
+            </h3>
+            <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
+              Realizamos tasaciones profesionales basadas en valores de cierre efectivo, análisis comparativo de oferta y demanda por zona y auditoría dominial.
+            </p>
+          </div>
+
+          <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+            <Link
+              href="/contacto?asunto=tasacion"
+              className="w-full sm:w-auto text-center bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-sm transition-all shadow-md"
+            >
+              Solicitar Tasación Sin Cargo
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Modal de Detalle de Propiedad */}
+      <PropertyDetailModal
+        property={selectedProperty}
+        onClose={() => setSelectedProperty(null)}
+      />
+    </div>
+  );
+}
