@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useData } from "@/context/DataContext";
 import BrandLogo from "@/components/BrandLogo";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { uploadPropertyImage } from "@/lib/supabase";
 import { Property, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus } from "@/lib/types";
 import { 
   SlidersHorizontal, 
@@ -48,6 +49,8 @@ export default function AdminPage() {
     resetToDefaults,
     exportDataJSON,
     importDataJSON,
+    isCloudConnected,
+    refreshFromCloud,
   } = useData();
 
   // Autenticación simple de sesión
@@ -85,32 +88,34 @@ export default function AdminPage() {
   const [manualImageUrl, setManualImageUrl] = useState("");
   const [isUploadingImages, setIsUploadingImages] = useState(false);
 
-  const handleImageFilesUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     setIsUploadingImages(true);
     const fileList = Array.from(files);
-    let loadedCount = 0;
-    const newImages: string[] = [];
+    const uploadedUrls: string[] = [];
 
-    fileList.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target?.result && typeof event.target.result === "string") {
-          newImages.push(event.target.result);
-        }
-        loadedCount++;
-        if (loadedCount === fileList.length) {
-          setPropForm((prev) => ({
-            ...prev,
-            images: [...(prev.images || []), ...newImages],
-          }));
-          setIsUploadingImages(false);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    for (const file of fileList) {
+      try {
+        const publicUrl = await uploadPropertyImage(file);
+        uploadedUrls.push(publicUrl);
+      } catch (err) {
+        // Fallback a Data URL local si la red falla
+        const dataUrl = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (event) => resolve((event.target?.result as string) || "");
+          reader.readAsDataURL(file);
+        });
+        if (dataUrl) uploadedUrls.push(dataUrl);
+      }
+    }
+
+    setPropForm((prev) => ({
+      ...prev,
+      images: [...(prev.images || []), ...uploadedUrls],
+    }));
+    setIsUploadingImages(false);
     e.target.value = "";
   };
 
@@ -353,6 +358,21 @@ export default function AdminPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          {isCloudConnected ? (
+            <span className="flex items-center gap-1.5 text-xs bg-emerald-50 text-emerald-700 border border-emerald-300 px-3 py-1.5 rounded-full font-medium shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Base de Datos Supabase Conectada</span>
+            </span>
+          ) : (
+            <button
+              onClick={() => refreshFromCloud()}
+              className="flex items-center gap-1.5 text-xs bg-amber-50 text-amber-700 border border-amber-300 px-3 py-1.5 rounded-full font-medium hover:bg-amber-100 transition-colors"
+            >
+              <span className="w-2 h-2 rounded-full bg-amber-500" />
+              <span>Reconectar Supabase</span>
+            </button>
+          )}
+
           <button
             onClick={() => setIsAuthenticated(false)}
             className="text-xs text-neutral-600 hover:text-neutral-900 px-3 py-2 border border-neutral-300 rounded-sm hover:bg-neutral-100 transition-colors flex items-center gap-1.5"

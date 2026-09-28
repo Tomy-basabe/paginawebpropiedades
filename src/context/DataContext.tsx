@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { Property, BankRate, FeaturedBanner, AgentProfile } from "@/lib/types";
 import {
   INITIAL_PROPERTIES,
@@ -8,6 +8,7 @@ import {
   INITIAL_FEATURED_BANNERS,
   INITIAL_AGENT_PROFILE,
 } from "@/lib/initialData";
+import { supabase } from "@/lib/supabase";
 
 const STORAGE_KEY = "aurea_real_estate_db_v1";
 
@@ -17,17 +18,19 @@ interface DataContextType {
   banners: FeaturedBanner[];
   agentProfile: AgentProfile;
   isLoaded: boolean;
-  addProperty: (property: Omit<Property, "id" | "createdAt">) => void;
-  updateProperty: (id: string, property: Partial<Property>) => void;
-  deleteProperty: (id: string) => void;
-  updateBankRate: (id: string, rate: Partial<BankRate>) => void;
-  addBankRate: (rate: Omit<BankRate, "id" | "updatedAt">) => void;
-  deleteBankRate: (id: string) => void;
-  updateBanner: (id: string, banner: Partial<FeaturedBanner>) => void;
-  addBanner: (banner: Omit<FeaturedBanner, "id">) => void;
-  deleteBanner: (id: string) => void;
-  updateAgentProfile: (profile: Partial<AgentProfile>) => void;
-  resetToDefaults: () => void;
+  isCloudConnected: boolean;
+  addProperty: (property: Omit<Property, "id" | "createdAt">) => Promise<string>;
+  updateProperty: (id: string, property: Partial<Property>) => Promise<void>;
+  deleteProperty: (id: string) => Promise<void>;
+  updateBankRate: (id: string, rate: Partial<BankRate>) => Promise<void>;
+  addBankRate: (rate: Omit<BankRate, "id" | "updatedAt">) => Promise<void>;
+  deleteBankRate: (id: string) => Promise<void>;
+  updateBanner: (id: string, banner: Partial<FeaturedBanner>) => Promise<void>;
+  addBanner: (banner: Omit<FeaturedBanner, "id">) => Promise<void>;
+  deleteBanner: (id: string) => Promise<void>;
+  updateAgentProfile: (profile: Partial<AgentProfile>) => Promise<void>;
+  refreshFromCloud: () => Promise<void>;
+  resetToDefaults: () => Promise<void>;
   exportDataJSON: () => string;
   importDataJSON: (jsonString: string) => boolean;
 }
@@ -40,8 +43,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [banners, setBanners] = useState<FeaturedBanner[]>(INITIAL_FEATURED_BANNERS);
   const [agentProfile, setAgentProfile] = useState<AgentProfile>(INITIAL_AGENT_PROFILE);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isCloudConnected, setIsCloudConnected] = useState<boolean>(true);
 
-  // Cargar datos desde localStorage al inicializar
+  // 1. Cargar datos locales de inmediato (para evitar parpadeo)
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -53,13 +57,65 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         if (parsed.agentProfile) setAgentProfile(parsed.agentProfile);
       }
     } catch (e) {
-      console.error("Error al cargar datos del almacenamiento local:", e);
+      console.error("Error al cargar datos locales:", e);
     } finally {
       setIsLoaded(true);
     }
   }, []);
 
-  // Guardar en localStorage cada vez que cambien los datos
+  // 2. Sincronizar desde Supabase en la nube
+  const refreshFromCloud = useCallback(async () => {
+    try {
+      const [
+        { data: propsData, error: propsErr },
+        { data: bannersData, error: bannersErr },
+        { data: ratesData, error: ratesErr },
+        { data: profileData, error: profileErr },
+      ] = await Promise.all([
+        supabase.from("properties").select("*").order("created_at", { ascending: false }),
+        supabase.from("featured_banners").select("*"),
+        supabase.from("bank_rates").select("*"),
+        supabase.from("agent_profile").select("*").limit(1),
+      ]);
+
+      if (propsErr || bannersErr || ratesErr || profileErr) {
+        console.warn("Aviso al consultar Supabase:", { propsErr, bannersErr, ratesErr, profileErr });
+        setIsCloudConnected(false);
+        return;
+      }
+
+      setIsCloudConnected(true);
+
+      if (propsData && propsData.length > 0) {
+        const parsedProps: Property[] = propsData.map((row) => (row.data as Property) || row);
+        setProperties(parsedProps);
+      }
+
+      if (bannersData && bannersData.length > 0) {
+        const parsedBanners: FeaturedBanner[] = bannersData.map((row) => (row.data as FeaturedBanner) || row);
+        setBanners(parsedBanners);
+      }
+
+      if (ratesData && ratesData.length > 0) {
+        const parsedRates: BankRate[] = ratesData.map((row) => (row.data as BankRate) || row);
+        setBankRates(parsedRates);
+      }
+
+      if (profileData && profileData.length > 0) {
+        const parsedProfile: AgentProfile = (profileData[0].data as AgentProfile) || profileData[0];
+        setAgentProfile(parsedProfile);
+      }
+    } catch (err) {
+      console.error("Error conectando con Supabase:", err);
+      setIsCloudConnected(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshFromCloud();
+  }, [refreshFromCloud]);
+
+  // 3. Persistir copia de seguridad en localStorage
   useEffect(() => {
     if (!isLoaded) return;
     try {
@@ -71,70 +127,289 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
     } catch (e) {
-      console.error("Error al guardar en almacenamiento local:", e);
+      console.error("Error al guardar copia local:", e);
     }
   }, [properties, bankRates, banners, agentProfile, isLoaded]);
 
-  const addProperty = (newProp: Omit<Property, "id" | "createdAt">) => {
+  // MUTACIONES CONECTADAS A SUPABASE
+
+  const addProperty = async (newProp: Omit<Property, "id" | "createdAt">): Promise<string> => {
     const id = `prop-${Date.now()}`;
     const createdAt = new Date().toISOString().split("T")[0];
-    setProperties((prev) => [{ ...newProp, id, createdAt }, ...prev]);
+    const propertyObj: Property = { ...newProp, id, createdAt };
+
+    // Actualización optimista local
+    setProperties((prev) => [propertyObj, ...prev]);
+
+    // Persistencia en Supabase
+    try {
+      const { error } = await supabase.from("properties").upsert({
+        id,
+        title: propertyObj.title,
+        operation: propertyObj.operation,
+        type: propertyObj.type,
+        status: propertyObj.status,
+        price: propertyObj.price,
+        currency: propertyObj.currency,
+        location: propertyObj.location,
+        features: propertyObj.features,
+        images: propertyObj.images,
+        description: propertyObj.description,
+        is_featured: propertyObj.isFeatured,
+        is_opportunity: propertyObj.isOpportunity,
+        data: propertyObj,
+        updated_at: new Date().toISOString(),
+      });
+      if (error) console.error("Error guardando propiedad en Supabase:", error);
+    } catch (err) {
+      console.error("Fallo al conectar con Supabase para addProperty:", err);
+    }
+
+    return id;
   };
 
-  const updateProperty = (id: string, updated: Partial<Property>) => {
+  const updateProperty = async (id: string, updated: Partial<Property>): Promise<void> => {
+    let fullUpdatedProperty: Property | null = null;
+
     setProperties((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, ...updated } : item))
+      prev.map((item) => {
+        if (item.id === id) {
+          fullUpdatedProperty = { ...item, ...updated };
+          return fullUpdatedProperty;
+        }
+        return item;
+      })
     );
+
+    if (!fullUpdatedProperty) return;
+
+    try {
+      const p = fullUpdatedProperty as Property;
+      const { error } = await supabase.from("properties").upsert({
+        id,
+        title: p.title,
+        operation: p.operation,
+        type: p.type,
+        status: p.status,
+        price: p.price,
+        currency: p.currency,
+        location: p.location,
+        features: p.features,
+        images: p.images,
+        description: p.description,
+        is_featured: p.isFeatured,
+        is_opportunity: p.isOpportunity,
+        data: p,
+        updated_at: new Date().toISOString(),
+      });
+      if (error) console.error("Error actualizando propiedad en Supabase:", error);
+    } catch (err) {
+      console.error("Fallo al conectar con Supabase para updateProperty:", err);
+    }
   };
 
-  const deleteProperty = (id: string) => {
+  const deleteProperty = async (id: string): Promise<void> => {
     setProperties((prev) => prev.filter((item) => item.id !== id));
+
+    try {
+      const { error } = await supabase.from("properties").delete().eq("id", id);
+      if (error) console.error("Error eliminando propiedad en Supabase:", error);
+    } catch (err) {
+      console.error("Fallo al conectar con Supabase para deleteProperty:", err);
+    }
   };
 
-  const addBankRate = (newRate: Omit<BankRate, "id" | "updatedAt">) => {
+  const addBankRate = async (newRate: Omit<BankRate, "id" | "updatedAt">): Promise<void> => {
     const id = `bank-${Date.now()}`;
     const updatedAt = new Date().toISOString().split("T")[0];
-    setBankRates((prev) => [...prev, { ...newRate, id, updatedAt }]);
+    const rateObj: BankRate = { ...newRate, id, updatedAt };
+
+    setBankRates((prev) => [...prev, rateObj]);
+
+    try {
+      await supabase.from("bank_rates").upsert({
+        id,
+        bank_name: rateObj.bankName,
+        tna: rateObj.rateUva,
+        cft: rateObj.cft,
+        max_financing_percent: rateObj.maxFinancing,
+        max_years_term: rateObj.maxTermYears,
+        logo_url: rateObj.logoText,
+        data: rateObj,
+        updated_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("Error guardando tasa bancaria en Supabase:", err);
+    }
   };
 
-  const updateBankRate = (id: string, updated: Partial<BankRate>) => {
+  const updateBankRate = async (id: string, updated: Partial<BankRate>): Promise<void> => {
     const updatedAt = new Date().toISOString().split("T")[0];
+    let fullUpdatedRate: BankRate | null = null;
+
     setBankRates((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, ...updated, updatedAt } : item
-      )
+      prev.map((item) => {
+        if (item.id === id) {
+          fullUpdatedRate = { ...item, ...updated, updatedAt };
+          return fullUpdatedRate;
+        }
+        return item;
+      })
     );
+
+    if (!fullUpdatedRate) return;
+
+    try {
+      const r = fullUpdatedRate as BankRate;
+      await supabase.from("bank_rates").upsert({
+        id,
+        bank_name: r.bankName,
+        tna: r.rateUva,
+        cft: r.cft,
+        max_financing_percent: r.maxFinancing,
+        max_years_term: r.maxTermYears,
+        logo_url: r.logoText,
+        data: r,
+        updated_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("Error actualizando tasa bancaria en Supabase:", err);
+    }
   };
 
-  const deleteBankRate = (id: string) => {
+  const deleteBankRate = async (id: string): Promise<void> => {
     setBankRates((prev) => prev.filter((item) => item.id !== id));
+
+    try {
+      await supabase.from("bank_rates").delete().eq("id", id);
+    } catch (err) {
+      console.error("Error eliminando tasa en Supabase:", err);
+    }
   };
 
-  const addBanner = (newBanner: Omit<FeaturedBanner, "id">) => {
+  const addBanner = async (newBanner: Omit<FeaturedBanner, "id">): Promise<void> => {
     const id = `banner-${Date.now()}`;
-    setBanners((prev) => [...prev, { ...newBanner, id }]);
+    const bannerObj: FeaturedBanner = { ...newBanner, id };
+
+    setBanners((prev) => [...prev, bannerObj]);
+
+    try {
+      await supabase.from("featured_banners").upsert({
+        id,
+        title: bannerObj.title,
+        subtitle: bannerObj.subtitle,
+        badge: bannerObj.badge,
+        image_url: bannerObj.imageUrl,
+        link: bannerObj.ctaLink,
+        cta_text: bannerObj.ctaText,
+        is_active: bannerObj.active,
+        data: bannerObj,
+      });
+    } catch (err) {
+      console.error("Error guardando banner en Supabase:", err);
+    }
   };
 
-  const updateBanner = (id: string, updated: Partial<FeaturedBanner>) => {
+  const updateBanner = async (id: string, updated: Partial<FeaturedBanner>): Promise<void> => {
+    let fullBanner: FeaturedBanner | null = null;
+
     setBanners((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, ...updated } : item))
+      prev.map((item) => {
+        if (item.id === id) {
+          fullBanner = { ...item, ...updated };
+          return fullBanner;
+        }
+        return item;
+      })
     );
+
+    if (!fullBanner) return;
+
+    try {
+      const b = fullBanner as FeaturedBanner;
+      await supabase.from("featured_banners").upsert({
+        id,
+        title: b.title,
+        subtitle: b.subtitle,
+        badge: b.badge,
+        image_url: b.imageUrl,
+        link: b.ctaLink,
+        cta_text: b.ctaText,
+        is_active: b.active,
+        data: b,
+      });
+    } catch (err) {
+      console.error("Error actualizando banner en Supabase:", err);
+    }
   };
 
-  const deleteBanner = (id: string) => {
+  const deleteBanner = async (id: string): Promise<void> => {
     setBanners((prev) => prev.filter((item) => item.id !== id));
+
+    try {
+      await supabase.from("featured_banners").delete().eq("id", id);
+    } catch (err) {
+      console.error("Error eliminando banner en Supabase:", err);
+    }
   };
 
-  const updateAgentProfile = (updated: Partial<AgentProfile>) => {
-    setAgentProfile((prev) => ({ ...prev, ...updated }));
+  const updateAgentProfile = async (updated: Partial<AgentProfile>): Promise<void> => {
+    let fullProfile: AgentProfile | null = null;
+
+    setAgentProfile((prev) => {
+      fullProfile = { ...prev, ...updated };
+      return fullProfile;
+    });
+
+    if (!fullProfile) return;
+
+    try {
+      const ap = fullProfile as AgentProfile;
+      await supabase.from("agent_profile").upsert({
+        id: "primary_agent",
+        name: ap.name,
+        title: ap.roleTitle,
+        license_number: ap.licenseNumber,
+        phone: ap.phone,
+        whatsapp_number: ap.whatsappNumber,
+        whatsapp_display: ap.whatsappDisplay,
+        email: ap.email,
+        office_address: ap.officeAddress,
+        bio: ap.bio,
+        short_bio: ap.shortBio,
+        photo_url: ap.photoUrl,
+        social: ap.social,
+        data: ap,
+        updated_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("Error actualizando perfil en Supabase:", err);
+    }
   };
 
-  const resetToDefaults = () => {
+  const resetToDefaults = async (): Promise<void> => {
     setProperties(INITIAL_PROPERTIES);
     setBankRates(INITIAL_BANK_RATES);
     setBanners(INITIAL_FEATURED_BANNERS);
     setAgentProfile(INITIAL_AGENT_PROFILE);
     localStorage.removeItem(STORAGE_KEY);
+
+    try {
+      // Re-sembrar en Supabase
+      const propRows = INITIAL_PROPERTIES.map((p) => ({ id: p.id, data: p }));
+      const bannerRows = INITIAL_FEATURED_BANNERS.map((b) => ({ id: b.id, data: b }));
+      const rateRows = INITIAL_BANK_RATES.map((r) => ({ id: r.id, data: r }));
+      const profileRow = { id: "primary_agent", data: INITIAL_AGENT_PROFILE };
+
+      await Promise.all([
+        supabase.from("properties").upsert(propRows),
+        supabase.from("featured_banners").upsert(bannerRows),
+        supabase.from("bank_rates").upsert(rateRows),
+        supabase.from("agent_profile").upsert([profileRow]),
+      ]);
+    } catch (err) {
+      console.error("Error al resetear en Supabase:", err);
+    }
   };
 
   const exportDataJSON = () => {
@@ -148,10 +423,22 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const importDataJSON = (jsonString: string): boolean => {
     try {
       const parsed = JSON.parse(jsonString);
-      if (parsed.properties) setProperties(parsed.properties);
-      if (parsed.bankRates) setBankRates(parsed.bankRates);
-      if (parsed.banners) setBanners(parsed.banners);
-      if (parsed.agentProfile) setAgentProfile(parsed.agentProfile);
+      if (parsed.properties) {
+        setProperties(parsed.properties);
+        supabase.from("properties").upsert(parsed.properties.map((p: Property) => ({ id: p.id, data: p }))).then();
+      }
+      if (parsed.bankRates) {
+        setBankRates(parsed.bankRates);
+        supabase.from("bank_rates").upsert(parsed.bankRates.map((r: BankRate) => ({ id: r.id, data: r }))).then();
+      }
+      if (parsed.banners) {
+        setBanners(parsed.banners);
+        supabase.from("featured_banners").upsert(parsed.banners.map((b: FeaturedBanner) => ({ id: b.id, data: b }))).then();
+      }
+      if (parsed.agentProfile) {
+        setAgentProfile(parsed.agentProfile);
+        supabase.from("agent_profile").upsert([{ id: "primary_agent", data: parsed.agentProfile }]).then();
+      }
       return true;
     } catch (e) {
       console.error("Formato JSON inválido:", e);
@@ -167,6 +454,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         banners,
         agentProfile,
         isLoaded,
+        isCloudConnected,
         addProperty,
         updateProperty,
         deleteProperty,
@@ -177,6 +465,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         updateBanner,
         deleteBanner,
         updateAgentProfile,
+        refreshFromCloud,
         resetToDefaults,
         exportDataJSON,
         importDataJSON,
