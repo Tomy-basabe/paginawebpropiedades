@@ -9,6 +9,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          red: "#C21818",
+          darkred: "#991B1B",
+          lightred: "#FEE2E2",
+        },
         gold: {
           50: "#FAF7F2",
           100: "#F4EDE2",

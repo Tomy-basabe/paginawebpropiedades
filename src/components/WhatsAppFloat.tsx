@@ -14,7 +14,7 @@ export default function WhatsAppFloat() {
   );
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex items-end gap-3">
+    <div className="hidden md:flex fixed bottom-6 right-6 z-40 items-end gap-3">
       {/* Tooltip con saludo del agente */}
       {showTooltip && (
         <div className="hidden sm:flex items-center gap-3 bg-white p-3 rounded-sm shadow-xl border border-neutral-200 text-xs max-w-xs animate-fade-in">

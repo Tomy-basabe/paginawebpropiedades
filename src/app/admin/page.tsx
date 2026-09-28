@@ -22,7 +22,9 @@ import {
   Upload, 
   Check, 
   X,
-  ExternalLink
+  ExternalLink,
+  ImageIcon,
+  Star
 } from "lucide-react";
 
 export default function AdminPage() {
@@ -76,6 +78,67 @@ export default function AdminPage() {
   // Estado para export/import
   const [importJsonText, setImportJsonText] = useState("");
   const [importSuccess, setImportSuccess] = useState<boolean | null>(null);
+
+  // Estados para subida de múltiples imágenes de propiedades
+  const [manualImageUrl, setManualImageUrl] = useState("");
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
+
+  const handleImageFilesUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploadingImages(true);
+    const fileList = Array.from(files);
+    let loadedCount = 0;
+    const newImages: string[] = [];
+
+    fileList.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result && typeof event.target.result === "string") {
+          newImages.push(event.target.result);
+        }
+        loadedCount++;
+        if (loadedCount === fileList.length) {
+          setPropForm((prev) => ({
+            ...prev,
+            images: [...(prev.images || []), ...newImages],
+          }));
+          setIsUploadingImages(false);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = "";
+  };
+
+  const handleAddManualUrl = () => {
+    if (!manualImageUrl.trim()) return;
+    setPropForm((prev) => ({
+      ...prev,
+      images: [...(prev.images || []), manualImageUrl.trim()],
+    }));
+    setManualImageUrl("");
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    setPropForm((prev) => ({
+      ...prev,
+      images: (prev.images || []).filter((_, i) => i !== indexToRemove),
+    }));
+  };
+
+  const handleMakeCoverImage = (indexToCover: number) => {
+    setPropForm((prev) => {
+      const images = [...(prev.images || [])];
+      if (indexToCover < 0 || indexToCover >= images.length) return prev;
+      const [selected] = images.splice(indexToCover, 1);
+      return {
+        ...prev,
+        images: [selected, ...images],
+      };
+    });
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -230,15 +293,21 @@ export default function AdminPage() {
     return (
       <div className="max-w-md mx-auto px-4 py-20">
         <div className="bg-white p-8 rounded-sm border border-neutral-200 shadow-xl space-y-6">
-          <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-sm bg-neutral-900 text-gold-400 flex items-center justify-center mx-auto">
-              <Lock className="w-6 h-6" />
+          <div className="text-center space-y-3">
+            <div className="relative w-16 h-16 rounded-sm bg-white p-1 border border-neutral-200 shadow-md mx-auto">
+              <Image
+                src="/logo.png"
+                alt="99 Propiedades"
+                fill
+                priority
+                className="object-contain"
+              />
             </div>
             <h1 className="font-serif text-2xl font-bold text-neutral-900">
               Panel de Administración
             </h1>
             <p className="text-xs text-neutral-500">
-              Gestión modular de contenidos de ÁUREA Real Estate
+              Gestión modular de contenidos de 99 Propiedades
             </p>
           </div>
 
@@ -256,7 +325,7 @@ export default function AdminPage() {
                 autoFocus
               />
               <span className="block text-[10px] text-neutral-400 mt-1">
-                (Clave de demostración: <code className="text-neutral-700 font-mono">aurea2026</code> o <code className="text-neutral-700 font-mono">admin</code>)
+                (Clave de acceso: <code className="text-neutral-700 font-mono">aurea2026</code> o <code className="text-neutral-700 font-mono">admin</code>)
               </span>
             </div>
 
@@ -283,17 +352,27 @@ export default function AdminPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Cabecera del Panel */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200 pb-6">
-        <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold-600 bg-gold-50 px-2.5 py-1 rounded-sm mb-1">
-            <SlidersHorizontal className="w-3.5 h-3.5" />
-            <span>CMS Modular Áurea</span>
+        <div className="flex items-center gap-4">
+          <div className="relative w-12 h-12 bg-white p-1 rounded-sm border border-neutral-200 shadow-sm shrink-0">
+            <Image
+              src="/logo.png"
+              alt="99 Propiedades"
+              fill
+              className="object-contain"
+            />
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900">
-            Centro de Gestión de Contenidos
-          </h1>
-          <p className="text-xs text-neutral-500">
-            Actualice propiedades, banners comerciales y tasas bancarias en tiempo real.
-          </p>
+          <div>
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold-600 bg-gold-50 px-2.5 py-0.5 rounded-sm mb-1">
+              <SlidersHorizontal className="w-3 h-3" />
+              <span>CMS 99 Propiedades</span>
+            </div>
+            <h1 className="font-serif text-xl sm:text-2xl font-bold text-neutral-900">
+              Centro de Gestión de Contenidos
+            </h1>
+            <p className="text-xs text-neutral-500">
+              Actualice propiedades, banners comerciales y tasas bancarias en tiempo real.
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -552,22 +631,126 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Imagen URL principal */}
-              <div>
-                <label className="block font-semibold text-neutral-700 mb-1">
-                  URL de Imagen Principal (URL de Unsplash o servidor)
-                </label>
-                <input
-                  type="text"
-                  value={propForm.images?.[0] || ""}
-                  onChange={(e) =>
-                    setPropForm({
-                      ...propForm,
-                      images: [e.target.value, ...(propForm.images?.slice(1) || [])],
-                    })
-                  }
-                  className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
-                />
+              {/* Gestor Avanzado de Subida Múltiple de Imágenes */}
+              <div className="space-y-3 bg-stone-50 p-4 rounded-sm border border-neutral-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="block font-semibold text-neutral-800 text-xs">
+                      Galería Fotográfica de la Propiedad (Subir una o varias imágenes)
+                    </label>
+                    <span className="text-[11px] text-neutral-500">
+                      Puedes subir fotos desde tu computadora/celular o ingresar enlaces directos.
+                    </span>
+                  </div>
+                  <span className="text-xs font-semibold text-gold-600 bg-gold-50 px-2 py-0.5 rounded-sm border border-gold-200">
+                    {propForm.images?.length || 0} fotos cargadas
+                  </span>
+                </div>
+
+                {/* Zona de subida de archivos locales (Multi-file) */}
+                <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                  <label className="flex-1 border-2 border-dashed border-neutral-300 hover:border-gold-500 bg-white rounded-sm p-4 text-center cursor-pointer transition-colors group">
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleImageFilesUpload}
+                      className="hidden"
+                    />
+                    <div className="flex items-center justify-center gap-2 text-neutral-700 group-hover:text-gold-600">
+                      <Upload className="w-5 h-5 text-gold-500" />
+                      <span className="font-semibold text-xs">
+                        {isUploadingImages
+                          ? "Procesando imágenes..."
+                          : "Elegir fotos (una o varias a la vez)"}
+                      </span>
+                    </div>
+                    <span className="block text-[10px] text-neutral-400 mt-1">
+                      Soporta JPG, PNG, WEBP directamente desde tu galería o cámara
+                    </span>
+                  </label>
+                </div>
+
+                {/* Alternativa: Añadir por URL */}
+                <div className="flex items-center gap-2 pt-1">
+                  <div className="relative flex-1">
+                    <ImageIcon className="w-4 h-4 text-neutral-400 absolute left-3 top-2.5" />
+                    <input
+                      type="text"
+                      placeholder="O pega aquí una URL de imagen web (ej: Unsplash, CDN...)"
+                      value={manualImageUrl}
+                      onChange={(e) => setManualImageUrl(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAddManualUrl}
+                    className="bg-neutral-900 hover:bg-neutral-800 text-white font-medium text-xs px-3.5 py-2 rounded-sm transition-colors shrink-0"
+                  >
+                    + Agregar URL
+                  </button>
+                </div>
+
+                {/* Galería de Miniaturas con Portada y Reordenamiento */}
+                {propForm.images && propForm.images.length > 0 && (
+                  <div className="pt-2">
+                    <span className="block text-[11px] font-semibold text-neutral-700 uppercase tracking-wider mb-2">
+                      Fotos seleccionadas (la primera es la portada principal):
+                    </span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2.5">
+                      {propForm.images.map((imgUrl, idx) => (
+                        <div
+                          key={idx}
+                          className={`relative group rounded-sm overflow-hidden border-2 bg-neutral-900 ${
+                            idx === 0 ? "border-gold-500 ring-2 ring-gold-400/30" : "border-neutral-200"
+                          }`}
+                        >
+                          <div className="relative h-24 w-full">
+                            <Image
+                              src={imgUrl}
+                              alt={`Foto ${idx + 1}`}
+                              fill
+                              unoptimized={imgUrl.startsWith("data:")}
+                              className="object-cover"
+                            />
+                          </div>
+
+                          {/* Badge de Portada */}
+                          {idx === 0 ? (
+                            <span className="absolute top-1 left-1 bg-gold-500 text-luxury-black font-bold text-[9px] px-1.5 py-0.5 rounded-sm shadow-sm flex items-center gap-0.5">
+                              <Star className="w-2.5 h-2.5 fill-luxury-black" />
+                              <span>Portada</span>
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => handleMakeCoverImage(idx)}
+                              className="absolute top-1 left-1 bg-black/70 hover:bg-gold-500 hover:text-black text-white text-[9px] px-1.5 py-0.5 rounded-sm opacity-90 transition-colors"
+                              title="Hacer foto principal"
+                            >
+                              Hacer Portada
+                            </button>
+                          )}
+
+                          {/* Botón Eliminar Foto */}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(idx)}
+                            className="absolute top-1 right-1 bg-rose-600/90 hover:bg-rose-700 text-white p-1 rounded-sm shadow-sm opacity-90 transition-colors"
+                            title="Eliminar esta foto"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+
+                          <div className="p-1 bg-white text-center text-[10px] text-neutral-500 truncate">
+                            Foto #{idx + 1}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Toggles de Destacado y Oportunidad */}

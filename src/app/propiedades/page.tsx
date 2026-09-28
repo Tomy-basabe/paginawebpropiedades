@@ -41,6 +41,7 @@ function PropiedadesContent() {
   const [bedroomsFilter, setBedroomsFilter] = useState<string>("todos");
   const [sortBy, setSortBy] = useState<string>("destacados");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   // Filtrado reactivo en memoria
   const filteredProperties = useMemo(() => {
@@ -139,16 +140,58 @@ function PropiedadesContent() {
         </p>
       </div>
 
+      {/* Chips Rápidos de Filtrado para Teléfonos y Pantallas Táctiles */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
+        {[
+          { label: "Todas", op: "todos", tp: "todos", st: "todos" },
+          { label: "En Venta", op: "venta", tp: "todos", st: "todos" },
+          { label: "En Alquiler", op: "alquiler", tp: "todos", st: "todos" },
+          { label: "En Pozo", op: "pozo", tp: "todos", st: "todos" },
+          { label: "Casas", op: "todos", tp: "casa", st: "todos" },
+          { label: "Deptos", op: "todos", tp: "departamento", st: "todos" },
+          { label: "Loteos", op: "todos", tp: "loteo", st: "todos" },
+          { label: "⭐ Oportunidades", op: "todos", tp: "todos", st: "oportunidad" },
+        ].map((chip) => {
+          const isSelected =
+            (chip.op === "todos" || operationFilter === chip.op) &&
+            (chip.tp === "todos" || typeFilter === chip.tp) &&
+            (chip.st === "todos" || statusFilter === chip.st);
+          return (
+            <button
+              key={chip.label}
+              type="button"
+              onClick={() => {
+                if (chip.op !== "todos") setOperationFilter(chip.op);
+                if (chip.tp !== "todos") setTypeFilter(chip.tp);
+                if (chip.st !== "todos") setStatusFilter(chip.st);
+                if (chip.op === "todos" && chip.tp === "todos" && chip.st === "todos") {
+                  setOperationFilter("todos");
+                  setTypeFilter("todos");
+                  setStatusFilter("todos");
+                }
+              }}
+              className={`shrink-0 text-xs px-3.5 py-1.5 rounded-full border transition-all ${
+                isSelected
+                  ? "bg-neutral-900 text-white border-neutral-900 font-semibold shadow-sm"
+                  : "bg-white text-neutral-600 border-neutral-300 hover:border-neutral-400"
+              }`}
+            >
+              {chip.label}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Barra de Filtros Interactiva */}
-      <div className="bg-white p-5 sm:p-6 rounded-sm border border-neutral-200 shadow-sm space-y-4">
+      <div className="bg-white p-4 sm:p-6 rounded-sm border border-neutral-200 shadow-sm space-y-4">
         {/* Fila 1: Búsqueda de texto y Operación */}
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
           <div className="sm:col-span-6">
             <div className="relative">
-              <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+              <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-3.5 sm:top-3" />
               <input
                 type="text"
-                placeholder="Buscar por barrio, calle, título o código de referencia..."
+                placeholder="Buscar por barrio, calle, título o REF..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2.5 text-xs bg-stone-50 border border-neutral-300 rounded-sm focus:outline-none focus:border-gold-500 text-neutral-800"
@@ -156,7 +199,7 @@ function PropiedadesContent() {
             </div>
           </div>
 
-          <div className="sm:col-span-3">
+          <div className="hidden sm:block sm:col-span-3">
             <select
               value={operationFilter}
               onChange={(e) => setOperationFilter(e.target.value)}
@@ -169,7 +212,7 @@ function PropiedadesContent() {
             </select>
           </div>
 
-          <div className="sm:col-span-3">
+          <div className="hidden sm:block sm:col-span-3">
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
@@ -183,15 +226,68 @@ function PropiedadesContent() {
               <option value="comercial">Comerciales & Oficinas</option>
             </select>
           </div>
+
+          {/* Botón para desplegar más filtros en móviles */}
+          <div className="sm:hidden flex items-center justify-between gap-2 pt-1">
+            <button
+              type="button"
+              onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+              className="flex-1 py-2 px-3 bg-stone-100 hover:bg-stone-200 text-neutral-800 text-xs font-semibold rounded-sm flex items-center justify-center gap-1.5 transition-colors"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-gold-600" />
+              <span>{showAdvancedFilters ? "Ocultar Filtros Avanzados" : "Más Filtros (Precio, Ambientes)"}</span>
+            </button>
+            <button
+              onClick={handleResetFilters}
+              type="button"
+              className="py-2 px-3 border border-neutral-300 text-neutral-600 text-xs rounded-sm hover:bg-neutral-50"
+              title="Limpiar"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
 
         {/* Fila 2: Filtros secundarios (Rango de precios, dormitorios, estado) */}
-        <div className="grid grid-cols-2 sm:grid-cols-12 gap-3 pt-2 border-t border-neutral-100">
+        <div className={`grid-cols-2 sm:grid-cols-12 gap-3 pt-2 border-t border-neutral-100 ${
+          showAdvancedFilters ? "grid" : "hidden sm:grid"
+        }`}>
+          {/* En mobile, mostrar select de operación y tipo si se abrió avanzado */}
+          <div className="col-span-1 sm:hidden">
+            <label className="block text-[10px] text-neutral-500 uppercase font-semibold mb-1">Operación</label>
+            <select
+              value={operationFilter}
+              onChange={(e) => setOperationFilter(e.target.value)}
+              className="w-full py-2 px-2.5 text-xs bg-stone-50 border border-neutral-300 rounded-sm focus:outline-none"
+            >
+              <option value="todos">Todas</option>
+              <option value="venta">Venta</option>
+              <option value="alquiler">Alquiler</option>
+              <option value="pozo">En Pozo</option>
+            </select>
+          </div>
+
+          <div className="col-span-1 sm:hidden">
+            <label className="block text-[10px] text-neutral-500 uppercase font-semibold mb-1">Tipo</label>
+            <select
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              className="w-full py-2 px-2.5 text-xs bg-stone-50 border border-neutral-300 rounded-sm focus:outline-none"
+            >
+              <option value="todos">Todos</option>
+              <option value="casa">Casas</option>
+              <option value="departamento">Deptos</option>
+              <option value="loteo">Loteos</option>
+              <option value="desarrollo">Emprendimientos</option>
+            </select>
+          </div>
+
           <div className="col-span-2 sm:col-span-3">
+            <label className="block text-[10px] text-neutral-500 uppercase font-semibold mb-1 sm:hidden">Rango de Precio (USD)</label>
             <div className="flex items-center gap-1.5">
               <input
                 type="number"
-                placeholder="Precio Mín (USD)"
+                placeholder="Mín (USD)"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
                 className="w-full py-2 px-2.5 text-xs bg-stone-50 border border-neutral-300 rounded-sm focus:outline-none focus:border-gold-500 text-neutral-800"
@@ -199,7 +295,7 @@ function PropiedadesContent() {
               <span className="text-neutral-400 text-xs">-</span>
               <input
                 type="number"
-                placeholder="Precio Máx (USD)"
+                placeholder="Máx (USD)"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
                 className="w-full py-2 px-2.5 text-xs bg-stone-50 border border-neutral-300 rounded-sm focus:outline-none focus:border-gold-500 text-neutral-800"
@@ -208,6 +304,7 @@ function PropiedadesContent() {
           </div>
 
           <div className="col-span-1 sm:col-span-3">
+            <label className="block text-[10px] text-neutral-500 uppercase font-semibold mb-1 sm:hidden">Dormitorios</label>
             <select
               value={bedroomsFilter}
               onChange={(e) => setBedroomsFilter(e.target.value)}
@@ -222,6 +319,7 @@ function PropiedadesContent() {
           </div>
 
           <div className="col-span-1 sm:col-span-3">
+            <label className="block text-[10px] text-neutral-500 uppercase font-semibold mb-1 sm:hidden">Estado</label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -234,7 +332,7 @@ function PropiedadesContent() {
             </select>
           </div>
 
-          <div className="col-span-2 sm:col-span-3 flex justify-end">
+          <div className="hidden sm:flex sm:col-span-3 justify-end">
             <button
               onClick={handleResetFilters}
               type="button"

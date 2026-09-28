@@ -2,16 +2,16 @@ import { Property, BankRate, FeaturedBanner, AgentProfile } from './types';
 
 export const INITIAL_AGENT_PROFILE: AgentProfile = {
   name: "Ignacio Valenzuela",
-  roleTitle: "Consultor Inmobiliario Senior & Desarrollador",
+  roleTitle: "Consultor Inmobiliario Senior & Director Comercial",
   licenseNumber: "CUCICBA Mat. 6842 / CMCPSI 5910",
-  bio: "Con más de 12 años en el mercado inmobiliario de alta gama y desarrollos residenciales, acompaño a inversores, desarrolladores y familias a tomar decisiones patrimoniales estratégicas. Mi enfoque combina rigurosidad analítica de mercado, estructuración financiera personalizada y un estándar de comercialización audiovisual de nivel internacional.",
-  shortBio: "Asesoramiento patrimonial de alta gama, gestión de desarrollos y comercialización exclusiva de propiedades singulares.",
+  bio: "Con más de 12 años en el mercado inmobiliario de alta gama y desarrollos residenciales en 99 Propiedades, acompaño a inversores, desarrolladores y familias a tomar decisiones patrimoniales estratégicas. Nuestro enfoque combina rigurosidad analítica de mercado, estructuración financiera personalizada y un estándar de comercialización audiovisual de nivel internacional.",
+  shortBio: "99 Propiedades: Asesoramiento patrimonial de alta gama, desarrollos inmobiliarios y comercialización exclusiva de propiedades singulares.",
   photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80",
   phone: "+54 9 11 4890-7722",
   whatsappNumber: "5491148907722",
   whatsappDisplay: "+54 9 11 4890-7722",
-  email: "ignacio@valenzuelarealestate.com",
-  officeAddress: "Av. del Libertador 4480, Piso 14, Belgrano, CABA",
+  email: "contacto@99propiedades.com",
+  officeAddress: "Av. del Libertador 4480, Belgrano, CABA",
   social: {
     instagram: "https://instagram.com/ignaciovalenzuela.re",
     linkedin: "https://linkedin.com/in/ignaciovalenzuela-propiedades",

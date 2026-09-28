@@ -60,13 +60,13 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
   );
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 md:p-6 animate-fade-in">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-sm flex items-center justify-center p-0 sm:p-4 md:p-6 animate-fade-in">
       <div 
-        className="relative bg-white w-full max-w-5xl rounded-sm shadow-2xl overflow-hidden my-6 border border-neutral-200"
+        className="relative bg-white w-full max-w-5xl h-[100dvh] sm:h-auto sm:max-h-[92vh] rounded-none sm:rounded-sm shadow-2xl overflow-hidden my-0 sm:my-6 border border-neutral-200 flex flex-col justify-between"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Barra superior con cierre */}
-        <div className="sticky top-0 bg-white/95 backdrop-blur-md z-30 px-6 py-4 border-b border-neutral-200 flex items-center justify-between">
+        <div className="sticky top-0 bg-white/95 backdrop-blur-md z-30 px-4 sm:px-6 py-3.5 border-b border-neutral-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono font-medium text-neutral-400">
               REF #{property.id}
@@ -101,6 +101,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
                 alt={property.title}
                 fill
                 priority
+                unoptimized={(property.images[activeImageIndex] || property.images[0])?.startsWith("data:")}
                 className="object-cover transition-opacity duration-300"
               />
               <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-sm">
@@ -125,6 +126,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
                       src={img}
                       alt={`Miniatura ${idx + 1}`}
                       fill
+                      unoptimized={img.startsWith("data:")}
                       className="object-cover"
                     />
                   </button>
@@ -404,6 +406,23 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
               </a>
             </div>
           </div>
+        </div>
+
+        {/* Barra inferior fija de conversión en teléfonos (Thumb-friendly) */}
+        <div className="sticky bottom-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 p-3 px-4 flex items-center justify-between gap-3 md:hidden z-30 shadow-2xl shrink-0">
+          <div>
+            <span className="block text-[10px] text-neutral-400 uppercase font-medium">Valor Inmueble</span>
+            <span className="font-serif text-lg font-bold text-neutral-900 text-gold-600">{formatPrice(property.price)}</span>
+          </div>
+          <a
+            href={`https://wa.me/${agentProfile.whatsappNumber}?text=${whatsappMessage}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-3 px-4 rounded-sm flex items-center justify-center gap-2 shadow-md active:scale-98 transition-transform"
+          >
+            <MessageCircle className="w-4 h-4" />
+            <span>Consultar por WhatsApp</span>
+          </a>
         </div>
       </div>
     </div>

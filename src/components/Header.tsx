@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useData } from "@/context/DataContext";
 import { 
@@ -56,17 +57,25 @@ export default function Header({ onOpenValuation }: HeaderProps) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo y Marca Personal */}
+          {/* Logo y Marca Personal 99 PROPIEDADES */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-sm bg-gold-500/10 border border-gold-400/40 flex items-center justify-center text-gold-400 transition-colors group-hover:border-gold-400">
-              <span className="font-serif text-xl font-bold tracking-wider">A</span>
+            <div className="relative h-11 w-11 sm:h-12 sm:w-12 shrink-0 bg-white/95 rounded-sm p-1 shadow-sm border border-white/20 transition-transform group-hover:scale-105">
+              <Image
+                src="/logo.png"
+                alt="99 Propiedades"
+                fill
+                priority
+                className="object-contain"
+              />
             </div>
             <div className="flex flex-col">
-              <span className="font-serif text-lg sm:text-xl font-semibold tracking-wider text-white group-hover:text-gold-300 transition-colors">
-                ÁUREA
-              </span>
-              <span className="text-[10px] tracking-[0.2em] text-neutral-400 uppercase font-sans">
-                {agentProfile.name} • Bienes Raíces
+              <div className="flex items-center gap-1.5">
+                <span className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white group-hover:text-gold-300 transition-colors">
+                  99 PROPIEDADES
+                </span>
+              </div>
+              <span className="text-[10px] tracking-[0.2em] text-neutral-300 uppercase font-sans font-medium">
+                {agentProfile.name} • Desarrollos
               </span>
             </div>
           </Link>

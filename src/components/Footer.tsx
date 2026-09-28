@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useData } from "@/context/DataContext";
 import { 
   Building2, 
@@ -19,21 +20,26 @@ export default function Footer() {
   const { agentProfile } = useData();
 
   return (
-    <footer className="bg-luxury-black text-neutral-400 border-t border-white/10 pt-16 pb-12">
+    <footer className="bg-luxury-black text-neutral-400 border-t border-white/10 pt-16 pb-24 md:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Columna 1: Marca y Autoridad */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-sm bg-gold-500/10 border border-gold-400/40 flex items-center justify-center text-gold-400">
-                <span className="font-serif text-lg font-bold">A</span>
+              <div className="relative w-12 h-12 rounded-sm bg-white p-1 shadow-md shrink-0 border border-white/20">
+                <Image
+                  src="/logo.png"
+                  alt="99 Propiedades"
+                  fill
+                  className="object-contain"
+                />
               </div>
               <div>
-                <span className="font-serif text-lg font-semibold tracking-wider text-white">
-                  ÁUREA
+                <span className="font-serif text-lg font-bold tracking-tight text-white block">
+                  99 PROPIEDADES
                 </span>
                 <span className="block text-[10px] tracking-[0.2em] text-neutral-400 uppercase">
-                  Real Estate & Desarrollos
+                  Desarrollos & Real Estate
                 </span>
               </div>
             </div>

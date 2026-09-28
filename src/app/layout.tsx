@@ -4,9 +4,13 @@ import { DataProvider } from "@/context/DataContext";
 import ClientShell from "@/components/ClientShell";
 
 export const metadata: Metadata = {
-  title: "ÁUREA | Ignacio Valenzuela - Consultoría Inmobiliaria & Desarrollos",
-  description: "Estudio inmobiliario de alta gama especializado en residencias singulares, loteos premium, emprendimientos en pozo y asesoría en créditos hipotecarios UVA.",
-  keywords: "inmobiliaria, propiedades de lujo, nordelta, palermo chico, san isidro, creditos hipotecarios uva, loteos, pozo, ignacio valenzuela",
+  title: "99 PROPIEDADES | Ignacio Valenzuela - Desarrollos & Real Estate",
+  description: "99 Propiedades: Comercialización exclusiva de residencias singulares, loteos premium, emprendimientos en pozo y asesoría en créditos hipotecarios UVA.",
+  keywords: "99 propiedades, inmobiliaria, propiedades de lujo, nordelta, palermo chico, san isidro, creditos hipotecarios uva, loteos, pozo, ignacio valenzuela",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
