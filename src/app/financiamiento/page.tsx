@@ -10,12 +10,12 @@ import {
   HelpCircle, 
   CheckCircle2, 
   ArrowRight, 
-  MessageCircle, 
   FileCheck,
   ShieldCheck,
   TrendingUp,
   AlertCircle
 } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 export default function FinanciamientoPage() {
   const { agentProfile } = useData();
@@ -131,9 +131,9 @@ export default function FinanciamientoPage() {
           href={`https://wa.me/${agentProfile.whatsappNumber}?text=${whatsappMessage}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs uppercase tracking-wider px-6 py-3.5 rounded-sm transition-all flex items-center gap-2 shadow-md shrink-0"
+          className="bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-sm transition-all flex items-center gap-2.5 shadow-lg shadow-emerald-500/25 shrink-0 btn-tactile"
         >
-          <MessageCircle className="w-4 h-4" />
+          <WhatsAppIcon className="w-5 h-5 drop-shadow-sm" />
           <span>Conversar con Ignacio</span>
         </a>
       </section>

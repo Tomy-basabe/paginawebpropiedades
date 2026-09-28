@@ -15,6 +15,7 @@ import {
   Youtube,
   ArrowUpRight
 } from "lucide-react";
+import WhatsAppIcon from "./WhatsAppIcon";
 
 export default function Footer() {
   const { agentProfile } = useData();
@@ -167,8 +168,9 @@ export default function Footer() {
                 href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20deseo%20hacerle%20una%20consulta%20inmobiliaria`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-xs font-medium text-gold-400 hover:text-gold-300 border-b border-gold-400/40 pb-0.5"
+                className="inline-flex items-center gap-2 text-xs font-semibold text-[#25D366] hover:text-[#20ba59] border-b border-[#25D366]/40 pb-0.5 transition-colors"
               >
+                <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
                 <span>Chatear por WhatsApp directo</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>

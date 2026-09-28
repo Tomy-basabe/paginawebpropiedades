@@ -15,6 +15,7 @@ import {
   SlidersHorizontal,
   FileCheck
 } from "lucide-react";
+import WhatsAppIcon from "./WhatsAppIcon";
 
 interface HeaderProps {
   onOpenValuation?: () => void;
@@ -81,7 +82,18 @@ export default function Header({ onOpenValuation }: HeaderProps) {
           </nav>
 
           {/* Botones de Acción */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
+            <a
+              href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20hacerle%20una%20consulta`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-[#25D366] hover:text-white transition-all duration-200 flex items-center gap-1.5 px-3 py-2 rounded-sm border border-[#25D366]/40 hover:border-[#25D366] hover:bg-[#25D366] btn-tactile group/wa"
+              title="Chat directo por WhatsApp"
+            >
+              <WhatsAppIcon className="w-3.5 h-3.5 group-hover/wa:scale-110 transition-transform" />
+              <span className="font-semibold text-neutral-200 group-hover/wa:text-white">WhatsApp</span>
+            </a>
+
             <Link
               href="/admin"
               className="text-xs text-neutral-400 hover:text-gold-400 transition-all duration-200 flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-white/10 hover:border-gold-400/40 hover:bg-white/5 btn-tactile"
@@ -110,8 +122,18 @@ export default function Header({ onOpenValuation }: HeaderProps) {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2 lg:hidden">
+          {/* Mobile Actions: WhatsApp rápido + Menú */}
+          <div className="flex items-center gap-1.5 lg:hidden">
+            <a
+              href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20hacerle%20una%20consulta`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 text-[#25D366] hover:text-white hover:bg-white/10 rounded-full transition-colors flex items-center justify-center"
+              title="WhatsApp Directo"
+              aria-label="WhatsApp"
+            >
+              <WhatsAppIcon className="w-5 h-5 drop-shadow-sm" />
+            </a>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 text-neutral-300 hover:text-white"
@@ -141,6 +163,16 @@ export default function Header({ onOpenValuation }: HeaderProps) {
             </Link>
           ))}
           <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
+            <a
+              href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20hacerle%20una%20consulta`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full text-center bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold text-xs tracking-wider uppercase py-3 rounded-sm transition-all flex items-center justify-center gap-2 shadow-md"
+            >
+              <WhatsAppIcon className="w-4 h-4" />
+              <span>Chatear por WhatsApp</span>
+            </a>
             {onOpenValuation ? (
               <button
                 onClick={() => {

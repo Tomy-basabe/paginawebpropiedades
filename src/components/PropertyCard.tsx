@@ -11,9 +11,9 @@ import {
   MapPin, 
   Sparkles, 
   ArrowUpRight,
-  MessageCircle,
   Car
 } from "lucide-react";
+import WhatsAppIcon from "./WhatsAppIcon";
 
 interface PropertyCardProps {
   property: Property;
@@ -160,10 +160,11 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
             href={`https://wa.me/${agentProfile.whatsappNumber}?text=${whatsappMessage}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2.5 border border-emerald-600/30 hover:border-emerald-600 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white rounded-sm transition-all duration-200 flex items-center justify-center btn-tactile shadow-sm hover:shadow-md hover:shadow-emerald-600/20"
+            className="p-2.5 border border-[#25D366]/40 hover:border-[#25D366] bg-emerald-50/80 hover:bg-[#25D366] text-[#128C7E] hover:text-white rounded-sm transition-all duration-200 flex items-center justify-center btn-tactile shadow-sm hover:shadow-md hover:shadow-emerald-500/20"
             title="Consultar por WhatsApp con Ignacio"
+            aria-label="Consultar por WhatsApp"
           >
-            <MessageCircle className="w-4 h-4" />
+            <WhatsAppIcon className="w-4 h-4" />
           </a>
         </div>
       </div>

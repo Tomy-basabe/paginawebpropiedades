@@ -22,9 +22,9 @@ import {
   CheckCircle2, 
   FileText,
   Phone,
-  MessageCircle,
   Sparkles
 } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 export default function HomePage() {
   const router = useRouter();
@@ -306,9 +306,9 @@ export default function HomePage() {
                   href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20conversar%20sobre%20asesoramiento%20inmobiliario`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-emerald-700 hover:text-emerald-800 font-semibold text-xs flex items-center gap-1.5"
+                  className="text-emerald-700 hover:text-emerald-900 font-semibold text-xs flex items-center gap-2 px-4 py-3 rounded-sm border border-emerald-600/30 hover:border-emerald-600 bg-emerald-50/60 hover:bg-emerald-50 transition-all btn-tactile"
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <WhatsAppIcon className="w-4 h-4 text-[#25D366] drop-shadow-sm" />
                   <span>Conversar directamente por WhatsApp</span>
                 </a>
               </div>

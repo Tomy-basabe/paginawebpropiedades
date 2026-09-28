@@ -8,9 +8,9 @@ import {
   Home, 
   Search, 
   Percent, 
-  MessageCircle, 
   FileCheck 
 } from "lucide-react";
+import WhatsAppIcon from "./WhatsAppIcon";
 
 interface MobileBottomNavProps {
   onOpenValuation?: () => void;
@@ -74,10 +74,10 @@ export default function MobileBottomNav({ onOpenValuation }: MobileBottomNavProp
           href={`https://wa.me/${agentProfile.whatsappNumber}?text=${defaultMsg}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex flex-col items-center justify-center py-1 px-3 bg-emerald-600 text-white rounded-full shadow-lg shadow-emerald-600/30 transform active:scale-95 transition-transform"
+          className="flex flex-col items-center justify-center py-1 px-3 bg-[#25D366] active:bg-[#20ba59] text-white rounded-full shadow-lg shadow-emerald-500/25 transform active:scale-95 transition-all"
           title="WhatsApp Directo"
         >
-          <MessageCircle className="w-5 h-5" />
+          <WhatsAppIcon className="w-5 h-5 drop-shadow-sm" />
           <span className="text-[9px] font-bold tracking-tight uppercase">Chat</span>
         </a>
       </div>

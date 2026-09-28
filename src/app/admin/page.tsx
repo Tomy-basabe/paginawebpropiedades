@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useData } from "@/context/DataContext";
 import BrandLogo from "@/components/BrandLogo";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { Property, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus } from "@/lib/types";
 import { 
   SlidersHorizontal, 
@@ -1389,7 +1390,10 @@ export default function AdminPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block font-semibold text-neutral-700 mb-1">Número de WhatsApp (con código de país) *</label>
+              <label className="flex items-center gap-1.5 font-semibold text-neutral-700 mb-1">
+                <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
+                <span>Número de WhatsApp (con código de país) *</span>
+              </label>
               <input
                 type="text"
                 placeholder="5491148907722 (sin espacios ni signos)"

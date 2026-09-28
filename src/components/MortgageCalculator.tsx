@@ -6,11 +6,11 @@ import {
   Calculator, 
   HelpCircle, 
   CheckCircle2, 
-  MessageCircle, 
   ArrowRight, 
   TrendingDown,
   Info
 } from "lucide-react";
+import WhatsAppIcon from "./WhatsAppIcon";
 
 export default function MortgageCalculator() {
   const { bankRates, agentProfile } = useData();
@@ -267,9 +267,9 @@ export default function MortgageCalculator() {
               href={`https://wa.me/${agentProfile.whatsappNumber}?text=${whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium text-xs py-3 px-4 rounded-sm transition-colors flex items-center justify-center gap-2 shadow-sm"
+              className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold text-xs py-3.5 px-4 rounded-sm transition-all duration-200 flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg hover:shadow-emerald-500/20 btn-tactile"
             >
-              <MessageCircle className="w-4 h-4" />
+              <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
               <span>Evaluar esta Calificación con Ignacio</span>
             </a>
             <p className="text-[10px] text-neutral-400 text-center mt-2">

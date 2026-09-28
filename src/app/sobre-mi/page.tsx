@@ -11,11 +11,11 @@ import {
   MapPin, 
   Phone, 
   Mail, 
-  MessageCircle, 
   CheckCircle2,
   FileCheck,
   Star
 } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 export default function SobreMiPage() {
   const { agentProfile } = useData();
@@ -94,9 +94,9 @@ export default function SobreMiPage() {
                 href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20coordinar%20una%20reunion`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs py-3 rounded-sm transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold text-xs py-3.5 rounded-sm transition-all duration-200 flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg hover:shadow-emerald-500/25 btn-tactile"
               >
-                <MessageCircle className="w-4 h-4" />
+                <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
                 <span>Coordinar Reunión por WhatsApp</span>
               </a>
             </div>

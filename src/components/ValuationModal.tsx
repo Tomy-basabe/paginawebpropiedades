@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { useData } from "@/context/DataContext";
-import { X, FileCheck, CheckCircle2, MessageCircle, Send } from "lucide-react";
+import { X, FileCheck, CheckCircle2, Send } from "lucide-react";
+import WhatsAppIcon from "./WhatsAppIcon";
 
 interface ValuationModalProps {
   isOpen: boolean;
@@ -207,9 +208,9 @@ export default function ValuationModal({ isOpen, onClose }: ValuationModalProps)
 
               <button
                 type="submit"
-                className="w-full bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold uppercase tracking-wider py-3.5 rounded-sm transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-gold-500/20"
+                className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold uppercase tracking-wider py-3.5 rounded-sm transition-all flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg hover:shadow-emerald-500/25 btn-tactile cursor-pointer"
               >
-                <MessageCircle className="w-4 h-4" />
+                <WhatsAppIcon className="w-5 h-5 drop-shadow-sm" />
                 <span>Enviar Solicitud a Ignacio por WhatsApp</span>
               </button>
             </form>

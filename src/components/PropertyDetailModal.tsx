@@ -13,13 +13,13 @@ import {
   Car, 
   Calendar, 
   Check, 
-  MessageCircle, 
   Phone, 
   Calculator, 
   Share2, 
   Clock,
   Sparkles
 } from "lucide-react";
+import WhatsAppIcon from "./WhatsAppIcon";
 
 interface PropertyDetailModalProps {
   property: Property | null;
@@ -392,14 +392,14 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
                 href={`https://wa.me/${agentProfile.whatsappNumber}?text=${whatsappMessage}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 md:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-5 py-3 rounded-sm transition-colors flex items-center justify-center gap-2"
+                className="flex-1 md:flex-initial bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold px-5 py-3 rounded-sm transition-all shadow-md hover:shadow-lg hover:shadow-emerald-500/20 flex items-center justify-center gap-2 btn-tactile"
               >
-                <MessageCircle className="w-4 h-4" />
+                <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
                 <span>Coordinar Visita por WhatsApp</span>
               </a>
               <a
                 href={`tel:${agentProfile.phone}`}
-                className="flex-1 md:flex-initial bg-white/10 hover:bg-white/20 text-white text-xs font-medium px-4 py-3 rounded-sm transition-colors flex items-center justify-center gap-2 border border-white/20"
+                className="flex-1 md:flex-initial bg-white/10 hover:bg-white/20 text-white text-xs font-medium px-4 py-3 rounded-sm transition-colors flex items-center justify-center gap-2 border border-white/20 btn-tactile"
               >
                 <Phone className="w-4 h-4" />
                 <span>Llamar</span>
@@ -418,9 +418,9 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
             href={`https://wa.me/${agentProfile.whatsappNumber}?text=${whatsappMessage}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-3 px-4 rounded-sm flex items-center justify-center gap-2 shadow-md active:scale-98 transition-transform"
+            className="flex-1 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white text-xs font-semibold py-3 px-4 rounded-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition-all"
           >
-            <MessageCircle className="w-4 h-4" />
+            <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
             <span>Consultar por WhatsApp</span>
           </a>
         </div>

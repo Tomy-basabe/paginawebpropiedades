@@ -7,13 +7,13 @@ import {
   Mail, 
   Phone, 
   MapPin, 
-  MessageCircle, 
   Clock, 
   CheckCircle2, 
   Send,
   Building2,
   FileCheck
 } from "lucide-react";
+import WhatsAppIcon from "@/components/WhatsAppIcon";
 
 function ContactoContent() {
   const searchParams = useSearchParams();
@@ -233,9 +233,9 @@ function ContactoContent() {
                 href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20conversar%20sobre%20una%20propiedad`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-sm transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold py-3.5 rounded-sm transition-all duration-200 flex items-center justify-center gap-2.5 shadow-lg shadow-emerald-500/25 btn-tactile"
               >
-                <MessageCircle className="w-4 h-4" />
+                <WhatsAppIcon className="w-5 h-5 drop-shadow-sm" />
                 <span>Iniciar Chat Inmediato por WhatsApp</span>
               </a>
             </div>
