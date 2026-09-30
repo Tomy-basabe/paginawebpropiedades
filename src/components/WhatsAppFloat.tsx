@@ -5,14 +5,14 @@ import Image from "next/image";
 import { useData } from "@/context/DataContext";
 import { X } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 export default function WhatsAppFloat() {
   const { agentProfile } = useData();
   const [showTooltip, setShowTooltip] = useState(true);
 
-  const defaultMsg = encodeURIComponent(
-    `Hola ${agentProfile.name}, estoy navegando tu sitio web inmobiliario y quisiera hacerte una consulta.`
-  );
+  const defaultMsg = `Hola ${agentProfile.name}, estoy navegando tu sitio web inmobiliario y quisiera hacerte una consulta.`;
+  const whatsappUrl = getWhatsAppUrl(agentProfile.whatsappNumber, defaultMsg);
 
   return (
     <div className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 flex items-end gap-3 pointer-events-auto">
@@ -48,7 +48,7 @@ export default function WhatsAppFloat() {
 
       {/* Botón Flotante con Logo Oficial de WhatsApp */}
       <a
-        href={`https://wa.me/${agentProfile.whatsappNumber}?text=${defaultMsg}`}
+        href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="group relative w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white shadow-xl hover:shadow-2xl hover:shadow-emerald-500/40 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"

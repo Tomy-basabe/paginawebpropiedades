@@ -16,6 +16,7 @@ import {
   FileCheck
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 interface HeaderProps {
   onOpenValuation?: () => void;
@@ -84,7 +85,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
           {/* Botones de Acción */}
           <div className="hidden md:flex items-center gap-3">
             <a
-              href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20hacerle%20una%20consulta`}
+              href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera hacerle una consulta`)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-[#25D366] hover:text-white transition-all duration-200 flex items-center gap-1.5 px-3 py-2 rounded-sm border border-[#25D366]/40 hover:border-[#25D366] hover:bg-[#25D366] btn-tactile group/wa"
@@ -125,7 +126,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
           {/* Mobile Actions: WhatsApp rápido + Menú */}
           <div className="flex items-center gap-1.5 lg:hidden">
             <a
-              href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20hacerle%20una%20consulta`}
+              href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera hacerle una consulta`)}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 text-[#25D366] hover:text-white hover:bg-white/10 rounded-full transition-colors flex items-center justify-center"
@@ -164,7 +165,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
           ))}
           <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
             <a
-              href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20hacerle%20una%20consulta`}
+              href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera hacerle una consulta`)}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}

@@ -6,6 +6,7 @@ import { useData } from "@/context/DataContext";
 import BrandLogo from "@/components/BrandLogo";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { uploadPropertyImage, uploadPropertyVideo } from "@/lib/supabase";
+import { cleanWhatsAppNumber, getWhatsAppUrl } from "@/lib/whatsapp";
 import { Property, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus } from "@/lib/types";
 import { 
   SlidersHorizontal, 
@@ -1553,17 +1554,40 @@ export default function AdminPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="flex items-center gap-1.5 font-semibold text-neutral-700 mb-1">
-                <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
-                <span>Número de WhatsApp (con código de país) *</span>
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="flex items-center gap-1.5 font-semibold text-neutral-700">
+                  <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
+                  <span>WhatsApp de Contacto *</span>
+                </label>
+                {profileForm.whatsappNumber && (
+                  <a
+                    href={getWhatsAppUrl(profileForm.whatsappNumber, "¡Hola! Mensaje de prueba desde el panel.")}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] text-emerald-700 hover:text-emerald-800 font-semibold underline flex items-center gap-0.5"
+                    title="Probar que el enlace abre WhatsApp correctamente"
+                  >
+                    <span>Probar Chat</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                )}
+              </div>
               <input
                 type="text"
-                placeholder="5491148907722 (sin espacios ni signos)"
+                placeholder="Ej: 5492234980913 o 2234980913"
                 value={profileForm.whatsappNumber}
-                onChange={(e) => setProfileForm({ ...profileForm, whatsappNumber: e.target.value })}
+                onChange={(e) => {
+                  const raw = e.target.value;
+                  setProfileForm({
+                    ...profileForm,
+                    whatsappNumber: raw,
+                  });
+                }}
                 className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
               />
+              <span className="block text-[10px] text-neutral-400 mt-1">
+                Formato limpio: <code className="text-emerald-700 font-mono font-semibold">{cleanWhatsAppNumber(profileForm.whatsappNumber)}</code>
+              </span>
             </div>
 
             <div>

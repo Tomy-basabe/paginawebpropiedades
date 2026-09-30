@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useData } from "@/context/DataContext";
 import { X, FileCheck, CheckCircle2, Send } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 interface ValuationModalProps {
   isOpen: boolean;
@@ -33,17 +34,16 @@ export default function ValuationModal({ isOpen, onClose }: ValuationModalProps)
     e.preventDefault();
     setSubmitted(true);
 
-    const message = encodeURIComponent(
+    const message = 
       `Hola ${agentProfile.name}, solicito tasación profesional para mi propiedad:\n` +
       `• Tipo: ${formData.propertyType}\n` +
       `• Ubicación: ${formData.address}, ${formData.neighborhood}\n` +
       `• Sup. aprox: ${formData.totalArea} m² (${formData.rooms} amb)\n` +
       `• Propietario: ${formData.ownerName} (${formData.ownerPhone})\n` +
-      `• Observaciones: ${formData.notes || "Ninguna"}`
-    );
+      `• Observaciones: ${formData.notes || "Ninguna"}`;
 
     // Abrir WhatsApp con los datos
-    window.open(`https://wa.me/${agentProfile.whatsappNumber}?text=${message}`, "_blank");
+    window.open(getWhatsAppUrl(agentProfile.whatsappNumber, message), "_blank");
   };
 
   return (

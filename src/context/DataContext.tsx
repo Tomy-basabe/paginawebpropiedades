@@ -357,7 +357,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     let fullProfile: AgentProfile | null = null;
 
     setAgentProfile((prev) => {
-      fullProfile = { ...prev, ...updated };
+      const merged = { ...prev, ...updated };
+      // Limpiar automáticamente número de WhatsApp de cualquier caracter extraño o espacio
+      if (merged.whatsappNumber) {
+        merged.whatsappNumber = merged.whatsappNumber.replace(/\D/g, "");
+      }
+      fullProfile = merged;
       return fullProfile;
     });
 
@@ -365,21 +370,19 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const ap = fullProfile as AgentProfile;
+      const cleanWa = (ap.whatsappNumber || "").replace(/\D/g, "");
       await supabase.from("agent_profile").upsert({
         id: "primary_agent",
         name: ap.name,
-        title: ap.roleTitle,
+        role_title: ap.roleTitle,
         license_number: ap.licenseNumber,
         phone: ap.phone,
-        whatsapp_number: ap.whatsappNumber,
-        whatsapp_display: ap.whatsappDisplay,
+        whatsapp_number: cleanWa,
         email: ap.email,
-        office_address: ap.officeAddress,
-        bio: ap.bio,
-        short_bio: ap.shortBio,
-        photo_url: ap.photoUrl,
-        social: ap.social,
-        data: ap,
+        data: {
+          ...ap,
+          whatsappNumber: cleanWa,
+        },
         updated_at: new Date().toISOString(),
       });
     } catch (err) {

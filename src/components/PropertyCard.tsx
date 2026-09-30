@@ -16,6 +16,7 @@ import {
   Video
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 interface PropertyCardProps {
   property: Property;
@@ -174,7 +175,7 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
           </button>
 
           <a
-            href={`https://wa.me/${agentProfile.whatsappNumber}?text=${whatsappMessage}`}
+            href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera consultar por la propiedad "${property.title}" (Ref: ${property.id})`)}
             target="_blank"
             rel="noopener noreferrer"
             className="p-2.5 border border-[#25D366]/40 hover:border-[#25D366] bg-emerald-50/80 hover:bg-[#25D366] text-[#128C7E] hover:text-white rounded-sm transition-all duration-200 flex items-center justify-center btn-tactile shadow-sm hover:shadow-md hover:shadow-emerald-500/20"

@@ -11,6 +11,7 @@ import {
   Info
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 export default function MortgageCalculator() {
   const { bankRates, agentProfile } = useData();
@@ -264,7 +265,7 @@ export default function MortgageCalculator() {
           {/* CTA de Asesoría Financiera con el Agente */}
           <div className="pt-6 mt-6 border-t border-neutral-200">
             <a
-              href={`https://wa.me/${agentProfile.whatsappNumber}?text=${whatsappMessage}`}
+              href={getWhatsAppUrl(agentProfile.whatsappNumber, whatsappMessage)}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold text-xs py-3.5 px-4 rounded-sm transition-all duration-200 flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg hover:shadow-emerald-500/20 btn-tactile"

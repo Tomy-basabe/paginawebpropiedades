@@ -16,6 +16,7 @@ import {
   ArrowUpRight
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 export default function Footer() {
   const { agentProfile } = useData();
@@ -165,7 +166,7 @@ export default function Footer() {
             </div>
             <div className="pt-3">
               <a
-                href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20deseo%20hacerle%20una%20consulta%20inmobiliaria`}
+                href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, deseo hacerle una consulta inmobiliaria`)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-xs font-semibold text-[#25D366] hover:text-[#20ba59] border-b border-[#25D366]/40 pb-0.5 transition-colors"

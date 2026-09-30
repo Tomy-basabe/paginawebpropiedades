@@ -24,6 +24,7 @@ import {
   Eye
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 interface PropertyDetailModalProps {
   property: Property | null;
@@ -449,7 +450,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
 
             <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
               <a
-                href={`https://wa.me/${agentProfile.whatsappNumber}?text=${whatsappMessage}`}
+                href={getWhatsAppUrl(agentProfile.whatsappNumber, whatsappMessage)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 md:flex-initial bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold px-5 py-3 rounded-sm transition-all shadow-md hover:shadow-lg hover:shadow-emerald-500/20 flex items-center justify-center gap-2 btn-tactile"
@@ -475,7 +476,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
             <span className="font-serif text-lg font-bold text-neutral-900 text-gold-600">{formatPrice(property.price)}</span>
           </div>
           <a
-            href={`https://wa.me/${agentProfile.whatsappNumber}?text=${whatsappMessage}`}
+            href={getWhatsAppUrl(agentProfile.whatsappNumber, whatsappMessage)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white text-xs font-semibold py-3 px-4 rounded-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition-all"

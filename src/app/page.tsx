@@ -25,6 +25,7 @@ import {
   Sparkles
 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 export default function HomePage() {
   const router = useRouter();
@@ -303,7 +304,7 @@ export default function HomePage() {
                 </Link>
 
                 <a
-                  href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20conversar%20sobre%20asesoramiento%20inmobiliario`}
+                  href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera conversar sobre asesoramiento inmobiliario`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-emerald-700 hover:text-emerald-900 font-semibold text-xs flex items-center gap-2 px-4 py-3 rounded-sm border border-emerald-600/30 hover:border-emerald-600 bg-emerald-50/60 hover:bg-emerald-50 transition-all btn-tactile"

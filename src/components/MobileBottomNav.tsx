@@ -11,6 +11,7 @@ import {
   FileCheck 
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
+import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 interface MobileBottomNavProps {
   onOpenValuation?: () => void;
@@ -71,7 +72,7 @@ export default function MobileBottomNav({ onOpenValuation }: MobileBottomNavProp
 
         {/* WhatsApp Directo destacadísimo para móviles */}
         <a
-          href={`https://wa.me/${agentProfile.whatsappNumber}?text=${defaultMsg}`}
+          href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, estoy navegando tu sitio web inmobiliario y quisiera hacerte una consulta.`)}
           target="_blank"
           rel="noopener noreferrer"
           className="flex flex-col items-center justify-center py-1 px-3 bg-[#25D366] active:bg-[#20ba59] text-white rounded-full shadow-lg shadow-emerald-500/25 transform active:scale-95 transition-all"
