@@ -94,7 +94,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-01.mp4",
     "hasVideoTour": true,
     "model3D": {
-      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-light.splat",
+      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
       "format": "splat",
       "initialCameraPosition": [0, 1.5, 3.5],
       "initialCameraTarget": [0, 0, 0]
@@ -146,7 +146,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-02.mp4",
     "hasVideoTour": true,
     "model3D": {
-      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-light.splat",
+      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
       "format": "splat",
       "initialCameraPosition": [0, 1.5, 3],
       "initialCameraTarget": [0, 0, 0]
@@ -197,7 +197,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-03.mp4",
     "hasVideoTour": true,
     "model3D": {
-      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-light.splat",
+      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
       "format": "splat",
       "initialCameraPosition": [0, 1.5, 3.5],
       "initialCameraTarget": [0, 0, 0]
@@ -248,7 +248,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-04.mp4",
     "hasVideoTour": true,
     "model3D": {
-      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-light.splat",
+      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
       "format": "splat",
       "initialCameraPosition": [0, 1.5, 3],
       "initialCameraTarget": [0, 0, 0]

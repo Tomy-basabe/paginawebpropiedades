@@ -95,8 +95,11 @@ export default function GaussianSplatViewer({
         selfDrivenMode: true,
         useBuiltInControls: true,
         renderMode: GaussianSplats3D.RenderMode.Always,
-        sceneRevealMode: GaussianSplats3D.SceneRevealMode.Default,
-        antialiased: !capabilities.isMobile,
+        sceneRevealMode: GaussianSplats3D.SceneRevealMode.Instant,
+        sharedMemoryForWorkers: false, // CRÍTICO: evita errores de SharedArrayBuffer en navegadores sin headers COOP/COEP
+        halfPrecisionCovariancesOnGPU: true, // Reduce a la mitad el consumo de memoria en GPU/móviles
+        integerBasedSort: true,
+        antialiased: false,
         focalAdjustment: 1.0,
         logLevel: GaussianSplats3D.LogLevel.None,
         devicePixelRatio: renderScale,
