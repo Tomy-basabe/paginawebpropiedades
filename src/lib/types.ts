@@ -30,6 +30,8 @@ export interface Property {
   description: string;
   highlightSummary: string;
   images: string[];
+  videoUrl?: string; // Video Tour MP4 o URL
+  hasVideoTour?: boolean;
   isFeatured: boolean;
   isOpportunity: boolean;
   opportunityBadge?: string; // ej: "Preventa Pozo -20%", "Último Lote al Lago"

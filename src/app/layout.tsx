@@ -4,9 +4,9 @@ import { DataProvider } from "@/context/DataContext";
 import ClientShell from "@/components/ClientShell";
 
 export const metadata: Metadata = {
-  title: "99 PROPIEDADES | Ignacio Valenzuela - Desarrollos & Real Estate",
-  description: "99 Propiedades: Comercialización exclusiva de residencias singulares, loteos premium, emprendimientos en pozo y asesoría en créditos hipotecarios UVA.",
-  keywords: "99 propiedades, inmobiliaria, propiedades de lujo, nordelta, palermo chico, san isidro, creditos hipotecarios uva, loteos, pozo, ignacio valenzuela",
+  title: "99 PROPIEDADES | Juan Pablo Pino - Martillero & Corredor Inmobiliario",
+  description: "99 Propiedades con Juan Pablo Pino: 10 años de trayectoria líder en ventas. Venta de inmuebles, loteos, administración integral de alquileres, tasaciones sin cargo y gestión de créditos hipotecarios.",
+  keywords: "99 propiedades, juan pablo pino, martillero, corredor inmobiliario, venta de propiedades, loteos, creditos hipotecarios uva, tasaciones sin cargo, administracion de alquileres, video tours",
   icons: {
     icon: "/favicon.svg",
     apple: "/favicon.svg",

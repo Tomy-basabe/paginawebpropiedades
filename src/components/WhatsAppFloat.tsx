@@ -52,7 +52,7 @@ export default function WhatsAppFloat() {
         target="_blank"
         rel="noopener noreferrer"
         className="group relative w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white shadow-xl hover:shadow-2xl hover:shadow-emerald-500/40 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
-        title="Contactar a Ignacio por WhatsApp"
+        title={`Contactar a ${agentProfile.name} por WhatsApp`}
         aria-label="Contactar por WhatsApp"
       >
         {/* Efecto de pulso concéntrico */}

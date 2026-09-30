@@ -134,7 +134,7 @@ export default function FinanciamientoPage() {
           className="bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-sm transition-all flex items-center gap-2.5 shadow-lg shadow-emerald-500/25 shrink-0 btn-tactile"
         >
           <WhatsAppIcon className="w-5 h-5 drop-shadow-sm" />
-          <span>Conversar con Ignacio</span>
+          <span>Conversar con {agentProfile.name}</span>
         </a>
       </section>
     </div>

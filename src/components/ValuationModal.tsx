@@ -59,11 +59,12 @@ export default function ValuationModal({ isOpen, onClose }: ValuationModalProps)
               <FileCheck className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-serif text-lg font-bold text-white">
-                Tasación Profesional de Inmuebles
+              <h3 className="font-serif text-lg font-bold text-white flex items-center gap-2">
+                <span>Tasación Profesional</span>
+                <span className="text-[10px] bg-gold-500 text-luxury-black font-sans font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">Sin Cargo</span>
               </h3>
               <p className="text-xs text-neutral-400">
-                Dictamen de valor de mercado por {agentProfile.name}
+                Valuación 100% gratuita y sin compromiso por {agentProfile.name}
               </p>
             </div>
           </div>
@@ -211,7 +212,7 @@ export default function ValuationModal({ isOpen, onClose }: ValuationModalProps)
                 className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold uppercase tracking-wider py-3.5 rounded-sm transition-all flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg hover:shadow-emerald-500/25 btn-tactile cursor-pointer"
               >
                 <WhatsAppIcon className="w-5 h-5 drop-shadow-sm" />
-                <span>Enviar Solicitud a Ignacio por WhatsApp</span>
+                <span>Enviar Solicitud a {agentProfile.name} (Sin Cargo)</span>
               </button>
             </form>
           )}

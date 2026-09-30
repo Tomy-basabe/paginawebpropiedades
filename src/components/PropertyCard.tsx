@@ -11,7 +11,9 @@ import {
   MapPin, 
   Sparkles, 
   ArrowUpRight,
-  Car
+  Car,
+  Play,
+  Video
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
 
@@ -78,7 +80,22 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
               {property.opportunityBadge || "Oportunidad"}
             </span>
           )}
+          {(property.hasVideoTour || property.videoUrl) && (
+            <span className="bg-red-600/95 backdrop-blur-md text-white text-[11px] font-bold tracking-wide px-2.5 py-1 rounded-sm flex items-center gap-1.5 shadow-md">
+              <Play className="w-3 h-3 fill-white" />
+              <span>Video Tour</span>
+            </span>
+          )}
         </div>
+
+        {/* Botón play flotante centrado si tiene video tour */}
+        {(property.hasVideoTour || property.videoUrl) && (
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+            <span className="w-12 h-12 rounded-full bg-red-600/90 text-white flex items-center justify-center shadow-xl backdrop-blur-sm transform scale-90 group-hover:scale-100 transition-transform duration-300">
+              <Play className="w-5 h-5 fill-white ml-0.5" />
+            </span>
+          </div>
+        )}
 
         {/* Ubicación en overlay inferior */}
         <div className="absolute bottom-3 left-3 right-3 text-white z-10 flex items-center gap-1.5 text-xs drop-shadow-md transition-transform duration-200 group-hover:translate-x-0.5">
@@ -161,7 +178,7 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
             target="_blank"
             rel="noopener noreferrer"
             className="p-2.5 border border-[#25D366]/40 hover:border-[#25D366] bg-emerald-50/80 hover:bg-[#25D366] text-[#128C7E] hover:text-white rounded-sm transition-all duration-200 flex items-center justify-center btn-tactile shadow-sm hover:shadow-md hover:shadow-emerald-500/20"
-            title="Consultar por WhatsApp con Ignacio"
+            title={`Consultar por WhatsApp con ${agentProfile.name}`}
             aria-label="Consultar por WhatsApp"
           >
             <WhatsAppIcon className="w-4 h-4" />

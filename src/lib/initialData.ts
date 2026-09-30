@@ -1,44 +1,44 @@
 import { Property, BankRate, FeaturedBanner, AgentProfile } from './types';
 
 export const INITIAL_AGENT_PROFILE: AgentProfile = {
-  name: "Ignacio Valenzuela",
-  roleTitle: "Consultor Inmobiliario Senior & Director Comercial",
-  licenseNumber: "CUCICBA Mat. 6842 / CMCPSI 5910",
-  bio: "Con más de 12 años en el mercado inmobiliario de alta gama y desarrollos residenciales en 99 Propiedades, acompaño a inversores, desarrolladores y familias a tomar decisiones patrimoniales estratégicas. Nuestro enfoque combina rigurosidad analítica de mercado, estructuración financiera personalizada y un estándar de comercialización audiovisual de nivel internacional.",
-  shortBio: "99 Propiedades: Asesoramiento patrimonial de alta gama, desarrollos inmobiliarios y comercialización exclusiva de propiedades singulares.",
-  photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80",
+  name: "Juan Pablo Pino",
+  roleTitle: "Martillero, Corredor Público e Inmobiliario",
+  licenseNumber: "Mat. Profesional N° 7824 - 99 Propiedades",
+  bio: "Con 10 años de trayectoria y posicionamiento como líder local en ventas, Juan Pablo Pino (34 años) lidera 99 Propiedades brindando una atención personalizada, comprometida y un acompañamiento integral. Especialista en la comercialización de viviendas, loteos y desarrollos, administración integral de alquileres y asesoramiento experto en gestión de créditos hipotecarios bancarios.",
+  shortBio: "99 Propiedades: 10 años de trayectoria y liderazgo local en ventas con Juan Pablo Pino. Martillero, Corredor Público e Inmobiliario.",
+  photoUrl: "/images/juan-pablo-pino.jpg",
   phone: "+54 9 11 4890-7722",
   whatsappNumber: "5491148907722",
   whatsappDisplay: "+54 9 11 4890-7722",
-  email: "contacto@99propiedades.com",
-  officeAddress: "Av. del Libertador 4480, Belgrano, CABA",
+  email: "juanpablo@99propiedades.com",
+  officeAddress: "99 Propiedades - Casa Central",
   social: {
-    instagram: "https://instagram.com/ignaciovalenzuela.re",
-    linkedin: "https://linkedin.com/in/ignaciovalenzuela-propiedades",
-    youtube: "https://youtube.com/@ignaciovalenzuelarealestate",
+    instagram: "https://instagram.com/juanpablopino.99propiedades",
+    linkedin: "https://linkedin.com/in/juanpablopino-inmobiliaria",
+    youtube: "https://youtube.com/@99propiedades",
   },
   metrics: {
-    yearsExperience: 12,
-    volumeSoldUSD: "+48M",
-    propertiesClosed: 195,
-    clientSatisfactionRate: 99,
+    yearsExperience: 10,
+    volumeSoldUSD: "+38M",
+    propertiesClosed: 215,
+    clientSatisfactionRate: 100,
   },
   pillars: [
     {
-      title: "Tasación de Precisión",
-      description: "Modelos comparativos de mercado y análisis de rentabilidad real que defienden el verdadero valor de tu activo."
+      title: "Tasación Siempre Sin Cargo",
+      description: "Valuación profesional, técnica y comparativa de mercado de tu propiedad, 100% gratuita y sin compromiso de venta."
     },
     {
-      title: "Estructuración Financiera",
-      description: "Asesoramiento exhaustivo en líneas de crédito hipotecario, permutas, fideicomisos y planes de financiación en pozo."
+      title: "Gestión de Créditos Hipotecarios",
+      description: "Servicio clave: Asesoramiento y acompañamiento completo durante todo el proceso crediticio, comparativa de tasas UVA y condiciones."
     },
     {
-      title: "Marketing Audiovisual de Vanguardia",
-      description: "Producción cinematográfica 4K, tomas con dron, renders inmersivos y difusión directa en nuestra red privada de inversores."
+      title: "Alquileres & Administraciones",
+      description: "Gestión y administración integral de propiedades en alquiler con exhaustiva calificación de garantías y cobranza segura."
     },
     {
-      title: "Confidencialidad & Seguridad Jurídica",
-      description: "Acompañamiento legal y notarial estricto en cada instancia de la reserva, boleto y escritura traslativa de dominio."
+      title: "Video Tours Prioritarios",
+      description: "Priorizamos el video sobre la foto: recorridos inmersivos para experimentar las dimensiones y detalles reales de cada propiedad."
     }
   ]
 };
@@ -58,15 +58,26 @@ export const INITIAL_FEATURED_BANNERS: FeaturedBanner[] = [
   },
   {
     id: "banner-2",
-    title: "Chacras de San Ignacio",
+    title: "Chacras del Pinar",
     subtitle: "Loteos Campestres de 1.800 a 3.500 m²",
-    badge: "Lanzamiento Fase 2",
+    badge: "Lanzamiento Exclusivo",
     description: "Entorno natural protegido a solo 45 minutos de Capital. Acceso asfaltado, red de fibra óptica subterránea y club house ecológico.",
     imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80",
     ctaText: "Consultar Lotes Disponibles",
     ctaLink: "/propiedades?type=loteo",
     active: true,
     propertyIdRef: "prop-5"
+  },
+  {
+    id: "banner-3",
+    title: "Experiencia Video Tour Inmersivo",
+    subtitle: "Recorridos Cinematográficos de Alta Definición",
+    badge: "Innovación 99 Propiedades",
+    description: "Priorizamos el video sobre la foto: recorré las propiedades en detalle antes de coordinar tu visita presencial.",
+    imageUrl: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1920&q=80",
+    ctaText: "Ver Propiedades con Video Tour",
+    ctaLink: "/propiedades?hasVideo=true",
+    active: true
   }
 ];
 
@@ -80,6 +91,8 @@ export const INITIAL_PROPERTIES: Property[] = [
     status: "disponible",
     price: 890000,
     currency: "USD",
+    videoUrl: "/videos/tour-casa-1.mp4",
+    hasVideoTour: true,
     location: {
       city: "Tigre",
       neighborhood: "Nordelta - El Golf",
@@ -153,6 +166,8 @@ export const INITIAL_PROPERTIES: Property[] = [
     status: "disponible",
     price: 1150000,
     currency: "USD",
+    videoUrl: "/videos/tour-casa-2.mp4",
+    hasVideoTour: true,
     location: {
       city: "San Isidro",
       neighborhood: "Barrancas de San Isidro",

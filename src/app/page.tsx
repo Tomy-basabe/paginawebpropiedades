@@ -323,27 +323,32 @@ export default function HomePage() {
         <BankRatesTable />
       </section>
 
-      {/* 6. BANNER DE TASACIÓN PROFESIONAL */}
+      {/* 6. BANNER DE TASACIÓN PROFESIONAL & SERVICIOS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="bg-luxury-black text-white p-8 sm:p-12 rounded-sm border border-white/10 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="bg-luxury-black text-white p-8 sm:p-12 rounded-sm border border-gold-500/20 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="relative z-10 max-w-xl space-y-3 text-center md:text-left">
-            <span className="text-xs uppercase tracking-widest text-gold-400 font-semibold">
-              Servicio para Propietarios
-            </span>
+            <div className="inline-flex items-center gap-2">
+              <span className="text-xs uppercase tracking-widest text-gold-400 font-semibold">
+                Servicio Exclusivo para Propietarios
+              </span>
+              <span className="text-[10px] bg-gold-500/20 text-gold-300 border border-gold-500/40 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                Siempre Sin Cargo
+              </span>
+            </div>
             <h3 className="font-serif text-2xl sm:text-3xl font-bold text-white">
-              ¿Deseas conocer el valor real de mercado de tu propiedad?
+              ¿Deseas conocer el valor real de mercado de tu propiedad o loteo?
             </h3>
-            <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
-              Realizamos tasaciones profesionales basadas en valores de cierre efectivo, análisis comparativo de oferta y demanda por zona y auditoría dominial.
+            <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+              Realizamos tasaciones profesionales <strong>100% sin cargo</strong> con rigor técnico, valores de cierre efectivo y estudio comparativo de mercado. Además, administramos integralmente tus alquileres y gestionamos créditos hipotecarios con las mejores tasas bancarias.
             </p>
           </div>
 
           <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
             <Link
               href="/contacto?asunto=tasacion"
-              className="w-full sm:w-auto text-center bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-sm transition-all shadow-md"
+              className="w-full sm:w-auto text-center bg-gold-500 hover:bg-gold-600 text-luxury-black font-bold text-xs uppercase tracking-wider px-6 py-4 rounded-sm transition-all shadow-lg hover:shadow-gold-500/30 flex items-center justify-center gap-2"
             >
-              Solicitar Tasación Sin Cargo
+              <span>Solicitar Tasación Sin Cargo</span>
             </Link>
           </div>
         </div>

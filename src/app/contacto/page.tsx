@@ -35,10 +35,11 @@ function ContactoContent() {
     setIsSubmitted(true);
 
     const subjectLabels: Record<string, string> = {
-      tasacion: "Tasación de Propiedad",
+      tasacion: "Tasación de Propiedad (Siempre Sin Cargo)",
+      credito: "Gestión de Crédito Hipotecario UVA",
+      alquileres: "Alquileres y Administración Integral",
+      loteos: "Venta de Inmuebles y Loteos",
       compra: "Búsqueda y Compra de Inmueble",
-      desarrollo: "Inversión en Desarrollo / Pozo",
-      financiamiento: "Consulta sobre Crédito Hipotecario UVA",
       consulta_general: "Consulta General Inmobiliaria",
     };
 
@@ -152,10 +153,11 @@ function ContactoContent() {
                     className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
                   >
                     <option value="consulta_general">Consulta General</option>
-                    <option value="tasacion">Solicitar Tasación de Propiedad</option>
+                    <option value="tasacion">Solicitar Tasación (Siempre Sin Cargo)</option>
+                    <option value="credito">Gestión de Crédito Hipotecario UVA</option>
+                    <option value="alquileres">Alquileres & Administración Integral</option>
+                    <option value="loteos">Venta de Inmuebles & Loteos</option>
                     <option value="compra">Interés en Comprar una Propiedad</option>
-                    <option value="desarrollo">Invertir en Pozo / Emprendimiento</option>
-                    <option value="financiamiento">Asesoramiento Crédito Hipotecario</option>
                   </select>
                 </div>
               </div>

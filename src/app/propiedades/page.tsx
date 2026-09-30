@@ -18,7 +18,9 @@ import {
   DollarSign, 
   Bed, 
   Sparkles,
-  Inbox
+  Inbox,
+  Video,
+  Play
 } from "lucide-react";
 
 function PropiedadesContent() {
@@ -31,11 +33,13 @@ function PropiedadesContent() {
   const initialType = searchParams.get("type") || "todos";
   const initialLocation = searchParams.get("location") || "";
   const initialStatus = searchParams.get("status") || "todos";
+  const initialVideo = searchParams.get("video") === "true";
 
   const [searchQuery, setSearchQuery] = useState(initialLocation);
   const [operationFilter, setOperationFilter] = useState<string>(initialOperation);
   const [typeFilter, setTypeFilter] = useState<string>(initialType);
   const [statusFilter, setStatusFilter] = useState<string>(initialStatus);
+  const [onlyVideoTour, setOnlyVideoTour] = useState<boolean>(initialVideo);
   const [minPrice, setMinPrice] = useState<string>("");
   const [maxPrice, setMaxPrice] = useState<string>("");
   const [bedroomsFilter, setBedroomsFilter] = useState<string>("todos");
@@ -77,6 +81,11 @@ function PropiedadesContent() {
         return false;
       }
 
+      // Video Tour Prioritario
+      if (onlyVideoTour && !item.hasVideoTour && !item.videoUrl) {
+        return false;
+      }
+
       // Precios
       if (minPrice && item.price < Number(minPrice)) {
         return false;
@@ -107,6 +116,7 @@ function PropiedadesContent() {
     operationFilter,
     typeFilter,
     statusFilter,
+    onlyVideoTour,
     minPrice,
     maxPrice,
     bedroomsFilter,
@@ -118,6 +128,7 @@ function PropiedadesContent() {
     setOperationFilter("todos");
     setTypeFilter("todos");
     setStatusFilter("todos");
+    setOnlyVideoTour(false);
     setMinPrice("");
     setMaxPrice("");
     setBedroomsFilter("todos");
@@ -141,7 +152,21 @@ function PropiedadesContent() {
       </div>
 
       {/* Chips Rápidos de Filtrado para Teléfonos y Pantallas Táctiles */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
+        {/* Chip prioritario de Video Tours */}
+        <button
+          type="button"
+          onClick={() => setOnlyVideoTour(!onlyVideoTour)}
+          className={`shrink-0 text-xs px-3.5 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-medium ${
+            onlyVideoTour
+              ? "bg-red-600 text-white border-red-600 shadow-sm"
+              : "bg-red-50/70 text-red-700 border-red-200 hover:bg-red-100"
+          }`}
+        >
+          <Play className="w-3 h-3 fill-current" />
+          <span>🎬 Con Video Tour</span>
+        </button>
+
         {[
           { label: "Todas", op: "todos", tp: "todos", st: "todos" },
           { label: "En Venta", op: "venta", tp: "todos", st: "todos" },
@@ -332,14 +357,27 @@ function PropiedadesContent() {
             </select>
           </div>
 
-          <div className="hidden sm:flex sm:col-span-3 justify-end">
+          <div className="hidden sm:flex sm:col-span-3 justify-end items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setOnlyVideoTour(!onlyVideoTour)}
+              className={`text-xs flex items-center gap-1.5 py-2 px-2.5 rounded-sm border transition-all ${
+                onlyVideoTour
+                  ? "bg-red-600 text-white border-red-600 font-semibold"
+                  : "bg-stone-50 text-neutral-700 border-neutral-300 hover:border-neutral-400"
+              }`}
+            >
+              <Play className={`w-3 h-3 ${onlyVideoTour ? "fill-white text-white" : "fill-red-600 text-red-600"}`} />
+              <span>Video Tours</span>
+            </button>
+
             <button
               onClick={handleResetFilters}
               type="button"
-              className="text-xs text-neutral-500 hover:text-neutral-900 flex items-center gap-1.5 py-2 px-3 border border-neutral-200 rounded-sm hover:bg-neutral-100 transition-colors w-full sm:w-auto justify-center"
+              className="text-xs text-neutral-500 hover:text-neutral-900 flex items-center gap-1.5 py-2 px-3 border border-neutral-200 rounded-sm hover:bg-neutral-100 transition-colors"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span>Limpiar Filtros</span>
+              <span>Limpiar</span>
             </button>
           </div>
         </div>

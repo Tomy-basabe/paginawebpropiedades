@@ -17,7 +17,11 @@ import {
   Calculator, 
   Share2, 
   Clock,
-  Sparkles
+  Sparkles,
+  Play,
+  Video,
+  Film,
+  Eye
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
 
@@ -29,6 +33,9 @@ interface PropertyDetailModalProps {
 export default function PropertyDetailModal({ property, onClose }: PropertyDetailModalProps) {
   const { agentProfile, bankRates } = useData();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [activeMediaTab, setActiveMediaTab] = useState<"photos" | "video">(
+    property?.videoUrl ? "video" : "photos"
+  );
 
   // Estados para la mini-calculadora hipotecaria dentro de la propiedad
   const [downPaymentPercent, setDownPaymentPercent] = useState(25);
@@ -93,44 +100,97 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
 
         {/* Contenido scrolleable */}
         <div className="max-h-[82vh] overflow-y-auto p-6 md:p-8 space-y-8">
-          {/* Galería de Fotos Principal */}
+          {/* Galería Multimedia: Video Tour Prioritario y Fotos */}
           <div className="space-y-3">
-            <div className="relative h-80 sm:h-96 md:h-[460px] w-full rounded-sm overflow-hidden bg-neutral-900">
-              <Image
-                src={property.images[activeImageIndex] || property.images[0]}
-                alt={property.title}
-                fill
-                priority
-                unoptimized={(property.images[activeImageIndex] || property.images[0])?.startsWith("data:")}
-                className="object-cover transition-opacity duration-300"
-              />
-              <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-sm">
-                Foto {activeImageIndex + 1} de {property.images.length}
-              </div>
-            </div>
+            {/* Barra de Tabs Multimedia (Si la propiedad cuenta con Video Tour) */}
+            {property.videoUrl && (
+              <div className="flex items-center gap-2 border-b border-neutral-200 pb-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveMediaTab("video")}
+                  className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile ${
+                    activeMediaTab === "video"
+                      ? "bg-red-600 text-white shadow-md shadow-red-600/30"
+                      : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+                  }`}
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>Video Tour Oficial (Prioritario)</span>
+                </button>
 
-            {/* Miniaturas de Fotos */}
-            {property.images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-2">
-                {property.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveImageIndex(idx)}
-                    className={`relative w-20 h-16 shrink-0 rounded-sm overflow-hidden border-2 transition-all ${
-                      activeImageIndex === idx
-                        ? "border-gold-500 scale-95"
-                        : "border-transparent opacity-70 hover:opacity-100"
-                    }`}
-                  >
-                    <Image
-                      src={img}
-                      alt={`Miniatura ${idx + 1}`}
-                      fill
-                      unoptimized={img.startsWith("data:")}
-                      className="object-cover"
-                    />
-                  </button>
-                ))}
+                <button
+                  type="button"
+                  onClick={() => setActiveMediaTab("photos")}
+                  className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile ${
+                    activeMediaTab === "photos"
+                      ? "bg-neutral-900 text-white shadow-md"
+                      : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+                  }`}
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Fotografías ({property.images.length})</span>
+                </button>
+              </div>
+            )}
+
+            {/* Vista de Video Tour */}
+            {activeMediaTab === "video" && property.videoUrl ? (
+              <div className="relative h-80 sm:h-96 md:h-[480px] w-full rounded-sm overflow-hidden bg-black flex items-center justify-center border border-neutral-800 shadow-2xl">
+                <video
+                  src={property.videoUrl}
+                  controls
+                  autoPlay
+                  playsInline
+                  className="w-full h-full object-contain"
+                >
+                  Tu navegador no soporta reproducción directa de video.
+                </video>
+                <div className="absolute top-3 left-3 bg-red-600/90 text-white text-[11px] font-bold px-2.5 py-1 rounded-sm shadow flex items-center gap-1.5 backdrop-blur-sm pointer-events-none">
+                  <Play className="w-3 h-3 fill-white" />
+                  <span>Video Tour 99 Propiedades</span>
+                </div>
+              </div>
+            ) : (
+              /* Galería de Fotos Principal */
+              <div className="space-y-3">
+                <div className="relative h-80 sm:h-96 md:h-[460px] w-full rounded-sm overflow-hidden bg-neutral-900">
+                  <Image
+                    src={property.images[activeImageIndex] || property.images[0]}
+                    alt={property.title}
+                    fill
+                    priority
+                    unoptimized={(property.images[activeImageIndex] || property.images[0])?.startsWith("data:")}
+                    className="object-cover transition-opacity duration-300"
+                  />
+                  <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-sm">
+                    Foto {activeImageIndex + 1} de {property.images.length}
+                  </div>
+                </div>
+
+                {/* Miniaturas de Fotos */}
+                {property.images.length > 1 && (
+                  <div className="flex gap-2 overflow-x-auto pb-2">
+                    {property.images.map((img, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveImageIndex(idx)}
+                        className={`relative w-20 h-16 shrink-0 rounded-sm overflow-hidden border-2 transition-all ${
+                          activeImageIndex === idx
+                            ? "border-gold-500 scale-95"
+                            : "border-transparent opacity-70 hover:opacity-100"
+                        }`}
+                      >
+                        <Image
+                          src={img}
+                          alt={`Miniatura ${idx + 1}`}
+                          fill
+                          unoptimized={img.startsWith("data:")}
+                          className="object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>

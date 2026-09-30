@@ -24,17 +24,17 @@ export default function SobreMiPage() {
     {
       name: "Arq. Marcelo Rossi",
       role: "Director de Rossi Desarrollos Urbanos",
-      comment: "Ignacio lideró la preventa de nuestro último edificio residencial en Belgrano. Su criterio comercial y la seriedad con la que defiende el valor de cada metro cuadrado marcaron una diferencia absoluta en los plazos de cierre.",
+      comment: "Juan Pablo lideró la preventa de nuestro último desarrollo residencial. Su criterio comercial, su liderazgo local en ventas y la seriedad con la que defiende el valor de cada metro cuadrado marcaron una diferencia absoluta en los plazos de cierre.",
     },
     {
       name: "Dr. Federico Benítez & Fam.",
-      role: "Comprador de Residencia en El Golf, Nordelta",
-      comment: "Comprar una propiedad de alta gama exige discreción y precisión legal. Ignacio nos asesoró tanto en la negociación como en la estructuración notarial con una solvencia impecable.",
+      role: "Comprador de Residencia Familiar",
+      comment: "Comprar una propiedad exige confianza y acompañamiento integral. Juan Pablo nos asesoró tanto en la negociación y gestión del crédito hipotecario como en la estructuración notarial con una solvencia y compromiso total.",
     },
     {
       name: "Lic. Clara Echeverría",
-      role: "Inversora en Renta Temporal y Pozo",
-      comment: "Valoro enormemente que no intenta vender por vender. Presenta análisis financieros objetivos de rentabilidad, tasas y costos ocultos antes de que uno tome la decisión.",
+      role: "Propietaria con Alquileres en Administración",
+      comment: "Confío la administración integral de mis propiedades a 99 Propiedades. La rigurosa selección de inquilinos, la puntualidad en los cobros y las tasaciones sin cargo hacen que uno trabaje con absoluta tranquilidad.",
     }
   ];
 

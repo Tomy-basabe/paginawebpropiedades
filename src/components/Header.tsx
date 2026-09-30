@@ -109,7 +109,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
                 className="bg-gold-500 hover:bg-gold-400 text-luxury-black font-semibold text-xs tracking-wider uppercase px-4 py-2.5 rounded-sm shadow-sm hover:shadow-lg hover:shadow-gold-500/20 flex items-center gap-2 btn-tactile cursor-pointer"
               >
                 <FileCheck className="w-3.5 h-3.5" />
-                <span>Tasá tu Propiedad</span>
+                <span>Tasación Sin Cargo</span>
               </button>
             ) : (
               <Link
@@ -117,7 +117,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
                 className="bg-gold-500 hover:bg-gold-400 text-luxury-black font-semibold text-xs tracking-wider uppercase px-4 py-2.5 rounded-sm shadow-sm hover:shadow-lg hover:shadow-gold-500/20 flex items-center gap-2 btn-tactile"
               >
                 <FileCheck className="w-3.5 h-3.5" />
-                <span>Tasá tu Propiedad</span>
+                <span>Tasación Sin Cargo</span>
               </Link>
             )}
           </div>
@@ -179,17 +179,17 @@ export default function Header({ onOpenValuation }: HeaderProps) {
                   setMobileMenuOpen(false);
                   onOpenValuation();
                 }}
-                className="w-full text-center bg-gold-500 hover:bg-gold-600 text-luxury-black font-medium text-xs tracking-wider uppercase py-3 rounded-sm transition-all"
+                className="w-full text-center bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs tracking-wider uppercase py-3 rounded-sm transition-all"
               >
-                Tasá tu Propiedad
+                Tasación Sin Cargo
               </button>
             ) : (
               <Link
                 href="/contacto?asunto=tasacion"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center bg-gold-500 hover:bg-gold-600 text-luxury-black font-medium text-xs tracking-wider uppercase py-3 rounded-sm transition-all"
+                className="w-full text-center bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs tracking-wider uppercase py-3 rounded-sm transition-all"
               >
-                Tasá tu Propiedad
+                Tasación Sin Cargo
               </Link>
             )}
             <Link

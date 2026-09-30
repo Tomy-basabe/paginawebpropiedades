@@ -750,7 +750,7 @@ export default function AdminPage() {
                 )}
               </div>
 
-              {/* Toggles de Destacado y Oportunidad */}
+              {/* Toggles de Destacado, Oportunidad y Video Tour */}
               <div className="flex flex-wrap gap-6 py-2 border-y border-neutral-200">
                 <label className="flex items-center gap-2 cursor-pointer font-medium">
                   <input
@@ -771,6 +771,71 @@ export default function AdminPage() {
                   />
                   <span>Marcar como Oportunidad Especial</span>
                 </label>
+
+                <label className="flex items-center gap-2 cursor-pointer font-medium text-red-700 bg-red-50 px-2.5 py-1 rounded-sm border border-red-200">
+                  <input
+                    type="checkbox"
+                    checked={propForm.hasVideoTour || false}
+                    onChange={(e) => setPropForm({ ...propForm, hasVideoTour: e.target.checked })}
+                    className="accent-red-600 w-4 h-4"
+                  />
+                  <span>🎬 Tiene Video Tour Oficial (Prioridad Video)</span>
+                </label>
+              </div>
+
+              {/* Campo para URL del Video Tour */}
+              <div className="p-3 bg-red-50/50 border border-red-100 rounded-sm space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block font-semibold text-neutral-800">
+                    URL o Archivo del Video Tour (.mp4, YouTube, Vimeo o enlace web)
+                  </label>
+                  <span className="text-[10px] text-neutral-500 font-mono">
+                    Priorizado para clientes que prefieren video sobre foto
+                  </span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={propForm.videoUrl || ""}
+                    onChange={(e) =>
+                      setPropForm({
+                        ...propForm,
+                        videoUrl: e.target.value,
+                        hasVideoTour: e.target.value.trim().length > 0 ? true : propForm.hasVideoTour,
+                      })
+                    }
+                    className="flex-1 p-2.5 bg-white border border-neutral-300 rounded-sm focus:border-red-500 focus:outline-none text-xs"
+                    placeholder="Ej: /videos/tour-casa-1.mp4 o https://..."
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setPropForm({
+                        ...propForm,
+                        videoUrl: "/videos/tour-casa-1.mp4",
+                        hasVideoTour: true,
+                      })
+                    }
+                    className="text-[10px] px-2.5 py-1 bg-white hover:bg-neutral-100 border border-neutral-300 rounded-sm text-neutral-600"
+                    title="Usar video tour local 1"
+                  >
+                    Tour 1
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setPropForm({
+                        ...propForm,
+                        videoUrl: "/videos/tour-casa-2.mp4",
+                        hasVideoTour: true,
+                      })
+                    }
+                    className="text-[10px] px-2.5 py-1 bg-white hover:bg-neutral-100 border border-neutral-300 rounded-sm text-neutral-600"
+                    title="Usar video tour local 2"
+                  >
+                    Tour 2
+                  </button>
+                </div>
               </div>
 
               {propForm.isOpportunity && (
