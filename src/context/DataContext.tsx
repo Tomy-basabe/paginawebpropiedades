@@ -55,7 +55,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
           // Fusionar con datos iniciales para asegurar que model3D esté presente
           const merged = parsed.properties.map((p: Property) => {
             const init = INITIAL_PROPERTIES.find((ip) => ip.id === p.id);
-            if (init?.model3D && (!p.model3D || !p.model3D.url || p.model3D.url.includes("bonsai"))) {
+            if (init?.model3D && (!p.model3D || !p.model3D.url || p.model3D.url.startsWith("/models/"))) {
               return { ...p, model3D: init.model3D, has3DTour: init.has3DTour };
             }
             return p;
@@ -100,7 +100,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         const parsedProps: Property[] = propsData.map((row) => {
           const prop = ((row.data as Property) || row) as Property;
           const init = INITIAL_PROPERTIES.find((ip) => ip.id === prop.id);
-          if (init?.model3D && (!prop.model3D || !prop.model3D.url || prop.model3D.url.includes("bonsai"))) {
+          if (init?.model3D && (!prop.model3D || !prop.model3D.url || prop.model3D.url.startsWith("/models/"))) {
             return {
               ...prop,
               model3D: init.model3D,

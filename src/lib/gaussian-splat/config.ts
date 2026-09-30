@@ -28,8 +28,8 @@ export const SPLAT_VIEWER_CONFIG = {
   /** Factor de escala de render para desktop */
   desktopRenderScale: 1.0,
 
-  /** Modelo de prueba por defecto (Gaussian Splat real optimizado de habitación interior) */
-  sampleModelUrl: '/models/demo-room.splat',
+  /** Modelo de prueba por defecto (Gaussian Splat optimizado servido desde CDN de Supabase, 8MB) */
+  sampleModelUrl: 'https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-light.splat',
 } as const;
 
 export type SplatFormat = (typeof SPLAT_VIEWER_CONFIG.supportedFormats)[number];
