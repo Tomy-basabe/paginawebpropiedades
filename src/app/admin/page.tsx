@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useData } from "@/context/DataContext";
 import BrandLogo from "@/components/BrandLogo";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
-import { uploadPropertyImage, uploadPropertyVideo } from "@/lib/supabase";
+import { uploadPropertyImage, uploadPropertyVideo, uploadPropertyModel3D } from "@/lib/supabase";
 import { cleanWhatsAppNumber, getWhatsAppUrl } from "@/lib/whatsapp";
 import { Property, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus } from "@/lib/types";
 import { 
@@ -99,6 +99,10 @@ export default function AdminPage() {
   const [videoProgress, setVideoProgress] = useState(0);
   const [videoStatus, setVideoStatus] = useState("");
 
+  // Estados para subida directa de modelo 3D Gaussian Splatting (.ply, .splat, .ksplat)
+  const [isUploadingModel, setIsUploadingModel] = useState(false);
+  const [modelUploadStatus, setModelUploadStatus] = useState("");
+
   const handleImageFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -185,6 +189,37 @@ export default function AdminPage() {
       alert(`No se pudo subir el video: ${msg}`);
     } finally {
       setIsUploadingVideo(false);
+      e.target.value = "";
+    }
+  };
+
+  // Handler para subir archivo 3D de Gaussian Splatting (.ply, .splat, .ksplat)
+  const handleModel3DFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingModel(true);
+    setModelUploadStatus("Iniciando subida del modelo 3D...");
+
+    try {
+      const result = await uploadPropertyModel3D(file, (status) => setModelUploadStatus(status));
+      setPropForm((prev) => ({
+        ...prev,
+        has3DTour: true,
+        model3D: {
+          url: result.url,
+          format: result.format,
+          initialCameraPosition: prev.model3D?.initialCameraPosition || [0, 2, 5],
+          initialCameraTarget: prev.model3D?.initialCameraTarget || [0, 0, 0],
+        },
+      }));
+      setModelUploadStatus(`✅ Archivo listo: ${result.fileName} (${result.sizeMB} MB)`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Error desconocido";
+      setModelUploadStatus(`❌ Error: ${msg}`);
+      alert(`No se pudo subir el archivo 3D: ${msg}`);
+    } finally {
+      setIsUploadingModel(false);
       e.target.value = "";
     }
   };
@@ -945,7 +980,7 @@ export default function AdminPage() {
               </div>
 
               {/* Zona de Configuración de Recorrido 3D Gaussian Splatting */}
-              <div className="p-4 bg-amber-50/50 border border-amber-200/80 rounded-sm space-y-3">
+              <div className="p-4 bg-amber-50/50 border border-amber-200/80 rounded-sm space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Box className="w-4 h-4 text-amber-600" />
@@ -958,12 +993,71 @@ export default function AdminPage() {
                   </span>
                 </div>
 
-                <p className="text-[11px] text-neutral-600">
-                  Ingresá la URL del modelo 3D (alojado en Supabase Storage, CDN o servidor externo con CORS habilitado).
-                </p>
+                {/* Guía rápida de flujo para el usuario */}
+                <div className="bg-amber-100/50 border border-amber-200 rounded-sm p-3 text-[11px] text-amber-950 space-y-1.5">
+                  <span className="font-bold flex items-center gap-1.5 text-amber-900">
+                    <span>📱 Flujo desde el teléfono (Scaniverse ➔ SuperSplat ➔ Web):</span>
+                  </span>
+                  <ol className="list-decimal pl-4 space-y-0.5 text-neutral-700">
+                    <li>Grabá la casa/espacio con <strong>Scaniverse</strong> en modo Splat y exportá el <strong>.ply</strong>.</li>
+                    <li>Abrí <a href="https://playcanvas.com/supersplat/editor" target="_blank" rel="noopener noreferrer" className="text-amber-800 font-semibold underline hover:text-amber-950">SuperSplat Editor</a>, recortá el entorno sobrante y exportá en <strong>.splat</strong> o <strong>.ksplat</strong> (o mantené el .ply).</li>
+                    <li><strong>Subí el archivo directamente acá abajo</strong>: se cargará automáticamente al CDN en la nube.</li>
+                  </ol>
+                </div>
 
-                {/* Input de URL del modelo 3D */}
-                <div className="space-y-1.5">
+                {/* Zona de subida de archivo 3D directo */}
+                <label
+                  className={`flex flex-col items-center justify-center w-full border-2 border-dashed rounded-sm p-5 text-center cursor-pointer transition-colors ${
+                    isUploadingModel
+                      ? "border-amber-400 bg-amber-50 cursor-not-allowed"
+                      : "border-amber-300 hover:border-amber-500 bg-white hover:bg-amber-50/30 group"
+                  }`}
+                >
+                  <input
+                    type="file"
+                    accept=".ply,.splat,.ksplat"
+                    onChange={handleModel3DFileUpload}
+                    disabled={isUploadingModel}
+                    className="hidden"
+                  />
+                  {isUploadingModel ? (
+                    <div className="w-full space-y-2">
+                      <div className="flex items-center justify-center gap-2 text-amber-700">
+                        <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
+                        <span className="text-xs font-semibold">{modelUploadStatus}</span>
+                      </div>
+                      <span className="text-[10px] text-neutral-500">Subiendo archivo 3D a Supabase Storage...</span>
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-center gap-2 text-neutral-700 group-hover:text-amber-800">
+                        <Upload className="w-5 h-5 text-amber-600" />
+                        <span className="font-semibold text-xs">
+                          {propForm.model3D?.url
+                            ? "Reemplazar archivo 3D (subir nuevo .ply / .splat / .ksplat)"
+                            : "Subir archivo 3D (.ply, .splat, .ksplat)"}
+                        </span>
+                      </div>
+                      <span className="block text-[10px] text-neutral-500">
+                        Elegí el archivo desde tu teléfono o computadora (hasta 500 MB)
+                      </span>
+                      {modelUploadStatus && !isUploadingModel && (
+                        <span className="block text-[11px] font-medium text-emerald-700 mt-1">{modelUploadStatus}</span>
+                      )}
+                    </div>
+                  )}
+                </label>
+
+                {/* Modelo actual o URL manual */}
+                <div className="space-y-1.5 pt-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">
+                      URL del Modelo 3D Alojado
+                    </span>
+                    <span className="text-[10px] text-neutral-400">
+                      (Generada automáticamente al subir o editable manualmente)
+                    </span>
+                  </div>
                   <div className="flex gap-2">
                     <input
                       type="text"

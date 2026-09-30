@@ -228,3 +228,68 @@ export async function uploadPropertyVideo(
 
   return publicUrlData.publicUrl;
 }
+
+/**
+ * Sube un archivo 3D de Gaussian Splatting (.ply, .splat, .ksplat) a Supabase Storage
+ * en el bucket 'property-models' (o fallback a 'property-videos' / 'property-images')
+ * y retorna la URL pública del CDN y su formato detectado.
+ */
+export async function uploadPropertyModel3D(
+  file: File,
+  onStatus?: (status: string) => void
+): Promise<{ url: string; format: 'ply' | 'splat' | 'ksplat'; fileName: string; sizeMB: string }> {
+  // Intentar crear bucket de modelos si no existe
+  await supabase.storage.createBucket("property-models", {
+    public: true,
+    fileSizeLimit: 524288000, // 500 MB max
+  }).catch(() => { /* ya existe, ignorar */ });
+
+  const rawExt = file.name.split(".").pop()?.toLowerCase() || "ply";
+  const format: 'ply' | 'splat' | 'ksplat' =
+    rawExt === "ksplat" ? "ksplat" : rawExt === "splat" ? "splat" : "ply";
+
+  const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+  const fileName = `splat-${Date.now()}-${cleanName}`;
+  const filePath = `models/${fileName}`;
+
+  onStatus?.("Subiendo archivo 3D a la nube...");
+
+  let uploadTarget = "property-models";
+  let uploadResult = await supabase.storage
+    .from("property-models")
+    .upload(filePath, file, {
+      cacheControl: "86400",
+      upsert: true,
+      contentType: "application/octet-stream",
+    });
+
+  // Si el bucket nuevo no tiene permisos configurados, intentar fallback a buckets existentes
+  if (uploadResult.error) {
+    console.warn("Fallo en bucket property-models, reintentando en fallback:", uploadResult.error.message);
+    uploadTarget = "property-videos";
+    uploadResult = await supabase.storage
+      .from("property-videos")
+      .upload(filePath, file, {
+        cacheControl: "86400",
+        upsert: true,
+        contentType: "application/octet-stream",
+      });
+  }
+
+  if (uploadResult.error) {
+    throw new Error(`Error al subir archivo 3D: ${uploadResult.error.message}`);
+  }
+
+  const { data: publicUrlData } = supabase.storage
+    .from(uploadTarget)
+    .getPublicUrl(filePath);
+
+  onStatus?.("¡Modelo 3D subido con éxito!");
+
+  return {
+    url: publicUrlData.publicUrl,
+    format,
+    fileName: file.name,
+    sizeMB: (file.size / (1024 * 1024)).toFixed(1),
+  };
+}
