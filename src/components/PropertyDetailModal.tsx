@@ -142,6 +142,8 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
                   controls
                   autoPlay
                   playsInline
+                  preload="metadata"
+                  poster={property.images && property.images.length > 0 ? property.images[0] : undefined}
                   className="w-full h-full object-contain"
                 >
                   Tu navegador no soporta reproducción directa de video.

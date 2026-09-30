@@ -32,6 +32,14 @@ export interface Property {
   images: string[];
   videoUrl?: string; // Video Tour MP4 o URL
   hasVideoTour?: boolean;
+  // Gaussian Splatting 3D — recorrido inmersivo
+  model3D?: {
+    url: string; // URL del modelo .ply / .splat / .ksplat
+    format?: 'ply' | 'splat' | 'ksplat';
+    initialCameraPosition?: [number, number, number];
+    initialCameraTarget?: [number, number, number];
+  };
+  has3DTour?: boolean;
   isFeatured: boolean;
   isOpportunity: boolean;
   opportunityBadge?: string; // ej: "Preventa Pozo -20%", "Último Lote al Lago"

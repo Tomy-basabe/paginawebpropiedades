@@ -91,7 +91,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "disponible",
     "price": 345000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-01.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-01.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "Tigre",
@@ -136,7 +136,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "oportunidad",
     "price": 490000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-02.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-02.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "Benavídez",
@@ -180,7 +180,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "disponible",
     "price": 420000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-03.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-03.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "Escobar",
@@ -224,7 +224,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "disponible",
     "price": 275000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-04.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-04.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "CABA",
@@ -268,7 +268,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "oportunidad",
     "price": 310000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-05.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-05.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "CABA",
@@ -312,7 +312,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "disponible",
     "price": 520000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-06.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-06.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "Pilar",
@@ -356,7 +356,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "disponible",
     "price": 980000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-07.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-07.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "Tigre",
@@ -400,7 +400,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "disponible",
     "price": 185000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-08.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-08.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "CABA",
@@ -444,7 +444,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "disponible",
     "price": 298000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-09.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-09.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "Tigre",
@@ -488,7 +488,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "oportunidad",
     "price": 165000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-10.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-10.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "CABA",
@@ -532,7 +532,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "disponible",
     "price": 430000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-11.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-11.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "Maschwitz",
@@ -576,7 +576,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "disponible",
     "price": 580000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-12.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-12.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "CABA",
@@ -620,7 +620,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "oportunidad",
     "price": 760000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-13.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-13.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "Tigre",
@@ -664,7 +664,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "status": "disponible",
     "price": 360000,
     "currency": "USD",
-    "videoUrl": "/videos/tour-propiedad-14.mp4",
+    "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-14.mp4",
     "hasVideoTour": true,
     "location": {
       "city": "San Isidro",
