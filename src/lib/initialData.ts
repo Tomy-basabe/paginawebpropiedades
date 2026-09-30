@@ -93,6 +93,13 @@ export const INITIAL_PROPERTIES: Property[] = [
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-01.mp4",
     "hasVideoTour": true,
+    "model3D": {
+      "url": "https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/bonsai/bonsai-7k.splat",
+      "format": "splat",
+      "initialCameraPosition": [0, 1.5, 3.5],
+      "initialCameraTarget": [0, 0, 0]
+    },
+    "has3DTour": true,
     "location": {
       "city": "Tigre",
       "neighborhood": "Rincón de Milberg",
@@ -138,6 +145,13 @@ export const INITIAL_PROPERTIES: Property[] = [
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-02.mp4",
     "hasVideoTour": true,
+    "model3D": {
+      "url": "https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/bonsai/bonsai-7k.splat",
+      "format": "splat",
+      "initialCameraPosition": [0, 2, 4],
+      "initialCameraTarget": [0, 0, 0]
+    },
+    "has3DTour": true,
     "location": {
       "city": "Benavídez",
       "neighborhood": "Barrio Cerrado La Bota",

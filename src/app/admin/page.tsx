@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useData } from "@/context/DataContext";
 import BrandLogo from "@/components/BrandLogo";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
@@ -30,8 +31,10 @@ import {
   ImageIcon,
   Star,
   Video,
-  Loader2
+  Loader2,
+  Box
 } from "lucide-react";
+import { SPLAT_VIEWER_CONFIG } from "@/lib/gaussian-splat/config";
 
 export default function AdminPage() {
   const {
@@ -820,6 +823,30 @@ export default function AdminPage() {
                   />
                   <span>🎬 Tiene Video Tour Oficial (Prioridad Video)</span>
                 </label>
+
+                <label className="flex items-center gap-2 cursor-pointer font-medium text-amber-800 bg-amber-50 px-2.5 py-1 rounded-sm border border-amber-200">
+                  <input
+                    type="checkbox"
+                    checked={propForm.has3DTour || !!propForm.model3D?.url || false}
+                    onChange={(e) => {
+                      const checked = e.target.checked;
+                      setPropForm({
+                        ...propForm,
+                        has3DTour: checked,
+                        model3D: checked
+                          ? propForm.model3D || {
+                              url: "",
+                              format: "ply",
+                              initialCameraPosition: [0, 2, 5],
+                              initialCameraTarget: [0, 0, 0],
+                            }
+                          : propForm.model3D,
+                      });
+                    }}
+                    className="accent-amber-600 w-4 h-4"
+                  />
+                  <span>🕶️ Recorrido 3D Gaussian Splatting</span>
+                </label>
               </div>
 
               {/* Zona de Subida y Compresión de Video Tour */}
@@ -914,6 +941,173 @@ export default function AdminPage() {
                     className="flex-1 p-2.5 bg-white border border-neutral-300 rounded-sm focus:border-red-500 focus:outline-none text-xs"
                     placeholder="O pegar URL externa: YouTube, Vimeo, https://..."
                   />
+                </div>
+              </div>
+
+              {/* Zona de Configuración de Recorrido 3D Gaussian Splatting */}
+              <div className="p-4 bg-amber-50/50 border border-amber-200/80 rounded-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Box className="w-4 h-4 text-amber-600" />
+                    <label className="block font-semibold text-neutral-800">
+                      Recorrido 3D Fotorealista (Gaussian Splatting)
+                    </label>
+                  </div>
+                  <span className="text-[10px] text-amber-800 font-mono bg-amber-100/70 border border-amber-200 px-2 py-0.5 rounded-sm">
+                    Formatos: .ply · .splat · .ksplat
+                  </span>
+                </div>
+
+                <p className="text-[11px] text-neutral-600">
+                  Ingresá la URL del modelo 3D (alojado en Supabase Storage, CDN o servidor externo con CORS habilitado).
+                </p>
+
+                {/* Input de URL del modelo 3D */}
+                <div className="space-y-1.5">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={propForm.model3D?.url || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setPropForm({
+                          ...propForm,
+                          has3DTour: val.trim().length > 0,
+                          model3D: {
+                            url: val,
+                            format: propForm.model3D?.format || "ply",
+                            initialCameraPosition: propForm.model3D?.initialCameraPosition || [0, 2, 5],
+                            initialCameraTarget: propForm.model3D?.initialCameraTarget || [0, 0, 0],
+                          },
+                        });
+                      }}
+                      className="flex-1 p-2.5 bg-white border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none text-xs font-mono"
+                      placeholder="https://.../modelo.ply o .splat o .ksplat"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPropForm({
+                          ...propForm,
+                          has3DTour: true,
+                          model3D: {
+                            url: SPLAT_VIEWER_CONFIG.sampleModelUrl,
+                            format: "splat",
+                            initialCameraPosition: [0, 1.5, 3.5],
+                            initialCameraTarget: [0, 0, 0],
+                          },
+                        });
+                      }}
+                      className="bg-neutral-800 hover:bg-neutral-900 text-white text-[11px] font-medium px-3 py-2 rounded-sm transition-colors shrink-0"
+                      title="Carga un Gaussian Splat real de demostración para probar"
+                    >
+                      Cargar Demo
+                    </button>
+                    {propForm.model3D?.url && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setPropForm({
+                            ...propForm,
+                            has3DTour: false,
+                            model3D: undefined,
+                          })
+                        }
+                        className="text-rose-500 hover:text-rose-700 p-2 shrink-0"
+                        title="Quitar modelo 3D"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Configuración de Cámara Inicial y Formato */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-neutral-700 mb-1">
+                      Formato de Archivo
+                    </label>
+                    <select
+                      value={propForm.model3D?.format || "ply"}
+                      onChange={(e) =>
+                        setPropForm({
+                          ...propForm,
+                          model3D: {
+                            ...(propForm.model3D || { url: "" }),
+                            format: e.target.value as "ply" | "splat" | "ksplat",
+                          },
+                        })
+                      }
+                      className="w-full p-2 bg-white border border-neutral-300 rounded-sm text-xs focus:border-gold-500 focus:outline-none"
+                    >
+                      <option value="ply">.PLY (Scaniverse / SuperSplat)</option>
+                      <option value="splat">.SPLAT (Optimizado estándar)</option>
+                      <option value="ksplat">.KSPLAT (Comprimido de alta velocidad)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-neutral-700 mb-1">
+                      Cámara Inicial [X, Y, Z]
+                    </label>
+                    <div className="grid grid-cols-3 gap-1">
+                      {[0, 1, 2].map((idx) => (
+                        <input
+                          key={idx}
+                          type="number"
+                          step="0.5"
+                          value={propForm.model3D?.initialCameraPosition?.[idx] ?? [0, 2, 5][idx]}
+                          onChange={(e) => {
+                            const newPos: [number, number, number] = [
+                              ...(propForm.model3D?.initialCameraPosition || [0, 2, 5]),
+                            ] as [number, number, number];
+                            newPos[idx] = Number(e.target.value);
+                            setPropForm({
+                              ...propForm,
+                              model3D: {
+                                ...(propForm.model3D || { url: "" }),
+                                initialCameraPosition: newPos,
+                              },
+                            });
+                          }}
+                          className="p-1.5 bg-white border border-neutral-300 rounded-sm text-center text-xs font-mono"
+                          title={idx === 0 ? "Eje X" : idx === 1 ? "Eje Y (altura)" : "Eje Z (distancia)"}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-neutral-700 mb-1">
+                      Punto Foco [Target X, Y, Z]
+                    </label>
+                    <div className="grid grid-cols-3 gap-1">
+                      {[0, 1, 2].map((idx) => (
+                        <input
+                          key={idx}
+                          type="number"
+                          step="0.5"
+                          value={propForm.model3D?.initialCameraTarget?.[idx] ?? [0, 0, 0][idx]}
+                          onChange={(e) => {
+                            const newTarget: [number, number, number] = [
+                              ...(propForm.model3D?.initialCameraTarget || [0, 0, 0]),
+                            ] as [number, number, number];
+                            newTarget[idx] = Number(e.target.value);
+                            setPropForm({
+                              ...propForm,
+                              model3D: {
+                                ...(propForm.model3D || { url: "" }),
+                                initialCameraTarget: newTarget,
+                              },
+                            });
+                          }}
+                          className="p-1.5 bg-white border border-neutral-300 rounded-sm text-center text-xs font-mono"
+                          title={idx === 0 ? "Target X" : idx === 1 ? "Target Y" : "Target Z"}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 

@@ -27,6 +27,9 @@ export const SPLAT_VIEWER_CONFIG = {
 
   /** Factor de escala de render para desktop */
   desktopRenderScale: 1.0,
+
+  /** Modelo de prueba por defecto (Gaussian Splat real optimizado) */
+  sampleModelUrl: 'https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/bonsai/bonsai-7k.splat',
 } as const;
 
 export type SplatFormat = (typeof SPLAT_VIEWER_CONFIG.supportedFormats)[number];
