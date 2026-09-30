@@ -87,15 +87,15 @@ export default function GaussianSplatViewer({
         : SPLAT_VIEWER_CONFIG.desktopRenderScale;
 
       const viewer = new GaussianSplats3D.Viewer({
-        cameraUp: [0, -1, 0],
+        cameraUp: [0, -1, -0.6],
         initialCameraPosition: cameraPosition,
         initialCameraLookAt: cameraTarget,
         rootElement: container,
         dynamicScene: false,
         selfDrivenMode: true,
         useBuiltInControls: true,
-        renderMode: GaussianSplats3D.RenderMode.OnChange,
-        sceneRevealMode: GaussianSplats3D.SceneRevealMode.Gradual,
+        renderMode: GaussianSplats3D.RenderMode.Always,
+        sceneRevealMode: GaussianSplats3D.SceneRevealMode.Default,
         antialiased: !capabilities.isMobile,
         focalAdjustment: 1.0,
         logLevel: GaussianSplats3D.LogLevel.None,
@@ -104,45 +104,63 @@ export default function GaussianSplatViewer({
 
       viewerRef.current = viewer;
 
-      // Progreso simulado basado en tiempo (la lib no emite progreso granular)
-      let progressInterval: NodeJS.Timeout | undefined;
-      let currentProgress = 0;
-      progressInterval = setInterval(() => {
-        currentProgress = Math.min(currentProgress + 2, 90);
-        setLoadProgress(currentProgress);
-      }, 300);
-
-      // Detectar formato
+      // Detectar formato real
       const detectedFormat = format || detectFormat(modelUrl);
       const splatFormat = mapFormat(detectedFormat, GaussianSplats3D);
 
-      await viewer.addSplatScene(modelUrl, {
-        format: splatFormat,
-        splatAlphaRemovalThreshold: 5,
-        showLoadingUI: false,
-        progressiveLoad: true,
+      let lastPercent = 10;
+      setLoadProgress(lastPercent);
+
+      // Simulación de avance continuo en caso de que la respuesta HTTP no tenga header Content-Length
+      const progressTimer = setInterval(() => {
+        setLoadProgress((prev) => {
+          if (prev < 90) return prev + 3;
+          return prev;
+        });
+      }, 400);
+
+      // Timeout de seguridad (40s) para evitar que se quede colgado indefinidamente
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(
+          () => reject(new Error('Tiempo de espera agotado al descargar el modelo 3D (40s). Verificá tu conexión a internet.')),
+          40000
+        );
       });
 
-      await viewer.start();
+      // Carga estándar (más robusta y confiable que progressiveLoad en navegadores)
+      const loadPromise = viewer.addSplatScene(modelUrl, {
+        format: splatFormat,
+        splatAlphaRemovalThreshold: 1,
+        showLoadingUI: false,
+        progressiveLoad: false,
+        onProgress: (percentComplete: number) => {
+          if (typeof percentComplete === 'number' && !isNaN(percentComplete)) {
+            const rounded = Math.min(99, Math.round(percentComplete));
+            setLoadProgress((prev) => Math.max(prev, rounded));
+          }
+        },
+      });
 
-      clearInterval(progressInterval);
+      await Promise.race([loadPromise, timeoutPromise]);
+      clearInterval(progressTimer);
+
+      viewer.start();
       setLoadProgress(100);
 
-      // Transición suave
       setTimeout(() => {
         setViewerState('ready');
-      }, 400);
+      }, 250);
 
     } catch (err: unknown) {
       setViewerState('error');
       const message = err instanceof Error ? err.message : 'Error desconocido al cargar el modelo 3D';
 
       if (message.includes('fetch') || message.includes('network') || message.includes('404')) {
-        setErrorMessage('No se pudo descargar el modelo 3D. Verificá que la URL sea correcta y accesible.');
+        setErrorMessage('No se pudo descargar el modelo 3D. Verificá que la URL sea accesible.');
       } else if (message.includes('memory') || message.includes('allocation')) {
-        setErrorMessage('Memoria insuficiente para cargar el modelo 3D. Intentá con un dispositivo con más recursos.');
+        setErrorMessage('Memoria insuficiente para procesar el modelo 3D.');
       } else if (message.includes('WebGL') || message.includes('context')) {
-        setErrorMessage('Error de WebGL al inicializar el visor 3D. Tu navegador podría no ser compatible.');
+        setErrorMessage('Error de WebGL al inicializar el visor 3D.');
       } else {
         setErrorMessage(`Error al cargar el recorrido 3D: ${message}`);
       }
@@ -157,13 +175,15 @@ export default function GaussianSplatViewer({
     return 'ply';
   }
 
-  // Mapear formato a constante de la lib
+  // Mapear formato a constante de la lib de forma exacta
   function mapFormat(fmt: string, lib: any): number {
+    const formats = lib.SceneFormat || {};
     switch (fmt) {
-      case 'ply': return lib.SceneFormat?.PLY ?? 0;
-      case 'splat': return lib.SceneFormat?.Splat ?? 1;
-      case 'ksplat': return lib.SceneFormat?.KSplat ?? 2;
-      default: return lib.SceneFormat?.PLY ?? 0;
+      case 'splat': return formats.Splat ?? 0;
+      case 'ksplat': return formats.KSplat ?? 1;
+      case 'ply': return formats.Ply ?? 2;
+      case 'spz': return formats.Spz ?? 3;
+      default: return formats.Splat ?? 0;
     }
   }
 
