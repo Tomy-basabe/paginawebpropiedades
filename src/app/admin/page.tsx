@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useData } from "@/context/DataContext";
 import BrandLogo from "@/components/BrandLogo";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
-import { uploadPropertyImage } from "@/lib/supabase";
+import { uploadPropertyImage, uploadPropertyVideo } from "@/lib/supabase";
 import { Property, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus } from "@/lib/types";
 import { 
   SlidersHorizontal, 
@@ -27,7 +27,9 @@ import {
   X,
   ExternalLink,
   ImageIcon,
-  Star
+  Star,
+  Video,
+  Loader2
 } from "lucide-react";
 
 export default function AdminPage() {
@@ -88,6 +90,11 @@ export default function AdminPage() {
   const [manualImageUrl, setManualImageUrl] = useState("");
   const [isUploadingImages, setIsUploadingImages] = useState(false);
 
+  // Estados para subida y compresión de video tour
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [videoProgress, setVideoProgress] = useState(0);
+  const [videoStatus, setVideoStatus] = useState("");
+
   const handleImageFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -145,6 +152,37 @@ export default function AdminPage() {
         images: [selected, ...images],
       };
     });
+  };
+
+  // Handler para subir video tour con compresión automática
+  const handleVideoFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingVideo(true);
+    setVideoProgress(0);
+    setVideoStatus("Iniciando...");
+
+    try {
+      const url = await uploadPropertyVideo(
+        file,
+        (pct) => setVideoProgress(pct),
+        (status) => setVideoStatus(status)
+      );
+      setPropForm((prev) => ({
+        ...prev,
+        videoUrl: url,
+        hasVideoTour: true,
+      }));
+      setVideoStatus(`✅ Video listo · ${(file.size / 1024 / 1024).toFixed(1)} MB original`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Error desconocido";
+      setVideoStatus(`❌ Error: ${msg}`);
+      alert(`No se pudo subir el video: ${msg}`);
+    } finally {
+      setIsUploadingVideo(false);
+      e.target.value = "";
+    }
   };
 
   const handleLogin = (e: React.FormEvent) => {
@@ -783,20 +821,88 @@ export default function AdminPage() {
                 </label>
               </div>
 
-              {/* Campo para URL del Video Tour */}
-              <div className="p-3 bg-red-50/50 border border-red-100 rounded-sm space-y-2">
+              {/* Zona de Subida y Compresión de Video Tour */}
+              <div className="p-4 bg-red-50/50 border border-red-100 rounded-sm space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="block font-semibold text-neutral-800">
-                    URL o Archivo del Video Tour (.mp4, YouTube, Vimeo o enlace web)
-                  </label>
-                  <span className="text-[10px] text-neutral-500 font-mono">
-                    Priorizado para clientes que prefieren video sobre foto
+                  <div className="flex items-center gap-2">
+                    <Video className="w-4 h-4 text-red-500" />
+                    <label className="block font-semibold text-neutral-800">
+                      Video Tour (subir archivo o pegar URL)
+                    </label>
+                  </div>
+                  <span className="text-[10px] text-neutral-500 font-mono bg-white border border-neutral-200 px-2 py-0.5 rounded-sm">
+                    Compresión automática · Alta calidad
                   </span>
                 </div>
-                <div className="flex gap-2">
+
+                {/* Zona de subida de archivo de video */}
+                <label
+                  className={`flex flex-col items-center justify-center w-full border-2 border-dashed rounded-sm p-5 text-center cursor-pointer transition-colors ${
+                    isUploadingVideo
+                      ? "border-red-300 bg-red-50 cursor-not-allowed"
+                      : "border-neutral-300 hover:border-red-400 bg-white hover:bg-red-50/30 group"
+                  }`}
+                >
+                  <input
+                    type="file"
+                    accept="video/mp4,video/webm,video/mov,video/quicktime,video/avi,video/*"
+                    onChange={handleVideoFileUpload}
+                    disabled={isUploadingVideo}
+                    className="hidden"
+                  />
+                  {isUploadingVideo ? (
+                    <div className="w-full space-y-2">
+                      <div className="flex items-center justify-center gap-2 text-red-600">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span className="text-xs font-semibold">{videoStatus}</span>
+                      </div>
+                      <div className="w-full bg-neutral-200 rounded-full h-2 overflow-hidden">
+                        <div
+                          className="bg-red-500 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${videoProgress}%` }}
+                        />
+                      </div>
+                      <span className="text-[10px] text-neutral-500">{videoProgress}% completado</span>
+                    </div>
+                  ) : (
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-center gap-2 text-neutral-600 group-hover:text-red-600">
+                        <Upload className="w-5 h-5 text-red-400" />
+                        <span className="font-semibold text-xs">
+                          {propForm.videoUrl ? "Reemplazar video (subir nuevo)" : "Subir video tour"}
+                        </span>
+                      </div>
+                      <span className="block text-[10px] text-neutral-400">
+                        MP4, MOV, AVI, WEBM · Se comprime automáticamente a 720p máx para menor peso
+                      </span>
+                      {videoStatus && !isUploadingVideo && (
+                        <span className="block text-[11px] font-medium text-emerald-600 mt-1">{videoStatus}</span>
+                      )}
+                    </div>
+                  )}
+                </label>
+
+                {/* Video actual preview si existe */}
+                {propForm.videoUrl && !isUploadingVideo && (
+                  <div className="flex items-center gap-2 bg-white border border-neutral-200 rounded-sm p-2.5">
+                    <Video className="w-4 h-4 text-red-500 shrink-0" />
+                    <span className="text-[11px] text-neutral-600 truncate flex-1 font-mono">{propForm.videoUrl}</span>
+                    <button
+                      type="button"
+                      onClick={() => setPropForm({ ...propForm, videoUrl: "", hasVideoTour: false })}
+                      className="text-rose-500 hover:text-rose-700 shrink-0"
+                      title="Quitar video"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Alternativa: URL manual */}
+                <div className="flex gap-2 pt-1">
                   <input
                     type="text"
-                    value={propForm.videoUrl || ""}
+                    value={propForm.videoUrl && !propForm.videoUrl.startsWith("http") ? propForm.videoUrl : ""}
                     onChange={(e) =>
                       setPropForm({
                         ...propForm,
@@ -805,36 +911,8 @@ export default function AdminPage() {
                       })
                     }
                     className="flex-1 p-2.5 bg-white border border-neutral-300 rounded-sm focus:border-red-500 focus:outline-none text-xs"
-                    placeholder="Ej: /videos/tour-casa-1.mp4 o https://..."
+                    placeholder="O pegar URL externa: YouTube, Vimeo, https://..."
                   />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setPropForm({
-                        ...propForm,
-                        videoUrl: "/videos/tour-casa-1.mp4",
-                        hasVideoTour: true,
-                      })
-                    }
-                    className="text-[10px] px-2.5 py-1 bg-white hover:bg-neutral-100 border border-neutral-300 rounded-sm text-neutral-600"
-                    title="Usar video tour local 1"
-                  >
-                    Tour 1
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setPropForm({
-                        ...propForm,
-                        videoUrl: "/videos/tour-casa-2.mp4",
-                        hasVideoTour: true,
-                      })
-                    }
-                    className="text-[10px] px-2.5 py-1 bg-white hover:bg-neutral-100 border border-neutral-300 rounded-sm text-neutral-600"
-                    title="Usar video tour local 2"
-                  >
-                    Tour 2
-                  </button>
                 </div>
               </div>
 
