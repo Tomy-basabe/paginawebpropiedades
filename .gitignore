@@ -35,3 +35,5 @@ next-env.d.ts
 # raw media folders (use public/ instead)
 /Videos e Imagenes 99propiedades/
 /Imagenes/
+/scripts/
+/public/videos/tour-propiedad-*.mp4
