@@ -97,7 +97,18 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       setIsCloudConnected(true);
 
       if (propsData && propsData.length > 0) {
-        const parsedProps: Property[] = propsData.map((row) => (row.data as Property) || row);
+        const parsedProps: Property[] = propsData.map((row) => {
+          const prop = ((row.data as Property) || row) as Property;
+          const init = INITIAL_PROPERTIES.find((ip) => ip.id === prop.id);
+          if (init?.model3D && (!prop.model3D || !prop.model3D.url || prop.model3D.url.includes("bonsai"))) {
+            return {
+              ...prop,
+              model3D: init.model3D,
+              has3DTour: init.has3DTour ?? true,
+            };
+          }
+          return prop;
+        });
         setProperties(parsedProps);
       }
 

@@ -90,8 +90,13 @@ function PropiedadesContent() {
       }
 
       // Recorrido 3D Gaussian Splatting
-      if (only3DTour && !item.has3DTour && !item.model3D?.url) {
-        return false;
+      if (only3DTour) {
+        const has3D =
+          Boolean(item.has3DTour) ||
+          Boolean((item as any).has_3d_tour) ||
+          Boolean(item.model3D?.url) ||
+          Boolean((item as any).model_3d?.url);
+        if (!has3D) return false;
       }
 
       // Precios
@@ -166,7 +171,13 @@ function PropiedadesContent() {
         {/* Chip prioritario de Recorrido 3D */}
         <button
           type="button"
-          onClick={() => setOnly3DTour(!only3DTour)}
+          onClick={() => {
+            const nextVal = !only3DTour;
+            setOnly3DTour(nextVal);
+            if (nextVal) {
+              setSearchQuery("");
+            }
+          }}
           className={`shrink-0 text-xs px-3.5 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-medium ${
             only3DTour
               ? "bg-gold-500 text-luxury-black border-gold-500 shadow-sm font-semibold"

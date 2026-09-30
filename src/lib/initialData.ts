@@ -196,6 +196,13 @@ export const INITIAL_PROPERTIES: Property[] = [
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-03.mp4",
     "hasVideoTour": true,
+    "model3D": {
+      "url": "/models/demo-room.splat",
+      "format": "splat",
+      "initialCameraPosition": [0, 1.5, 3.5],
+      "initialCameraTarget": [0, 0, 0]
+    },
+    "has3DTour": true,
     "location": {
       "city": "Escobar",
       "neighborhood": "Puertos del Lago - Barrio Marinas",
@@ -234,12 +241,19 @@ export const INITIAL_PROPERTIES: Property[] = [
     "title": "Semipiso con Balcón Aterrazado y Vista Panorámica",
     "slug": "semipiso-balcon-aterrazado-vista-panoramica",
     "type": "departamento",
-    "operation": "venta",
+    "operation": "alquiler",
     "status": "disponible",
-    "price": 275000,
+    "price": 1400,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-04.mp4",
     "hasVideoTour": true,
+    "model3D": {
+      "url": "/models/demo-kitchen.splat",
+      "format": "splat",
+      "initialCameraPosition": [0, 1.5, 3],
+      "initialCameraTarget": [0, 0, 0]
+    },
+    "has3DTour": true,
     "location": {
       "city": "CABA",
       "neighborhood": "Belgrano R",
@@ -284,6 +298,13 @@ export const INITIAL_PROPERTIES: Property[] = [
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-05.mp4",
     "hasVideoTour": true,
+    "model3D": {
+      "url": "/models/demo-room.splat",
+      "format": "splat",
+      "initialCameraPosition": [0, 1.5, 3.5],
+      "initialCameraTarget": [0, 0, 0]
+    },
+    "has3DTour": true,
     "location": {
       "city": "CABA",
       "neighborhood": "Núñez",
