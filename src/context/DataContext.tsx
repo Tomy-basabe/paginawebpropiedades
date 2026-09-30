@@ -51,7 +51,17 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (parsed.properties) setProperties(parsed.properties);
+        if (parsed.properties) {
+          // Fusionar con datos iniciales para asegurar que model3D esté presente
+          const merged = parsed.properties.map((p: Property) => {
+            const init = INITIAL_PROPERTIES.find((ip) => ip.id === p.id);
+            if (init?.model3D && (!p.model3D || !p.model3D.url || p.model3D.url.includes("bonsai"))) {
+              return { ...p, model3D: init.model3D, has3DTour: init.has3DTour };
+            }
+            return p;
+          });
+          setProperties(merged);
+        }
         if (parsed.bankRates) setBankRates(parsed.bankRates);
         if (parsed.banners) setBanners(parsed.banners);
         if (parsed.agentProfile) setAgentProfile(parsed.agentProfile);

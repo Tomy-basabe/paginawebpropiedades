@@ -94,7 +94,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-01.mp4",
     "hasVideoTour": true,
     "model3D": {
-      "url": "https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/bonsai/bonsai-7k.splat",
+      "url": "/models/demo-room.splat",
       "format": "splat",
       "initialCameraPosition": [0, 1.5, 3.5],
       "initialCameraTarget": [0, 0, 0]
@@ -146,9 +146,9 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-02.mp4",
     "hasVideoTour": true,
     "model3D": {
-      "url": "https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/bonsai/bonsai-7k.splat",
+      "url": "/models/demo-kitchen.splat",
       "format": "splat",
-      "initialCameraPosition": [0, 2, 4],
+      "initialCameraPosition": [0, 1.5, 3],
       "initialCameraTarget": [0, 0, 0]
     },
     "has3DTour": true,
