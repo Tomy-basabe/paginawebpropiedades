@@ -15,7 +15,7 @@ export default function WhatsAppFloat() {
   const whatsappUrl = getWhatsAppUrl(agentProfile.whatsappNumber, defaultMsg);
 
   return (
-    <div className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 flex items-end gap-3 pointer-events-auto">
+    <div className="hidden md:flex fixed bottom-6 right-6 z-40 items-end gap-3 pointer-events-auto">
       {/* Tooltip con saludo del agente en desktop */}
       {showTooltip && (
         <div className="hidden sm:flex items-center gap-3 bg-white p-3.5 rounded-lg shadow-2xl border border-neutral-200/80 text-xs max-w-xs animate-fade-in backdrop-blur-sm">

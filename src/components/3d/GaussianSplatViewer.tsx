@@ -330,12 +330,12 @@ function InteractionHint() {
   if (!visible) return null;
 
   return (
-    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none animate-fade-in">
-      <div className="bg-black/60 backdrop-blur-sm text-white text-xs px-4 py-2 rounded-full flex items-center gap-2 border border-white/10 shadow-lg">
-        <svg className="w-4 h-4 text-gold-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none animate-fade-in w-[90%] max-w-sm">
+      <div className="bg-black/75 backdrop-blur-md text-white text-[11px] sm:text-xs px-3.5 py-2 rounded-full flex items-center justify-center gap-2 border border-white/15 shadow-xl text-center">
+        <svg className="w-4 h-4 text-gold-400 shrink-0 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
         </svg>
-        <span>Arrastrá para explorar el espacio</span>
+        <span className="truncate sm:whitespace-normal">1 dedo para rotar • 2 dedos para zoom / mover</span>
       </div>
     </div>
   );

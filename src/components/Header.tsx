@@ -39,6 +39,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
   const navLinks = [
     { name: "Inicio", href: "/" },
     { name: "Propiedades", href: "/propiedades" },
+    { name: "Tours 3D", href: "/propiedades?tour3d=true" },
     { name: "Financiamiento & Tasas", href: "/financiamiento" },
     { name: "Sobre Mí", href: "/sobre-mi" },
     { name: "Contacto", href: "/contacto" },
@@ -124,12 +125,12 @@ export default function Header({ onOpenValuation }: HeaderProps) {
           </div>
 
           {/* Mobile Actions: WhatsApp rápido + Menú */}
-          <div className="flex items-center gap-1.5 lg:hidden">
+          <div className="flex items-center gap-1 lg:hidden">
             <a
               href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera hacerle una consulta`)}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 text-[#25D366] hover:text-white hover:bg-white/10 rounded-full transition-colors flex items-center justify-center"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] text-[#25D366] hover:text-white hover:bg-white/10 active:scale-95 rounded-full transition-all flex items-center justify-center"
               title="WhatsApp Directo"
               aria-label="WhatsApp"
             >
@@ -137,7 +138,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
             </a>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-neutral-300 hover:text-white"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] text-neutral-300 hover:text-white active:scale-95 rounded-full transition-all flex items-center justify-center"
               aria-label="Abrir menú"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

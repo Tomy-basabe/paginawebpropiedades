@@ -92,8 +92,8 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
         className="relative bg-white w-full max-w-5xl h-[100dvh] sm:h-auto sm:max-h-[92vh] rounded-none sm:rounded-sm shadow-2xl overflow-hidden my-0 sm:my-6 border border-neutral-200 flex flex-col justify-between"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Barra superior con cierre */}
-        <div className="sticky top-0 bg-white/95 backdrop-blur-md z-30 px-4 sm:px-6 py-3.5 border-b border-neutral-200 flex items-center justify-between">
+        {/* Barra superior con cierre con safe-area para iOS/Android */}
+        <div className="sticky top-0 bg-white/95 backdrop-blur-md z-30 px-4 sm:px-6 py-3.5 border-b border-neutral-200 flex items-center justify-between safe-area-top">
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono font-medium text-neutral-400">
               REF #{property.id}
@@ -118,7 +118,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
           <div className="flex items-center gap-2">
             <Link
               href={`/propiedades/${property.id}`}
-              className="text-xs text-neutral-600 hover:text-gold-600 font-medium flex items-center gap-1.5 px-2.5 py-1 rounded border border-neutral-200 hover:border-gold-300 transition-colors"
+              className="text-xs text-neutral-600 hover:text-gold-600 font-medium flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-neutral-200 hover:border-gold-300 transition-colors min-h-[38px]"
               title="Abrir en página completa dedicada"
             >
               <ExternalLink className="w-3.5 h-3.5" />
@@ -126,7 +126,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
             </Link>
             <button
               onClick={onClose}
-              className="p-1.5 text-neutral-400 hover:text-neutral-900 rounded-full hover:bg-neutral-100 transition-colors"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-neutral-400 hover:text-neutral-900 rounded-full hover:bg-neutral-100 active:bg-neutral-200 transition-colors"
               aria-label="Cerrar modal"
             >
               <X className="w-5 h-5" />
@@ -534,8 +534,8 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
           </div>
         </div>
 
-        {/* Barra inferior fija de conversión en teléfonos (Thumb-friendly) */}
-        <div className="sticky bottom-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 p-3 px-4 flex items-center justify-between gap-3 md:hidden z-30 shadow-2xl shrink-0">
+        {/* Barra inferior fija de conversión en teléfonos (Thumb-friendly con safe-area) */}
+        <div className="sticky bottom-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 p-3 px-4 safe-area-bottom-bar flex items-center justify-between gap-3 md:hidden z-30 shadow-[0_-10px_20px_rgba(0,0,0,0.1)] shrink-0">
           <div>
             <span className="block text-[10px] text-neutral-400 uppercase font-medium">Valor Inmueble</span>
             <span className="font-serif text-lg font-bold text-neutral-900 text-gold-600">{formatPrice(property.price)}</span>
@@ -544,7 +544,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
             href={getWhatsAppUrl(agentProfile.whatsappNumber, whatsappMessage)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white text-xs font-semibold py-3 px-4 rounded-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition-all"
+            className="flex-1 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white text-xs font-semibold py-3 px-4 rounded-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition-all min-h-[44px] touch-target"
           >
             <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
             <span>Consultar por WhatsApp</span>

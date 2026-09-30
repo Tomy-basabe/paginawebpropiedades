@@ -94,12 +94,12 @@ export default function PropertyDetailPage() {
   const whatsappMessage = `Hola ${agentProfile.name}, quisiera coordinar una visita a la propiedad "${property.title}" (Ref #${property.id}) en ${property.location.neighborhood}. ¿Qué días y horarios tiene disponibles?`;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-28 sm:pb-10 space-y-8">
       {/* Breadcrumb / Volver */}
       <div className="flex items-center gap-3">
         <button
           onClick={() => router.back()}
-          className="p-2 text-neutral-500 hover:text-neutral-900 rounded-sm hover:bg-neutral-100 transition-colors"
+          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-neutral-500 hover:text-neutral-900 active:bg-neutral-200 rounded-sm hover:bg-neutral-100 transition-colors"
           aria-label="Volver"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -372,8 +372,8 @@ export default function PropertyDetailPage() {
         </div>
       </div>
 
-      {/* Barra inferior fija en mobile */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 p-3 px-4 flex items-center justify-between gap-3 md:hidden z-30 shadow-2xl">
+      {/* Barra inferior fija en mobile con safe-area para iOS/Android */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 p-3 px-4 safe-area-bottom-bar flex items-center justify-between gap-3 md:hidden z-30 shadow-[0_-10px_20px_rgba(0,0,0,0.1)]">
         <div>
           <span className="block text-[10px] text-neutral-400 uppercase font-medium">Valor</span>
           <span className="font-serif text-lg font-bold text-gold-600">{formatPrice(property.price)}</span>
@@ -382,7 +382,7 @@ export default function PropertyDetailPage() {
           href={getWhatsAppUrl(agentProfile.whatsappNumber, whatsappMessage)}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white text-xs font-semibold py-3 px-4 rounded-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition-all"
+          className="flex-1 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white text-xs font-semibold py-3 px-4 rounded-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition-all min-h-[44px] touch-target"
         >
           <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
           <span>Consultar</span>

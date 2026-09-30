@@ -132,7 +132,7 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
           {/* Título de la propiedad */}
           <h3 
             onClick={() => onSelectProperty && onSelectProperty(property)}
-            className="text-base font-semibold text-neutral-800 hover:text-gold-600 transition-colors duration-200 line-clamp-1 cursor-pointer mb-2"
+            className="text-base font-semibold text-neutral-800 hover:text-gold-600 transition-colors duration-200 line-clamp-2 min-h-[2.5rem] cursor-pointer mb-2 active:opacity-75"
             title={property.title}
           >
             {property.title}
@@ -171,11 +171,11 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
           </div>
         </div>
 
-        {/* Botones de Acción con Microinteracciones */}
+        {/* Botones de Acción con Microinteracciones Táctiles */}
         <div className="pt-4 flex items-center gap-2">
           <button
             onClick={() => onSelectProperty && onSelectProperty(property)}
-            className="group/btn flex-1 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold py-2.5 px-3 rounded-sm transition-all duration-200 flex items-center justify-center gap-1.5 btn-tactile shadow-sm hover:shadow-md"
+            className="group/btn flex-1 min-h-[44px] bg-neutral-900 hover:bg-neutral-800 active:scale-[0.98] text-white text-xs font-semibold py-2.5 px-3 rounded-lg sm:rounded-sm transition-all duration-200 flex items-center justify-center gap-1.5 btn-tactile shadow-sm hover:shadow-md"
           >
             <span>Ver Ficha Técnica</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-gold-400 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
@@ -185,7 +185,7 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
             href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera consultar por la propiedad "${property.title}" (Ref: ${property.id})`)}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2.5 border border-[#25D366]/40 hover:border-[#25D366] bg-emerald-50/80 hover:bg-[#25D366] text-[#128C7E] hover:text-white rounded-sm transition-all duration-200 flex items-center justify-center btn-tactile shadow-sm hover:shadow-md hover:shadow-emerald-500/20"
+            className="w-[44px] h-[44px] min-w-[44px] min-h-[44px] border border-[#25D366]/40 hover:border-[#25D366] active:scale-[0.95] bg-emerald-50/80 hover:bg-[#25D366] text-[#128C7E] hover:text-white rounded-lg sm:rounded-sm transition-all duration-200 flex items-center justify-center btn-tactile shadow-sm hover:shadow-md hover:shadow-emerald-500/20"
             title={`Consultar por WhatsApp con ${agentProfile.name}`}
             aria-label="Consultar por WhatsApp"
           >
