@@ -7,10 +7,12 @@ import {
   ChevronLeft, 
   ChevronRight,
   Eye,
-  Footprints
+  Footprints,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
 
-export type WalkDirection = 'forward' | 'backward' | 'left' | 'right';
+export type WalkDirection = 'forward' | 'backward' | 'left' | 'right' | 'up' | 'down';
 
 interface WalkNavigationOverlayProps {
   onMoveStart: (direction: WalkDirection) => void;
@@ -20,8 +22,11 @@ interface WalkNavigationOverlayProps {
     backward: boolean;
     left: boolean;
     right: boolean;
+    up?: boolean;
+    down?: boolean;
   };
   isWalking: boolean;
+  isCalibrating?: boolean;
 }
 
 export default function WalkNavigationOverlay({
@@ -29,6 +34,7 @@ export default function WalkNavigationOverlay({
   onMoveEnd,
   activeDirections,
   isWalking,
+  isCalibrating = false,
 }: WalkNavigationOverlayProps) {
   const [showHint, setShowHint] = useState(true);
 
@@ -60,20 +66,33 @@ export default function WalkNavigationOverlay({
 
   return (
     <div className="absolute inset-0 pointer-events-none select-none z-15">
-      {/* Badge Superior: POV Primera Persona */}
+      {/* Badge Superior: POV Primera Persona o Modo Calibración */}
       <div className="absolute top-3 left-3 pointer-events-auto">
-        <div className="inline-flex items-center gap-2 bg-black/75 backdrop-blur-md border border-gold-400/30 text-white px-3 py-1.5 rounded-full text-[11px] shadow-lg">
-          <span className={`w-2 h-2 rounded-full ${isWalking ? 'bg-gold-400 animate-ping' : 'bg-emerald-400 animate-pulse'}`} />
-          <span className="font-semibold text-gold-300 flex items-center gap-1.5">
+        <div className={`inline-flex items-center gap-2 backdrop-blur-md border px-3 py-1.5 rounded-full text-[11px] shadow-lg ${
+          isCalibrating 
+            ? 'bg-amber-950/90 border-amber-400 text-amber-200' 
+            : 'bg-black/75 border-gold-400/30 text-white'
+        }`}>
+          <span className={`w-2 h-2 rounded-full ${
+            isCalibrating 
+              ? 'bg-amber-400 animate-pulse' 
+              : isWalking 
+              ? 'bg-gold-400 animate-ping' 
+              : 'bg-emerald-400 animate-pulse'
+          }`} />
+          <span className="font-semibold flex items-center gap-1.5">
             <Footprints className="w-3.5 h-3.5 text-gold-400" />
-            <span>POV Humano</span>
+            <span>{isCalibrating ? 'Modo Calibración POV' : 'POV Humano'}</span>
           </span>
-          <span className="text-neutral-400 text-[10px] hidden sm:inline">• Altura de ojos fija</span>
+          <span className="text-neutral-400 text-[10px] hidden sm:inline">
+            {isCalibrating ? '• W A S D: Moverse | Q E: Altura' : '• Altura de ojos fija'}
+          </span>
         </div>
       </div>
 
-      {/* Cruceta de Navegación interactiva estilo Google Maps / Street View */}
-      <div className="absolute bottom-4 left-4 pointer-events-auto flex flex-col items-center">
+      {/* Cruceta de Navegación interactiva + Controles de Altura si está calibrando */}
+      <div className="absolute bottom-4 left-4 pointer-events-auto flex items-end gap-2">
+        {/* Cruceta WASD / Flechas */}
         <div className="bg-luxury-black/85 backdrop-blur-md p-2 rounded-2xl border border-white/20 shadow-2xl flex flex-col items-center gap-1">
           {/* Flecha Arriba (Avanzar) */}
           <button
@@ -158,15 +177,66 @@ export default function WalkNavigationOverlay({
             <ChevronDown className="w-6 h-6" strokeWidth={2.5} />
           </button>
         </div>
+
+        {/* Columna de Controles de Altura (Solo en Modo Calibración) */}
+        {isCalibrating && (
+          <div className="bg-luxury-black/90 backdrop-blur-md p-2 rounded-2xl border border-amber-400/40 shadow-2xl flex flex-col items-center gap-1">
+            <span className="text-[9px] font-bold text-amber-400 uppercase tracking-wider mb-0.5">Altura</span>
+            
+            {/* Subir Altura (E) */}
+            <button
+              type="button"
+              onPointerDown={(e) => handlePointerDown('up', e)}
+              onPointerUp={(e) => handlePointerUp('up', e)}
+              onPointerLeave={(e) => handlePointerLeave('up', e)}
+              className={`w-10 h-10 rounded-xl flex flex-col items-center justify-center transition-all ${
+                activeDirections.up
+                  ? 'bg-amber-400 text-luxury-black scale-95 shadow-md'
+                  : 'bg-white/10 hover:bg-amber-500/20 active:bg-amber-400 active:text-luxury-black text-white border border-white/10'
+              }`}
+              title="Subir Altura (Tecla E)"
+              aria-label="Subir Altura (E)"
+            >
+              <ArrowUp className="w-4 h-4" strokeWidth={2.5} />
+              <span className="text-[9px] font-bold">E</span>
+            </button>
+
+            {/* Bajar Altura (Q) */}
+            <button
+              type="button"
+              onPointerDown={(e) => handlePointerDown('down', e)}
+              onPointerUp={(e) => handlePointerUp('down', e)}
+              onPointerLeave={(e) => handlePointerLeave('down', e)}
+              className={`w-10 h-10 rounded-xl flex flex-col items-center justify-center transition-all ${
+                activeDirections.down
+                  ? 'bg-amber-400 text-luxury-black scale-95 shadow-md'
+                  : 'bg-white/10 hover:bg-amber-500/20 active:bg-amber-400 active:text-luxury-black text-white border border-white/10'
+              }`}
+              title="Bajar Altura (Tecla Q)"
+              aria-label="Bajar Altura (Q)"
+            >
+              <ArrowDown className="w-4 h-4" strokeWidth={2.5} />
+              <span className="text-[9px] font-bold">Q</span>
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Cartel flotante de ayuda / instrucciones (desaparece gradualmente) */}
+      {/* Cartel flotante de ayuda / instrucciones */}
       {showHint && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 pointer-events-auto">
-          <div className="bg-black/80 backdrop-blur-md text-white text-[11px] sm:text-xs px-4 py-2 rounded-full border border-white/20 shadow-xl flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-gold-400" />
+          <div className="bg-black/85 backdrop-blur-md text-white text-[11px] sm:text-xs px-4 py-2 rounded-full border border-white/20 shadow-xl flex items-center gap-2.5">
+            <span className={`w-2 h-2 rounded-full ${isCalibrating ? 'bg-amber-400' : 'bg-gold-400'}`} />
             <span>
-              <strong className="text-gold-300">W A S D</strong> o <strong className="text-gold-300">Flechas</strong> para caminar • Arrastrá con el mouse para mirar
+              {isCalibrating ? (
+                <>
+                  <strong className="text-amber-300">W A S D</strong> para moverte • <strong className="text-amber-300">Q / E</strong> para altura • Arrastrá para mirar
+                </>
+              ) : (
+                <>
+                  <strong className="text-gold-300">W A S D</strong> o <strong className="text-gold-300">Flechas</strong> para caminar • Arrastrá para mirar
+                </>
+              )}
             </span>
           </div>
         </div>

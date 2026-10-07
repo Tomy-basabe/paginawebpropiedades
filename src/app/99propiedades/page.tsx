@@ -37,9 +37,11 @@ import {
   Users,
   KeyRound,
   Shield,
-  UserPlus
+  UserPlus,
+  Crosshair
 } from "lucide-react";
 import { SPLAT_VIEWER_CONFIG } from "@/lib/gaussian-splat/config";
+import CameraCalibrationModal from "@/components/3d/CameraCalibrationModal";
 
 export interface AdminUser {
   id: string;
@@ -183,6 +185,17 @@ export default function AdminSecretPage() {
   const [uploadingRoomId, setUploadingRoomId] = useState<string | null>(null);
   const [showGuide3D, setShowGuide3D] = useState(false);
 
+  // Estado para calibración interactiva de cámara POV (WASD + QE)
+  const [calibratingTarget, setCalibratingTarget] = useState<{
+    propertyId?: string;
+    roomId?: string;
+    name: string;
+    url: string;
+    format?: "ply" | "splat" | "ksplat" | "embed";
+    initialCameraPosition?: [number, number, number];
+    initialCameraTarget?: [number, number, number];
+  } | null>(null);
+
   const handleImageFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -278,14 +291,98 @@ export default function AdminSecretPage() {
       name: currentRooms.length === 0 ? "Living Comedor" : `Habitación ${currentRooms.length + 1}`,
       url: "",
       format: "ply",
-      initialCameraPosition: [0, 2, 5],
-      initialCameraTarget: [0, 0, 0],
+      initialCameraPosition: [-0.3, 0.55, 0.6],
+      initialCameraTarget: [-0.3, 0.55, -0.8],
     };
     setPropForm((prev) => ({
       ...prev,
       has3DTour: true,
       rooms3D: [...currentRooms, newRoom],
     }));
+  };
+
+  const handleSaveCalibration = (
+    position: [number, number, number],
+    target: [number, number, number]
+  ) => {
+    if (!calibratingTarget) return;
+
+    // Caso 1: Calibrando habitación dentro del formulario activo
+    if (calibratingTarget.roomId) {
+      handleUpdateRoom3D(calibratingTarget.roomId, {
+        initialCameraPosition: position,
+        initialCameraTarget: target,
+      });
+
+      setPropForm((prev) => {
+        const rooms = (prev.rooms3D || []).map((r) =>
+          r.id === calibratingTarget.roomId
+            ? { ...r, initialCameraPosition: position, initialCameraTarget: target }
+            : r
+        );
+        const isFirst = rooms[0]?.id === calibratingTarget.roomId;
+        return {
+          ...prev,
+          rooms3D: rooms,
+          ...(isFirst && prev.model3D
+            ? {
+                model3D: {
+                  ...prev.model3D,
+                  initialCameraPosition: position,
+                  initialCameraTarget: target,
+                },
+              }
+            : {}),
+        };
+      });
+    }
+
+    // Caso 2: Calibrando directo desde la tabla de propiedades con propertyId
+    if (calibratingTarget.propertyId) {
+      const targetProp = properties.find((p) => p.id === calibratingTarget.propertyId);
+      if (targetProp) {
+        let updatedRooms = targetProp.rooms3D ? [...targetProp.rooms3D] : [];
+        if (calibratingTarget.roomId) {
+          updatedRooms = updatedRooms.map((r) =>
+            r.id === calibratingTarget.roomId
+              ? { ...r, initialCameraPosition: position, initialCameraTarget: target }
+              : r
+          );
+        } else if (updatedRooms.length > 0) {
+          updatedRooms[0] = {
+            ...updatedRooms[0],
+            initialCameraPosition: position,
+            initialCameraTarget: target,
+          };
+        }
+
+        const updatedModel3D = targetProp.model3D
+          ? {
+              ...targetProp.model3D,
+              initialCameraPosition: position,
+              initialCameraTarget: target,
+            }
+          : updatedRooms[0]
+          ? {
+              url: updatedRooms[0].url,
+              format: updatedRooms[0].format,
+              initialCameraPosition: position,
+              initialCameraTarget: target,
+            }
+          : undefined;
+
+        updateProperty(calibratingTarget.propertyId, {
+          rooms3D: updatedRooms,
+          model3D: updatedModel3D,
+        });
+      }
+    }
+
+    showFeedback(
+      `Punto de partida y altura guardados para "${calibratingTarget.name}".`,
+      "success"
+    );
+    setCalibratingTarget(null);
   };
 
   const handleUpdateRoom3D = (roomId: string, patch: Partial<PropertyRoom3D>) => {
@@ -567,8 +664,8 @@ export default function AdminSecretPage() {
             name: "Ambiente Principal",
             url: prop.model3D.url,
             format: prop.model3D.format || "ply",
-            initialCameraPosition: prop.model3D.initialCameraPosition || [0, 2, 5],
-            initialCameraTarget: prop.model3D.initialCameraTarget || [0, 0, 0],
+            initialCameraPosition: prop.model3D.initialCameraPosition || [-0.3, 0.55, 0.6],
+            initialCameraTarget: prop.model3D.initialCameraTarget || [-0.3, 0.55, -0.8],
           },
         ]
       : [];
@@ -1671,6 +1768,47 @@ export default function AdminSecretPage() {
                             </select>
                           </div>
                         </div>
+
+                        {/* Configuración de punto de partida y altura de la cámara */}
+                        <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5 mt-1 border-t border-dashed border-amber-200">
+                          <div className="flex items-center gap-1.5 text-[11px] text-neutral-600">
+                            <Crosshair className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                            <span>
+                              {room.initialCameraPosition
+                                ? `Inicio: [X:${room.initialCameraPosition[0].toFixed(2)}, Y:${room.initialCameraPosition[1].toFixed(2)}, Z:${room.initialCameraPosition[2].toFixed(2)}]`
+                                : "Posición: Centro calibrado a 1.70m de altura"}
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            disabled={!room.url || room.format === "embed"}
+                            onClick={() =>
+                              setCalibratingTarget({
+                                roomId: room.id,
+                                name: room.name || `Habitación ${idx + 1}`,
+                                url: room.url,
+                                format: room.format,
+                                initialCameraPosition: room.initialCameraPosition || [-0.3, 0.55, 0.6],
+                                initialCameraTarget: room.initialCameraTarget || [-0.3, 0.55, -0.8],
+                              })
+                            }
+                            className={`px-3 py-1.5 rounded-sm font-semibold text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer ${
+                              !room.url || room.format === "embed"
+                                ? "bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
+                                : "bg-amber-500 hover:bg-amber-400 text-luxury-black hover:shadow-md active:scale-95"
+                            }`}
+                            title={
+                              room.format === "embed"
+                                ? "Los embeds de SuperSplat usan su propio visor web"
+                                : !room.url
+                                ? "Primero ingresá o subí el archivo 3D"
+                                : "Abre el visor para desplazarte con WASD y ajustar la altura con Q y E"
+                            }
+                          >
+                            <Crosshair className="w-3.5 h-3.5" />
+                            <span>Calibrar Punto Inicial & Altura (WASD + QE)</span>
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -2001,6 +2139,33 @@ export default function AdminSecretPage() {
 
                       <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">
+                          {(prop.has3DTour || prop.model3D?.url || (prop.rooms3D && prop.rooms3D.length > 0)) && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const targetRoom = prop.rooms3D?.[0];
+                                const url = targetRoom?.url || prop.model3D?.url;
+                                const format = targetRoom?.format || prop.model3D?.format;
+                                if (!url || format === "embed") {
+                                  alert("Esta propiedad usa un enlace externo o no tiene un archivo 3D compatible para calibrar.");
+                                  return;
+                                }
+                                setCalibratingTarget({
+                                  propertyId: prop.id,
+                                  roomId: targetRoom?.id,
+                                  name: targetRoom?.name || prop.title,
+                                  url,
+                                  format,
+                                  initialCameraPosition: targetRoom?.initialCameraPosition || prop.model3D?.initialCameraPosition || [-0.3, 0.55, 0.6],
+                                  initialCameraTarget: targetRoom?.initialCameraTarget || prop.model3D?.initialCameraTarget || [-0.3, 0.55, -0.8],
+                                });
+                              }}
+                              className="p-1.5 text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded-sm cursor-pointer transition-colors"
+                              title="Calibrar Punto de Partida y Altura 3D (WASD + QE)"
+                            >
+                              <Crosshair className="w-4 h-4" />
+                            </button>
+                          )}
                           <button
                             onClick={() => startEditProperty(prop)}
                             className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-sm cursor-pointer"
@@ -2910,6 +3075,20 @@ export default function AdminSecretPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal interactivo de calibración 3D en primera persona (POV WASD + QE) */}
+      {calibratingTarget && (
+        <CameraCalibrationModal
+          isOpen={!!calibratingTarget}
+          onClose={() => setCalibratingTarget(null)}
+          roomName={calibratingTarget.name}
+          modelUrl={calibratingTarget.url}
+          format={calibratingTarget.format}
+          initialCameraPosition={calibratingTarget.initialCameraPosition || [-0.3, 0.55, 0.6]}
+          initialCameraTarget={calibratingTarget.initialCameraTarget || [-0.3, 0.55, -0.8]}
+          onSave={handleSaveCalibration}
+        />
       )}
     </div>
   );

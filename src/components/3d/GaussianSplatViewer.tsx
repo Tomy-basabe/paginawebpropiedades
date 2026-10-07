@@ -15,6 +15,8 @@ export interface GaussianSplatViewerProps {
   initialCameraTarget?: [number, number, number];
   className?: string;
   propertyTitle?: string;
+  isCalibrating?: boolean;
+  onCameraChange?: (pos: [number, number, number], target: [number, number, number]) => void;
 }
 
 export function parseScaniverseUrl(url: string): { isScaniverse: boolean; scanId: string | null } {
@@ -65,6 +67,8 @@ export default function GaussianSplatViewer({
   initialCameraTarget,
   className = '',
   propertyTitle,
+  isCalibrating = false,
+  onCameraChange,
 }: GaussianSplatViewerProps) {
   const scaniverseInfo = parseScaniverseUrl(modelUrl);
   const isEmbed = isEmbedViewer(modelUrl, format);
@@ -76,12 +80,14 @@ export default function GaussianSplatViewer({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isInverted, setIsInverted] = useState(false);
 
-  // Estados de navegación en primera persona (POV)
+  // Estados de navegación en primera persona (POV) con soporte de altura (Q / E) en calibración
   const [activeDirections, setActiveDirections] = useState({
     forward: false,
     backward: false,
     left: false,
     right: false,
+    up: false,
+    down: false,
   });
   const [isWalking, setIsWalking] = useState(false);
 
@@ -96,6 +102,8 @@ export default function GaussianSplatViewer({
     backward: false,
     left: false,
     right: false,
+    up: false,
+    down: false,
   });
   const isDraggingRef = useRef(false);
   const lastPointerPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -339,6 +347,12 @@ export default function GaussianSplatViewer({
       } else if (e.code === 'KeyD' || e.key === 'ArrowRight') {
         setActiveDirections((prev) => ({ ...prev, right: true }));
         matched = true;
+      } else if (isCalibrating && (e.code === 'KeyE' || e.key === 'e' || e.key === 'E')) {
+        setActiveDirections((prev) => ({ ...prev, up: true }));
+        matched = true;
+      } else if (isCalibrating && (e.code === 'KeyQ' || e.key === 'q' || e.key === 'Q')) {
+        setActiveDirections((prev) => ({ ...prev, down: true }));
+        matched = true;
       }
 
       if (matched) {
@@ -355,6 +369,10 @@ export default function GaussianSplatViewer({
         setActiveDirections((prev) => ({ ...prev, left: false }));
       } else if (e.code === 'KeyD' || e.key === 'ArrowRight') {
         setActiveDirections((prev) => ({ ...prev, right: false }));
+      } else if (isCalibrating && (e.code === 'KeyE' || e.key === 'e' || e.key === 'E')) {
+        setActiveDirections((prev) => ({ ...prev, up: false }));
+      } else if (isCalibrating && (e.code === 'KeyQ' || e.key === 'q' || e.key === 'Q')) {
+        setActiveDirections((prev) => ({ ...prev, down: false }));
       }
     };
 
@@ -481,11 +499,24 @@ export default function GaussianSplatViewer({
       playerPosRef.current.x += moveX;
       playerPosRef.current.z += moveZ;
 
+      // En modo calibración, permitir ajustar la altura con Q y E (y sus botones en pantalla)
+      if (isCalibrating) {
+        const vertDistance = 1.3 * dt;
+        if (dirs.up) {
+          playerPosRef.current.y += vertDistance;
+          baseEyeHeightRef.current = playerPosRef.current.y;
+        }
+        if (dirs.down) {
+          playerPosRef.current.y -= vertDistance;
+          baseEyeHeightRef.current = playerPosRef.current.y;
+        }
+      }
+
       // Emulación de movimiento natural de una persona (Head-Bobbing de pasos)
       let bobY = 0;
       let bobLateral = 0;
 
-      if (moving) {
+      if (moving && !isCalibrating) {
         walkCycleRef.current += dt * 10.5; // ~1.67 pasos por segundo
         bobY = Math.sin(walkCycleRef.current) * 0.024; // Elevación/descenso de cada pisada
         bobLateral = Math.cos(walkCycleRef.current * 0.5) * 0.012; // Oscilación sutil de hombros/cadera
@@ -493,20 +524,36 @@ export default function GaussianSplatViewer({
         walkCycleRef.current = 0;
       }
 
-      // POSICIÓN ESTRICTA: El usuario nunca puede elevarse hacia arriba más allá de la altura de los ojos
+      // POSICIÓN: En modo calibración o normal
       const currentCameraX = playerPosRef.current.x + rightX * bobLateral;
       const currentCameraY = baseEyeHeightRef.current + bobY;
       const currentCameraZ = playerPosRef.current.z + rightZ * bobLateral;
 
       viewer.camera.position.set(currentCameraX, currentCameraY, currentCameraZ);
 
-      // Vector de mirada de los ojos humanos (hacia el techo o hacia el suelo, sin alterar la altura corporal)
+      // Vector de mirada de los ojos humanos (hacia el techo o hacia el suelo)
       const lookDistance = 2.0;
       const lookAtX = currentCameraX + Math.sin(yaw) * Math.cos(pitch) * lookDistance;
       const lookAtY = currentCameraY + (isInverted ? -Math.sin(pitch) : Math.sin(pitch)) * lookDistance;
       const lookAtZ = currentCameraZ - Math.cos(yaw) * Math.cos(pitch) * lookDistance;
 
       viewer.camera.lookAt(lookAtX, lookAtY, lookAtZ);
+
+      // Notificar al componente padre (Admin) si hay cambio de cámara
+      if (onCameraChange && (moving || dirs.up || dirs.down || isDraggingRef.current)) {
+        onCameraChange(
+          [
+            Number(currentCameraX.toFixed(3)),
+            Number(currentCameraY.toFixed(3)),
+            Number(currentCameraZ.toFixed(3)),
+          ],
+          [
+            Number(lookAtX.toFixed(3)),
+            Number(lookAtY.toFixed(3)),
+            Number(lookAtZ.toFixed(3)),
+          ]
+        );
+      }
 
       // Actualizar el target interno para que la ordenación de splats de la librería se mantenga perfecta
       if (viewer.controls && viewer.controls.target) {
@@ -803,6 +850,7 @@ export default function GaussianSplatViewer({
             onMoveEnd={handleMoveEnd}
             activeDirections={activeDirections}
             isWalking={isWalking}
+            isCalibrating={isCalibrating}
           />
           <ViewerControls
             onResetCamera={handleResetCamera}

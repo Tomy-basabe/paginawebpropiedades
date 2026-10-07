@@ -108,30 +108,30 @@
       "source_location": "L6"
     },
     {
-      "id": "src_lib_gaussian_splat_config_splatformat",
-      "label": "SplatFormat",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "GaussianSplatViewer.tsx",
-      "file_type": "code",
-      "norm_label": "splatformat",
-      "source_file": "src/lib/gaussian-splat/config.ts",
-      "source_location": "L35"
-    },
-    {
       "id": "src_components_propertyvirtualtouruploader_uploadstate",
       "label": "UploadState",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 15,
-      "community_name": "PropertyVirtualTourUploader.tsx",
+      "community_name": "TourViewer.tsx",
       "file_type": "code",
       "norm_label": "uploadstate",
       "source_file": "src/components/PropertyVirtualTourUploader.tsx",
       "source_location": "L7"
+    },
+    {
+      "id": "src_app_99propiedades_page_adminuser",
+      "label": "AdminUser",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "adminuser",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L44"
     },
     {
       "id": "src_components_brandlogo_brandlogoprops",
@@ -139,12 +139,38 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 2,
-      "community_name": "useData",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
       "file_type": "code",
       "norm_label": "brandlogoprops",
       "source_file": "src/components/BrandLogo.tsx",
       "source_location": "L6"
+    },
+    {
+      "id": "src_lib_gaussian_splat_config_splatformat",
+      "label": "SplatFormat",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "splatformat",
+      "source_file": "src/lib/gaussian-splat/config.ts",
+      "source_location": "L35"
+    },
+    {
+      "id": "src_lib_types_propertystatus",
+      "label": "PropertyStatus",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "propertystatus",
+      "source_file": "src/lib/types.ts",
+      "source_location": "L3"
     },
     {
       "id": "src_components_header_headerprops",
@@ -199,19 +225,6 @@
       "source_location": "L3"
     },
     {
-      "id": "src_app_99propiedades_page_adminuser",
-      "label": "AdminUser",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "adminuser",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L44"
-    },
-    {
       "id": "src_components_propertycard_propertycardprops",
       "label": "PropertyCardProps",
       "_callable": true,
@@ -235,7 +248,7 @@
       "file_type": "code",
       "norm_label": "propertydetailmodalprops",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L48"
+      "source_location": "L49"
     },
     {
       "id": "src_context_datacontext_datacontexttype",
@@ -327,19 +340,6 @@
       "norm_label": "propertyroom3d",
       "source_file": "src/lib/types.ts",
       "source_location": "L50"
-    },
-    {
-      "id": "src_lib_types_propertystatus",
-      "label": "PropertyStatus",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "propertystatus",
-      "source_file": "src/lib/types.ts",
-      "source_location": "L3"
     },
     {
       "id": "src_lib_types_propertytype",
@@ -571,42 +571,6 @@
       "source_location": "L9"
     },
     {
-      "id": "src_components_tourviewer_controls",
-      "label": "Controls()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "controls()",
-      "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L12"
-    },
-    {
-      "id": "src_components_tourviewer_lumasplats",
-      "label": "LumaSplats()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "lumasplats()",
-      "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L36"
-    },
-    {
-      "id": "src_components_tourviewer_tourviewer",
-      "label": "TourViewer()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "tourviewer()",
-      "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L55"
-    },
-    {
       "id": "src_app_admin_page_adminpage",
       "label": "AdminPage()",
       "_callable": true,
@@ -631,16 +595,148 @@
       "source_location": "L5"
     },
     {
+      "id": "src_app_tour_demo_page_tourdemopage",
+      "label": "TourDemoPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "tourdemopage()",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L5"
+    },
+    {
       "id": "src_components_propertyvirtualtouruploader_propertyvirtualtouruploader",
       "label": "PropertyVirtualTourUploader()",
       "_callable": true,
       "_origin": "ast",
       "community": 15,
-      "community_name": "PropertyVirtualTourUploader.tsx",
+      "community_name": "TourViewer.tsx",
       "file_type": "code",
       "norm_label": "propertyvirtualtouruploader()",
       "source_file": "src/components/PropertyVirtualTourUploader.tsx",
       "source_location": "L9"
+    },
+    {
+      "id": "src_components_tourviewer_controls",
+      "label": "Controls()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "controls()",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L19"
+    },
+    {
+      "id": "src_components_tourviewer_lumasplats",
+      "label": "LumaSplats()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "lumasplats()",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L43"
+    },
+    {
+      "id": "src_components_tourviewer_tourviewer",
+      "label": "TourViewer()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "tourviewer()",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L62"
+    },
+    {
+      "id": "src_app_99propiedades_page_adminsecretpage",
+      "label": "AdminSecretPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "adminsecretpage()",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L62"
+    },
+    {
+      "id": "src_components_brandlogo_brandlogo",
+      "label": "BrandLogo()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "brandlogo()",
+      "source_file": "src/components/BrandLogo.tsx",
+      "source_location": "L12"
+    },
+    {
+      "id": "src_lib_supabase_compressvideoinbrowser",
+      "label": "compressVideoInBrowser()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "compressvideoinbrowser()",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L49"
+    },
+    {
+      "id": "src_lib_supabase_uploadpropertyimage",
+      "label": "uploadPropertyImage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "uploadpropertyimage()",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L15"
+    },
+    {
+      "id": "src_lib_supabase_uploadpropertymodel3d",
+      "label": "uploadPropertyModel3D()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "uploadpropertymodel3d()",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L237"
+    },
+    {
+      "id": "src_lib_supabase_uploadpropertyvideo",
+      "label": "uploadPropertyVideo()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "uploadpropertyvideo()",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L162"
+    },
+    {
+      "id": "src_app_api_generate_tour_route_post",
+      "label": "POST()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "generate-tour/route.ts",
+      "file_type": "code",
+      "norm_label": "post()",
+      "source_file": "src/app/api/generate-tour/route.ts",
+      "source_location": "L4"
     },
     {
       "id": "src_app_contacto_page_contactocontent",
@@ -691,6 +787,30 @@
       "source_location": "L31"
     },
     {
+      "id": "src_app_propiedades_id_page_propertydetailpage",
+      "label": "PropertyDetailPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "propertydetailpage()",
+      "source_file": "src/app/propiedades/[id]/page.tsx",
+      "source_location": "L47"
+    },
+    {
+      "id": "src_app_propiedades_page_propiedadescontent",
+      "label": "PropiedadesContent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "propiedadescontent()",
+      "source_file": "src/app/propiedades/page.tsx",
+      "source_location": "L27"
+    },
+    {
       "id": "src_app_sobre_mi_page_sobremipage",
       "label": "SobreMiPage()",
       "_callable": true,
@@ -725,18 +845,6 @@
       "norm_label": "bannerhero()",
       "source_file": "src/components/BannerHero.tsx",
       "source_location": "L9"
-    },
-    {
-      "id": "src_components_brandlogo_brandlogo",
-      "label": "BrandLogo()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "useData",
-      "file_type": "code",
-      "norm_label": "brandlogo()",
-      "source_file": "src/components/BrandLogo.tsx",
-      "source_location": "L12"
     },
     {
       "id": "src_components_clientshell_clientshell",
@@ -811,6 +919,18 @@
       "source_location": "L27"
     },
     {
+      "id": "src_components_propertydetailmodal_propertydetailmodal",
+      "label": "PropertyDetailModal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "propertydetailmodal()",
+      "source_file": "src/components/PropertyDetailModal.tsx",
+      "source_location": "L54"
+    },
+    {
       "id": "src_components_valuationmodal_valuationmodal",
       "label": "ValuationModal()",
       "_callable": true,
@@ -856,7 +976,19 @@
       "file_type": "code",
       "norm_label": "usedata()",
       "source_file": "src/context/DataContext.tsx",
-      "source_location": "L568"
+      "source_location": "L569"
+    },
+    {
+      "id": "src_lib_whatsapp_cleanwhatsappnumber",
+      "label": "cleanWhatsAppNumber()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "cleanwhatsappnumber()",
+      "source_file": "src/lib/whatsapp.ts",
+      "source_location": "L5"
     },
     {
       "id": "src_lib_whatsapp_getwhatsappurl",
@@ -871,42 +1003,6 @@
       "source_location": "L34"
     },
     {
-      "id": "src_app_99propiedades_page_adminsecretpage",
-      "label": "AdminSecretPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "adminsecretpage()",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L62"
-    },
-    {
-      "id": "src_app_propiedades_id_page_propertydetailpage",
-      "label": "PropertyDetailPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "propertydetailpage()",
-      "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L47"
-    },
-    {
-      "id": "src_app_propiedades_page_propiedadescontent",
-      "label": "PropiedadesContent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "propiedadescontent()",
-      "source_file": "src/app/propiedades/page.tsx",
-      "source_location": "L27"
-    },
-    {
       "id": "src_app_propiedades_page_propiedadespage",
       "label": "PropiedadesPage()",
       "_callable": true,
@@ -917,78 +1013,6 @@
       "norm_label": "propiedadespage()",
       "source_file": "src/app/propiedades/page.tsx",
       "source_location": "L565"
-    },
-    {
-      "id": "src_components_propertydetailmodal_propertydetailmodal",
-      "label": "PropertyDetailModal()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "propertydetailmodal()",
-      "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L53"
-    },
-    {
-      "id": "src_lib_supabase_compressvideoinbrowser",
-      "label": "compressVideoInBrowser()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "compressvideoinbrowser()",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L49"
-    },
-    {
-      "id": "src_lib_supabase_uploadpropertyimage",
-      "label": "uploadPropertyImage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "uploadpropertyimage()",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L15"
-    },
-    {
-      "id": "src_lib_supabase_uploadpropertymodel3d",
-      "label": "uploadPropertyModel3D()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "uploadpropertymodel3d()",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L237"
-    },
-    {
-      "id": "src_lib_supabase_uploadpropertyvideo",
-      "label": "uploadPropertyVideo()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "uploadpropertyvideo()",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L162"
-    },
-    {
-      "id": "src_lib_whatsapp_cleanwhatsappnumber",
-      "label": "cleanWhatsAppNumber()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "cleanwhatsappnumber()",
-      "source_file": "src/lib/whatsapp.ts",
-      "source_location": "L5"
     },
     {
       "id": "src_app_layout_rootlayout",
@@ -1013,17 +1037,6 @@
       "norm_label": "dataprovider()",
       "source_file": "src/context/DataContext.tsx",
       "source_location": "L42"
-    },
-    {
-      "id": "gaussian_splats_3d",
-      "label": "@mkkellogg/gaussian-splats-3d",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "GaussianSplatViewer.tsx",
-      "confidence": "EXTRACTED",
-      "file_type": "code",
-      "norm_label": "@mkkellogg/gaussian-splats-3d",
-      "source_file": "@mkkellogg/gaussian-splats-3d"
     },
     {
       "id": "src_components_3d_gaussiansplatviewer",
@@ -1090,28 +1103,6 @@
       "norm_label": "capabilities.ts",
       "source_file": "src/lib/gaussian-splat/capabilities.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "src_lib_gaussian_splat_config",
-      "label": "config.ts",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "GaussianSplatViewer.tsx",
-      "file_type": "code",
-      "norm_label": "config.ts",
-      "source_file": "src/lib/gaussian-splat/config.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_gaussian_splat_config_splat_viewer_config",
-      "label": "SPLAT_VIEWER_CONFIG",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "GaussianSplatViewer.tsx",
-      "file_type": "code",
-      "norm_label": "splat_viewer_config",
-      "source_file": "src/lib/gaussian-splat/config.ts",
-      "source_location": "L6"
     },
     {
       "id": "ref_mkkellogg_gaussian_splats_3d",
@@ -1334,17 +1325,6 @@
       "source_location": "L7"
     },
     {
-      "id": "src_components_tourviewer",
-      "label": "TourViewer.tsx",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "tourviewer.tsx",
-      "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "tailwind_config",
       "label": "tailwind.config.ts",
       "_origin": "ast",
@@ -1389,17 +1369,6 @@
       "source_location": "L16"
     },
     {
-      "id": "ref_lumaai_luma_web",
-      "label": "@lumaai/luma-web",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "@lumaai/luma-web",
-      "source_file": "package.json",
-      "source_location": "L12"
-    },
-    {
       "id": "ref_postcss",
       "label": "postcss",
       "_origin": "ast",
@@ -1420,17 +1389,6 @@
       "norm_label": "react-dom",
       "source_file": "package.json",
       "source_location": "L20"
-    },
-    {
-      "id": "ref_react_three_fiber",
-      "label": "@react-three/fiber",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "@react-three/fiber",
-      "source_file": "package.json",
-      "source_location": "L14"
     },
     {
       "id": "ref_supabase_supabase_js",
@@ -1464,17 +1422,6 @@
       "norm_label": "tailwindcss",
       "source_file": "package.json",
       "source_location": "L30"
-    },
-    {
-      "id": "ref_three",
-      "label": "three",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "three",
-      "source_file": "package.json",
-      "source_location": "L22"
     },
     {
       "id": "ref_types_node",
@@ -1625,13 +1572,24 @@
     },
     {
       "id": "src_app_api_upload_model_route",
-      "label": "route.ts",
+      "label": "upload-model/route.ts",
       "_origin": "ast",
       "community": 14,
       "community_name": "route.ts",
       "file_type": "code",
-      "norm_label": "route.ts",
+      "norm_label": "upload-model/route.ts",
       "source_file": "src/app/api/upload-model/route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_tour_demo_page",
+      "label": "tour-demo/page.tsx",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "tour-demo/page.tsx",
+      "source_file": "src/app/tour-demo/page.tsx",
       "source_location": "L1"
     },
     {
@@ -1639,10 +1597,153 @@
       "label": "PropertyVirtualTourUploader.tsx",
       "_origin": "ast",
       "community": 15,
-      "community_name": "PropertyVirtualTourUploader.tsx",
+      "community_name": "TourViewer.tsx",
       "file_type": "code",
       "norm_label": "propertyvirtualtouruploader.tsx",
       "source_file": "src/components/PropertyVirtualTourUploader.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_tourviewer",
+      "label": "TourViewer.tsx",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "tourviewer.tsx",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_tourviewer_gaussiansplatviewer",
+      "label": "GaussianSplatViewer",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "gaussiansplatviewer",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L12"
+    },
+    {
+      "id": "ref_lumaai_luma_web",
+      "label": "@lumaai/luma-web",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "concept",
+      "norm_label": "@lumaai/luma-web",
+      "source_file": "package.json",
+      "source_location": "L12"
+    },
+    {
+      "id": "ref_react_three_fiber",
+      "label": "@react-three/fiber",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "concept",
+      "norm_label": "@react-three/fiber",
+      "source_file": "package.json",
+      "source_location": "L14"
+    },
+    {
+      "id": "ref_three",
+      "label": "three",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "concept",
+      "norm_label": "three",
+      "source_file": "package.json",
+      "source_location": "L22"
+    },
+    {
+      "id": "src_app_99propiedades_page",
+      "label": "99propiedades/page.tsx",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "99propiedades/page.tsx",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_99propiedades_page_default_admin_user",
+      "label": "DEFAULT_ADMIN_USER",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "default_admin_user",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L53"
+    },
+    {
+      "id": "src_components_brandlogo",
+      "label": "BrandLogo.tsx",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "brandlogo.tsx",
+      "source_file": "src/components/BrandLogo.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_gaussian_splat_config",
+      "label": "config.ts",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "config.ts",
+      "source_file": "src/lib/gaussian-splat/config.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_gaussian_splat_config_splat_viewer_config",
+      "label": "SPLAT_VIEWER_CONFIG",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "splat_viewer_config",
+      "source_file": "src/lib/gaussian-splat/config.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_lib_supabase",
+      "label": "supabase.ts",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "supabase.ts",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_supabase_supabase",
+      "label": "supabase",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "supabase",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L9"
+    },
+    {
+      "id": "src_app_api_generate_tour_route",
+      "label": "generate-tour/route.ts",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "generate-tour/route.ts",
+      "file_type": "code",
+      "norm_label": "generate-tour/route.ts",
+      "source_file": "src/app/api/generate-tour/route.ts",
       "source_location": "L1"
     },
     {
@@ -1679,6 +1780,28 @@
       "source_location": "L1"
     },
     {
+      "id": "src_app_propiedades_id_page",
+      "label": "[id]/page.tsx",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "[id]/page.tsx",
+      "source_file": "src/app/propiedades/[id]/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_propiedades_id_page_gaussiansplatviewer",
+      "label": "GaussianSplatViewer",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "gaussiansplatviewer",
+      "source_file": "src/app/propiedades/[id]/page.tsx",
+      "source_location": "L29"
+    },
+    {
       "id": "src_app_sobre_mi_page",
       "label": "sobre-mi/page.tsx",
       "_origin": "ast",
@@ -1709,17 +1832,6 @@
       "file_type": "code",
       "norm_label": "bannerhero.tsx",
       "source_file": "src/components/BannerHero.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_brandlogo",
-      "label": "BrandLogo.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "useData",
-      "file_type": "code",
-      "norm_label": "brandlogo.tsx",
-      "source_file": "src/components/BrandLogo.tsx",
       "source_location": "L1"
     },
     {
@@ -1775,17 +1887,6 @@
       "file_type": "code",
       "norm_label": "mortgagecalculator.tsx",
       "source_file": "src/components/MortgageCalculator.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_propertycard",
-      "label": "PropertyCard.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "useData",
-      "file_type": "code",
-      "norm_label": "propertycard.tsx",
-      "source_file": "src/components/PropertyCard.tsx",
       "source_location": "L1"
     },
     {
@@ -1866,50 +1967,6 @@
       "source_location": "L19"
     },
     {
-      "id": "src_app_99propiedades_page",
-      "label": "99propiedades/page.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "99propiedades/page.tsx",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_app_99propiedades_page_default_admin_user",
-      "label": "DEFAULT_ADMIN_USER",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "default_admin_user",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L53"
-    },
-    {
-      "id": "src_app_propiedades_id_page",
-      "label": "[id]/page.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "[id]/page.tsx",
-      "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_app_propiedades_id_page_gaussiansplatviewer",
-      "label": "GaussianSplatViewer",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "gaussiansplatviewer",
-      "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L29"
-    },
-    {
       "id": "src_app_propiedades_page",
       "label": "propiedades/page.tsx",
       "_origin": "ast",
@@ -1918,6 +1975,17 @@
       "file_type": "code",
       "norm_label": "propiedades/page.tsx",
       "source_file": "src/app/propiedades/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_propertycard",
+      "label": "PropertyCard.tsx",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propertycard.tsx",
+      "source_file": "src/components/PropertyCard.tsx",
       "source_location": "L1"
     },
     {
@@ -1940,7 +2008,7 @@
       "file_type": "code",
       "norm_label": "gaussiansplatviewer",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L33"
+      "source_location": "L34"
     },
     {
       "id": "src_context_datacontext",
@@ -2018,28 +2086,6 @@
       "norm_label": "initial_properties",
       "source_file": "src/lib/initialData.ts",
       "source_location": "L84"
-    },
-    {
-      "id": "src_lib_supabase",
-      "label": "supabase.ts",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "supabase.ts",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_supabase_supabase",
-      "label": "supabase",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "supabase",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L9"
     },
     {
       "id": "src_lib_types",
@@ -2503,7 +2549,7 @@
       "label": "ref_framer_motion",
       "_origin": "semantic",
       "community": 15,
-      "community_name": "PropertyVirtualTourUploader.tsx",
+      "community_name": "TourViewer.tsx",
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_framer_motion",
@@ -2909,6 +2955,30 @@
       "weight": 1.0
     },
     {
+      "source": "src_app_tour_demo_page_tourdemopage",
+      "target": "src_components_propertyvirtualtouruploader_propertyvirtualtouruploader",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_tour_demo_page_tourdemopage",
+      "target": "src_components_tourviewer_tourviewer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
       "source": "src_components_3d_gaussiansplatviewer_gaussiansplatviewer",
       "target": "src_lib_gaussian_splat_capabilities_canrun3dviewer",
       "relation": "calls",
@@ -3301,7 +3371,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L280",
+      "source_location": "L344",
       "weight": 1.0
     },
     {
@@ -3313,7 +3383,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L54",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -3325,7 +3395,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L608",
+      "source_location": "L788",
       "weight": 1.0
     },
     {
@@ -3337,7 +3407,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L613",
+      "source_location": "L793",
       "weight": 1.0
     },
     {
@@ -3349,7 +3419,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L112",
+      "source_location": "L127",
       "weight": 1.0
     },
     {
@@ -3361,7 +3431,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L113",
+      "source_location": "L128",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_tourviewer_tourviewer",
+      "target": "src_components_tourviewer_gaussiansplatviewer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L88",
       "weight": 1.0
     },
     {
@@ -3577,7 +3659,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L49",
+      "source_location": "L50",
       "weight": 1.0
     },
     {
@@ -3664,7 +3746,20 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L34",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_tourviewer_gaussiansplatviewer",
+      "target": "src_components_3d_gaussiansplatviewer",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "deferred": true,
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -4448,6 +4543,30 @@
       "weight": 1.0
     },
     {
+      "source": "src_app_tour_demo_page",
+      "target": "src_components_propertyvirtualtouruploader_propertyvirtualtouruploader",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_tour_demo_page",
+      "target": "src_components_tourviewer_tourviewer",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
       "source": "src_components_3d_gaussiansplatviewer",
       "target": "src_lib_gaussian_splat_config_splat_viewer_config",
       "relation": "imports",
@@ -4797,18 +4916,6 @@
     },
     {
       "source": "src_components_propertydetailmodal",
-      "target": "src_components_whatsappicon_whatsappicon",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L30",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_propertydetailmodal",
       "target": "src_lib_whatsapp_getwhatsappurl",
       "relation": "imports",
       "_origin": "ast",
@@ -4817,6 +4924,18 @@
       "context": "import",
       "source_file": "src/components/PropertyDetailModal.tsx",
       "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_propertydetailmodal",
+      "target": "src_components_tourviewer_tourviewer",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/PropertyDetailModal.tsx",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -5224,6 +5343,18 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/admin/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_generate_tour_route",
+      "target": "ref_next",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/api/generate-tour/route.ts",
       "source_location": "L1",
       "weight": 1.0
     },
@@ -5814,6 +5945,42 @@
       "context": "import",
       "source_file": "src/app/sobre-mi/page.tsx",
       "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_tour_demo_page",
+      "target": "ref_react",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_tour_demo_page",
+      "target": "src_components_propertyvirtualtouruploader",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_tour_demo_page",
+      "target": "src_components_tourviewer",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L3",
       "weight": 1.0
     },
     {
@@ -6562,6 +6729,18 @@
     },
     {
       "source": "src_components_propertydetailmodal",
+      "target": "src_components_tourviewer",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/PropertyDetailModal.tsx",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_propertydetailmodal",
       "target": "ref_next",
       "relation": "imports_from",
       "_origin": "ast",
@@ -6642,6 +6821,18 @@
       "context": "import",
       "source_file": "src/components/PropertyVirtualTourUploader.tsx",
       "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_tourviewer",
+      "target": "ref_next",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L10",
       "weight": 1.0
     },
     {
@@ -7385,6 +7576,17 @@
       "weight": 1.0
     },
     {
+      "source": "src_app_api_generate_tour_route",
+      "target": "src_app_api_generate_tour_route_post",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/generate-tour/route.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
       "source": "src_app_api_upload_model_route",
       "target": "src_app_api_upload_model_route_post",
       "relation": "contains",
@@ -7514,6 +7716,17 @@
       "confidence_score": 1.0,
       "source_file": "src/app/sobre-mi/page.tsx",
       "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_tour_demo_page",
+      "target": "src_app_tour_demo_page_tourdemopage",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L5",
       "weight": 1.0
     },
     {
@@ -7832,7 +8045,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -7843,7 +8056,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L48",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -7854,7 +8067,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L53",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -7881,7 +8094,7 @@
     },
     {
       "source": "src_components_tourviewer",
-      "target": "src_components_tourviewer_controls",
+      "target": "src_components_tourviewer_gaussiansplatviewer",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -7892,13 +8105,24 @@
     },
     {
       "source": "src_components_tourviewer",
+      "target": "src_components_tourviewer_controls",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_tourviewer",
       "target": "src_components_tourviewer_lumasplats",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L36",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -7909,7 +8133,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L55",
+      "source_location": "L62",
       "weight": 1.0
     },
     {
@@ -8008,7 +8232,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/context/DataContext.tsx",
-      "source_location": "L568",
+      "source_location": "L569",
       "weight": 1.0
     },
     {
@@ -8549,15 +8773,6 @@
       "source_file": "src/app/propiedades/[id]/page.tsx"
     },
     {
-      "source": "src_components_3d_gaussiansplatviewer",
-      "target": "gaussian_splats_3d",
-      "relation": "dynamic_import",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/3d/GaussianSplatViewer.tsx"
-    },
-    {
       "source": "src_components_propertydetailmodal",
       "target": "src_components_3d_gaussiansplatviewer",
       "relation": "dynamic_import",
@@ -8565,8 +8780,17 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/PropertyDetailModal.tsx"
+    },
+    {
+      "source": "src_components_tourviewer",
+      "target": "src_components_3d_gaussiansplatviewer",
+      "relation": "dynamic_import",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/TourViewer.tsx"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "41828bf2e79c418587e2e2f667d7966be7b54641"
+  "built_at_commit": "ad7bbdee92f00d5c9e017c75e380f3dd5f9fdaa2"
 }

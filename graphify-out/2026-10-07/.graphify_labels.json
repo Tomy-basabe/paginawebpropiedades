@@ -14,5 +14,7 @@
   "12": "ÁUREA | Consultoría Inmobiliaria & Desarrollos",
   "13": "admin/page.tsx",
   "14": "route.ts",
-  "15": "PropertyVirtualTourUploader.tsx"
+  "15": "TourViewer.tsx",
+  "16": "99propiedades/page.tsx",
+  "17": "generate-tour/route.ts"
 }
