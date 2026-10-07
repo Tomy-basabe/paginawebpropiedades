@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -22,7 +22,8 @@ import {
   CheckCircle2, 
   FileText,
   Phone,
-  Sparkles
+  Sparkles,
+  ChevronDown
 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
@@ -37,17 +38,38 @@ export default function HomePage() {
   const [heroType, setHeroType] = useState("todos");
   const [heroLocation, setHeroLocation] = useState("");
 
+  // Conteos dinámicos por operación
+  const countVenta = useMemo(() => properties.filter((p) => p.operation === "venta").length, [properties]);
+  const countAlquiler = useMemo(() => properties.filter((p) => p.operation === "alquiler").length, [properties]);
+  const countPozo = useMemo(() => properties.filter((p) => p.operation === "pozo").length, [properties]);
+
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
     if (heroOperation) params.set("operation", heroOperation);
     if (heroType && heroType !== "todos") params.set("type", heroType);
-    if (heroLocation) params.set("location", heroLocation);
+    if (heroLocation) params.set("location", heroLocation.trim());
     router.push(`/propiedades?${params.toString()}`);
   };
 
-  // Propiedades destacadas
-  const featuredProperties = properties.filter((p) => p.isFeatured).slice(0, 6);
+  const handleTabClick = (opId: string) => {
+    if (heroOperation === opId) {
+      // Si ya está activo, navegar directamente al catálogo de esa operación
+      router.push(`/propiedades?operation=${opId}`);
+    } else {
+      setHeroOperation(opId);
+    }
+  };
+
+  // Propiedades destacadas reactivas según la operación elegida en el Hero
+  const featuredProperties = useMemo(() => {
+    const matching = properties.filter((p) => p.operation === heroOperation);
+    if (matching.length > 0) {
+      const feat = matching.filter((p) => p.isFeatured);
+      return feat.length > 0 ? feat.slice(0, 6) : matching.slice(0, 6);
+    }
+    return properties.filter((p) => p.isFeatured).slice(0, 6);
+  }, [properties, heroOperation]);
 
   return (
     <div className="space-y-16 sm:space-y-24">
@@ -73,7 +95,7 @@ export default function HomePage() {
           </div>
 
           {/* Título de impacto editorial */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight text-white">
               Propiedades Singulares & <br />
               <span className="text-gold-400 italic">Estrategia Inmobiliaria</span>
@@ -81,30 +103,63 @@ export default function HomePage() {
             <p className="max-w-2xl mx-auto text-sm sm:text-base text-neutral-300 leading-relaxed font-light">
               Gestión inmobiliaria personalizada dirigida por {agentProfile.name}. Comercialización exclusiva de residencias, loteos campestres y desarrollos en pozo con respaldo financiero.
             </p>
+
+            {/* Botón directo de Ver Todas las Propiedades */}
+            <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/propiedades"
+                className="bg-gold-500 hover:bg-gold-400 text-luxury-black font-bold text-xs sm:text-sm uppercase tracking-wider px-6 py-3.5 rounded-sm transition-all shadow-lg hover:shadow-gold-500/30 flex items-center gap-2.5 group"
+              >
+                <Building className="w-4 h-4 text-luxury-black" />
+                <span>Ver Todas las Propiedades</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
 
           {/* Motor de Búsqueda Rápida Integrado */}
           <div className="bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-sm shadow-2xl text-neutral-900 text-left border border-white/20 max-w-4xl mx-auto">
             {/* Tabs de Operación */}
-            <div className="flex gap-2 mb-4 border-b border-neutral-200 pb-3">
-              {[
-                { id: "venta", label: "Comprar" },
-                { id: "alquiler", label: "Alquilar" },
-                { id: "pozo", label: "Preventa en Pozo" },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setHeroOperation(tab.id)}
-                  className={`text-xs font-semibold uppercase tracking-wider px-3.5 py-1.5 rounded-sm transition-colors ${
-                    heroOperation === tab.id
-                      ? "bg-neutral-900 text-white"
-                      : "text-neutral-500 hover:text-neutral-900 bg-neutral-100"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4 border-b border-neutral-200 pb-3">
+              <div className="flex gap-2">
+                {[
+                  { id: "venta", label: "Comprar", count: countVenta },
+                  { id: "alquiler", label: "Alquilar", count: countAlquiler },
+                  { id: "pozo", label: "Preventa en Pozo", count: countPozo },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => handleTabClick(tab.id)}
+                    title={heroOperation === tab.id ? `Ver catálogo de ${tab.label}` : `Filtrar por ${tab.label}`}
+                    className={`text-xs font-semibold uppercase tracking-wider px-3.5 py-2 rounded-sm transition-all flex items-center gap-1.5 cursor-pointer ${
+                      heroOperation === tab.id
+                        ? "bg-neutral-900 text-white shadow-sm ring-1 ring-neutral-900"
+                        : "text-neutral-500 hover:text-neutral-900 bg-neutral-100 hover:bg-neutral-200"
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                        heroOperation === tab.id
+                          ? "bg-gold-500 text-luxury-black"
+                          : "bg-neutral-200 text-neutral-600"
+                      }`}
+                    >
+                      {tab.count}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Enlace directo rápido a la categoría */}
+              <Link
+                href={`/propiedades?operation=${heroOperation}`}
+                className="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold text-gold-600 hover:text-gold-700 uppercase tracking-wider transition-colors"
+              >
+                <span>Ver catálogo ({heroOperation === "alquiler" ? "Alquiler" : heroOperation === "pozo" ? "En Pozo" : "Venta"})</span>
+                <ArrowRight className="w-3 h-3" />
+              </Link>
             </div>
 
             {/* Formulario de Búsqueda */}
@@ -149,13 +204,43 @@ export default function HomePage() {
               <div className="sm:col-span-3 flex items-end">
                 <button
                   type="submit"
-                  className="w-full bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs uppercase tracking-wider py-3 px-4 rounded-sm transition-all shadow-md hover:shadow-gold-500/20 flex items-center justify-center gap-2"
+                  className="w-full bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs uppercase tracking-wider py-3 px-4 rounded-sm transition-all shadow-md hover:shadow-gold-500/20 flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Search className="w-4 h-4" />
-                  <span>Buscar</span>
+                  <span>
+                    {heroOperation === "alquiler"
+                      ? "Buscar Alquileres"
+                      : heroOperation === "pozo"
+                      ? "Buscar en Pozo"
+                      : "Buscar en Venta"}
+                  </span>
                 </button>
               </div>
             </form>
+
+            {/* Acceso directo contextualizado según la pestaña */}
+            <div className="mt-3 pt-3 border-t border-neutral-200/80 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+              <span className="text-neutral-500 text-[11px]">
+                {heroOperation === "alquiler"
+                  ? "¿Buscás residencias o departamentos en alquiler?"
+                  : heroOperation === "pozo"
+                  ? "¿Buscás oportunidades de inversión o preventa en pozo?"
+                  : "¿Querés ver todas las opciones disponibles sin filtrar?"}
+              </span>
+              <Link
+                href={`/propiedades?operation=${heroOperation}`}
+                className="inline-flex items-center gap-1.5 font-bold text-neutral-900 hover:text-gold-600 transition-colors uppercase tracking-wider text-[11px]"
+              >
+                <span>
+                  {heroOperation === "alquiler"
+                    ? `Ver catálogo de propiedades en Alquiler (${countAlquiler})`
+                    : heroOperation === "pozo"
+                    ? `Ver catálogo de proyectos en Pozo (${countPozo})`
+                    : `Ver catálogo de propiedades en Venta (${countVenta})`}
+                </span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
 
           {/* Quick Metrics debajo del hero */}
@@ -193,11 +278,31 @@ export default function HomePage() {
               </span>
             </div>
           </div>
+
+          {/* Indicador visual e interactivo de Scroll hacia abajo */}
+          <div className="pt-6 sm:pt-10 flex flex-col items-center justify-center">
+            <button
+              onClick={() => {
+                const target = document.getElementById("contenido-principal");
+                target?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="group inline-flex flex-col items-center gap-2 text-neutral-300 hover:text-gold-400 transition-all cursor-pointer focus:outline-none"
+              aria-label="Deslizar hacia abajo para seguir viendo contenido"
+            >
+              <span className="text-[11px] sm:text-xs uppercase tracking-[0.2em] font-medium text-neutral-300 group-hover:text-gold-400 transition-colors flex items-center gap-1.5">
+                <span>Desliza para ver más contenido</span>
+              </span>
+              <div className="w-5 h-9 border-2 border-gold-400/60 rounded-full flex justify-center p-1 group-hover:border-gold-400 transition-colors shadow-sm bg-luxury-black/40 backdrop-blur-xs">
+                <div className="w-1.5 h-2 bg-gold-400 rounded-full animate-bounce" />
+              </div>
+              <ChevronDown className="w-4 h-4 text-gold-400 animate-bounce -mt-1 group-hover:scale-125 transition-transform" />
+            </button>
+          </div>
         </div>
       </section>
 
       {/* 2. SECCIÓN DESTACADA DINÁMICA: OPORTUNIDADES & DESARROLLOS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="contenido-principal" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
         <BannerHero />
       </section>
 
@@ -207,21 +312,41 @@ export default function HomePage() {
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold-600 bg-gold-50 px-2.5 py-1 rounded-sm mb-2">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Colección Exclusiva</span>
+              <span>
+                {heroOperation === "alquiler"
+                  ? "Alquileres Destacados"
+                  : heroOperation === "pozo"
+                  ? "Lanzamientos en Pozo"
+                  : "Colección Exclusiva"}
+              </span>
             </div>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900">
-              Inmuebles Seleccionados
+              {heroOperation === "alquiler"
+                ? "Propiedades en Alquiler"
+                : heroOperation === "pozo"
+                ? "Desarrollos & Preventas en Pozo"
+                : "Inmuebles Seleccionados en Venta"}
             </h2>
             <p className="text-xs sm:text-sm text-neutral-500 mt-1">
-              Cartera curada de propiedades residenciales, comerciales y loteos en las ubicaciones más codiciadas.
+              {heroOperation === "alquiler"
+                ? "Departamentos y residencias en alquiler tradicional y corporativo con administración integral."
+                : heroOperation === "pozo"
+                ? "Emprendimientos y desarrollos en preventa con esquemas de cuotas y alta rentabilidad."
+                : "Cartera curada de propiedades residenciales, comerciales y loteos en las ubicaciones más codiciadas."}
             </p>
           </div>
 
           <Link
-            href="/propiedades"
+            href={`/propiedades?operation=${heroOperation}`}
             className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-neutral-900 hover:text-gold-600 border-b border-neutral-900 hover:border-gold-600 pb-1 transition-colors"
           >
-            <span>Ver Catálogo Completo ({properties.length})</span>
+            <span>
+              {heroOperation === "alquiler"
+                ? `Ver Todos los Alquileres (${countAlquiler})`
+                : heroOperation === "pozo"
+                ? `Ver Todas las Preventas en Pozo (${countPozo})`
+                : `Ver Catálogo en Venta (${countVenta})`}
+            </span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -235,6 +360,18 @@ export default function HomePage() {
               onSelectProperty={(p) => setSelectedProperty(p)}
             />
           ))}
+        </div>
+
+        {/* CTA centrado para acceder al catálogo completo */}
+        <div className="pt-4 text-center">
+          <Link
+            href="/propiedades"
+            className="inline-flex items-center justify-center gap-2.5 bg-neutral-900 hover:bg-neutral-800 text-white font-semibold text-xs sm:text-sm uppercase tracking-wider px-8 py-3.5 rounded-sm transition-all shadow-md hover:shadow-lg border border-neutral-800 group"
+          >
+            <Building className="w-4 h-4 text-gold-400" />
+            <span>Ver Todas las Propiedades ({properties.length})</span>
+            <ArrowRight className="w-4 h-4 text-gold-400 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </section>
 

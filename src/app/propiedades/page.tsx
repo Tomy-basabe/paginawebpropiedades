@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, Suspense } from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useData } from "@/context/DataContext";
 import PropertyCard from "@/components/PropertyCard";
@@ -49,6 +49,32 @@ function PropiedadesContent() {
   const [sortBy, setSortBy] = useState<string>("destacados");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+
+  // Sincronizar dinámicamente cuando cambian los searchParams de la URL (ej: navegación desde home o botones)
+  useEffect(() => {
+    const op = searchParams.get("operation");
+    if (op) {
+      setOperationFilter(op);
+    }
+    const tp = searchParams.get("type");
+    if (tp) {
+      setTypeFilter(tp);
+    }
+    const loc = searchParams.get("location");
+    if (loc !== null && loc !== undefined) {
+      setSearchQuery(loc);
+    }
+    const st = searchParams.get("status");
+    if (st) {
+      setStatusFilter(st);
+    }
+    if (searchParams.get("video") === "true") {
+      setOnlyVideoTour(true);
+    }
+    if (searchParams.get("tour3d") === "true") {
+      setOnly3DTour(true);
+    }
+  }, [searchParams]);
 
   // Filtrado reactivo en memoria
   const filteredProperties = useMemo(() => {
@@ -212,22 +238,32 @@ function PropiedadesContent() {
           { label: "Loteos", op: "todos", tp: "loteo", st: "todos" },
           { label: "⭐ Oportunidades", op: "todos", tp: "todos", st: "oportunidad" },
         ].map((chip) => {
-          const isSelected =
-            (chip.op === "todos" || operationFilter === chip.op) &&
-            (chip.tp === "todos" || typeFilter === chip.tp) &&
-            (chip.st === "todos" || statusFilter === chip.st);
+          let isSelected = false;
+          if (chip.op === "todos" && chip.tp === "todos" && chip.st === "todos") {
+            isSelected = operationFilter === "todos" && typeFilter === "todos" && statusFilter === "todos";
+          } else if (chip.op !== "todos") {
+            isSelected = operationFilter === chip.op;
+          } else if (chip.tp !== "todos") {
+            isSelected = typeFilter === chip.tp;
+          } else if (chip.st !== "todos") {
+            isSelected = statusFilter === chip.st;
+          }
+
           return (
             <button
               key={chip.label}
               type="button"
               onClick={() => {
-                if (chip.op !== "todos") setOperationFilter(chip.op);
-                if (chip.tp !== "todos") setTypeFilter(chip.tp);
-                if (chip.st !== "todos") setStatusFilter(chip.st);
                 if (chip.op === "todos" && chip.tp === "todos" && chip.st === "todos") {
                   setOperationFilter("todos");
                   setTypeFilter("todos");
                   setStatusFilter("todos");
+                } else if (chip.op !== "todos") {
+                  setOperationFilter(operationFilter === chip.op ? "todos" : chip.op);
+                } else if (chip.tp !== "todos") {
+                  setTypeFilter(typeFilter === chip.tp ? "todos" : chip.tp);
+                } else if (chip.st !== "todos") {
+                  setStatusFilter(statusFilter === chip.st ? "todos" : chip.st);
                 }
               }}
               className={`shrink-0 text-xs px-3.5 py-1.5 rounded-full border transition-all ${

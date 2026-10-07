@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useData } from '@/context/DataContext';
-import { Property } from '@/lib/types';
+import { Property, PropertyRoom3D } from '@/lib/types';
 import {
   ArrowLeft,
   MapPin,
@@ -79,8 +79,36 @@ export default function PropertyDetailPage() {
     );
   }
 
-  const has3D = !!(property.model3D?.url || property.has3DTour);
-  const hasVideo = !!(property.videoUrl);
+  // Normalizar lista de habitaciones 3D
+  const rooms3D: PropertyRoom3D[] = useMemo(() => {
+    if (!property) return [];
+    if (property.rooms3D && property.rooms3D.length > 0) return property.rooms3D;
+    if (property.model3D?.url) {
+      return [
+        {
+          id: 'room-default',
+          name: 'Ambiente Principal',
+          url: property.model3D.url,
+          format: property.model3D.format,
+          initialCameraPosition: property.model3D.initialCameraPosition,
+          initialCameraTarget: property.model3D.initialCameraTarget,
+        },
+      ];
+    }
+    return [];
+  }, [property]);
+
+  const [activeRoomId, setActiveRoomId] = useState<string>(rooms3D[0]?.id || '');
+
+  useEffect(() => {
+    if (rooms3D.length > 0) {
+      setActiveRoomId(rooms3D[0].id);
+    }
+  }, [rooms3D]);
+
+  const currentRoom = rooms3D.find((r) => r.id === activeRoomId) || rooms3D[0];
+  const has3D = rooms3D.length > 0;
+  const hasVideo = !!property.videoUrl;
 
   // Determinar tab inicial según contenido disponible
   const effectiveTab = activeMediaTab === '3d' && !has3D
@@ -131,7 +159,7 @@ export default function PropertyDetailPage() {
                 }`}
               >
                 <Box className="w-3.5 h-3.5" />
-                <span>Recorrido 3D</span>
+                <span>Recorrido 3D {rooms3D.length > 1 ? `(${rooms3D.length} Ambientes)` : ''}</span>
               </button>
             )}
             {hasVideo && (
@@ -164,15 +192,65 @@ export default function PropertyDetailPage() {
         )}
 
         {/* Contenido multimedia */}
-        {effectiveTab === '3d' && property.model3D?.url ? (
-          <GaussianSplatViewer
-            modelUrl={property.model3D.url}
-            format={property.model3D.format}
-            initialCameraPosition={property.model3D.initialCameraPosition}
-            initialCameraTarget={property.model3D.initialCameraTarget}
-            propertyTitle={property.title}
-            className="shadow-2xl"
-          />
+        {effectiveTab === '3d' && currentRoom?.url ? (
+          <div className="space-y-3">
+            {/* Selector de ambientes cuando hay múltiples habitaciones */}
+            {rooms3D.length > 1 && (
+              <div className="bg-stone-50 border border-neutral-200 rounded-sm p-3 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-neutral-800 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+                    <Box className="w-3.5 h-3.5 text-gold-600" />
+                    <span>Ambientes Escaneados en 3D ({rooms3D.length})</span>
+                  </span>
+                  <span className="text-[11px] text-neutral-500">
+                    Hacé clic en cualquier ambiente para recorrerlo
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                  {rooms3D.map((room, idx) => {
+                    const isSelected = room.id === currentRoom.id;
+                    return (
+                      <button
+                        key={room.id}
+                        type="button"
+                        onClick={() => setActiveRoomId(room.id)}
+                        className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-medium rounded-sm whitespace-nowrap transition-all border ${
+                          isSelected
+                            ? "bg-luxury-black text-gold-300 border-gold-500 font-semibold shadow-sm"
+                            : "bg-white text-neutral-700 hover:bg-neutral-100 border-neutral-300"
+                        }`}
+                      >
+                        <span className={`w-2 h-2 rounded-full ${isSelected ? "bg-gold-400 animate-pulse" : "bg-neutral-400"}`} />
+                        <span>{room.name || `Habitación ${idx + 1}`}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Visor 3D de la habitación activa */}
+            <div className="relative w-full rounded-sm overflow-hidden bg-luxury-black border border-neutral-800 shadow-2xl">
+              {rooms3D.length > 1 && (
+                <div className="absolute top-3 left-3 z-10 bg-black/80 backdrop-blur-md text-white text-[11px] sm:text-xs px-3 py-1.5 rounded-full border border-white/20 flex items-center gap-2 shadow-lg pointer-events-none">
+                  <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
+                  <span className="text-neutral-400">Ambiente actual:</span>
+                  <span className="font-semibold text-gold-300">{currentRoom.name}</span>
+                </div>
+              )}
+
+              <GaussianSplatViewer
+                key={currentRoom.id + currentRoom.url}
+                modelUrl={currentRoom.url}
+                format={currentRoom.format}
+                initialCameraPosition={currentRoom.initialCameraPosition}
+                initialCameraTarget={currentRoom.initialCameraTarget}
+                propertyTitle={`${property.title} - ${currentRoom.name}`}
+                className="shadow-2xl"
+              />
+            </div>
+          </div>
         ) : effectiveTab === 'video' && property.videoUrl ? (
           <div className="relative w-full rounded-sm overflow-hidden bg-black border border-neutral-800 shadow-2xl" style={{ aspectRatio: '16/9' }}>
             <video

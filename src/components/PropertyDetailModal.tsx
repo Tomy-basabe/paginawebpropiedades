@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Property } from "@/lib/types";
+import { Property, PropertyRoom3D } from "@/lib/types";
 import { useData } from "@/context/DataContext";
 import { 
   X, 
@@ -53,9 +53,51 @@ interface PropertyDetailModalProps {
 export default function PropertyDetailModal({ property, onClose }: PropertyDetailModalProps) {
   const { agentProfile, bankRates } = useData();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  // Normalizar lista de habitaciones 3D (soporta tanto rooms3D como model3D legacy)
+  const rooms3D: PropertyRoom3D[] = property
+    ? property.rooms3D && property.rooms3D.length > 0
+      ? property.rooms3D
+      : property.model3D?.url
+      ? [
+          {
+            id: "room-default",
+            name: "Ambiente Principal",
+            url: property.model3D.url,
+            format: property.model3D.format,
+            initialCameraPosition: property.model3D.initialCameraPosition,
+            initialCameraTarget: property.model3D.initialCameraTarget,
+          },
+        ]
+      : []
+    : [];
+
+  const [activeRoomId, setActiveRoomId] = useState<string>(rooms3D[0]?.id || "");
+
+  useEffect(() => {
+    if (rooms3D.length > 0) {
+      setActiveRoomId(rooms3D[0].id);
+    }
+  }, [property?.id]);
+
+  const currentRoom = rooms3D.find((r) => r.id === activeRoomId) || rooms3D[0];
+
+  const has3DContent = rooms3D.length > 0;
+
   const [activeMediaTab, setActiveMediaTab] = useState<"3d" | "video" | "photos">(
-    property?.model3D?.url ? "3d" : property?.videoUrl ? "video" : "photos"
+    has3DContent ? "3d" : property?.videoUrl ? "video" : "photos"
   );
+
+  // Sincronizar tab por defecto al cambiar propiedad
+  useEffect(() => {
+    if (has3DContent) {
+      setActiveMediaTab("3d");
+    } else if (property?.videoUrl) {
+      setActiveMediaTab("video");
+    } else {
+      setActiveMediaTab("photos");
+    }
+  }, [property?.id, has3DContent]);
 
   // Estados para la mini-calculadora hipotecaria dentro de la propiedad
   const [downPaymentPercent, setDownPaymentPercent] = useState(25);
@@ -139,9 +181,9 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
           {/* Galería Multimedia: Recorrido 3D, Video Tour y Fotos */}
           <div className="space-y-3">
             {/* Barra de Tabs Multimedia */}
-            {(property.model3D?.url || property.has3DTour || property.videoUrl) && (
+            {(has3DContent || property.videoUrl) && (
               <div className="flex items-center gap-2 border-b border-neutral-200 pb-2 overflow-x-auto">
-                {(property.model3D?.url || property.has3DTour) && (
+                {has3DContent && (
                   <button
                     type="button"
                     onClick={() => setActiveMediaTab("3d")}
@@ -152,7 +194,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
                     }`}
                   >
                     <Box className="w-3.5 h-3.5" />
-                    <span>Recorrido 3D Gaussian Splatting</span>
+                    <span>Recorrido 3D {rooms3D.length > 1 ? `(${rooms3D.length} Ambientes)` : "Gaussian Splatting"}</span>
                   </button>
                 )}
 
@@ -186,16 +228,64 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
               </div>
             )}
 
-            {/* Vista 3D Gaussian Splatting */}
-            {activeMediaTab === "3d" && property.model3D?.url ? (
-              <div className="relative w-full rounded-sm overflow-hidden bg-luxury-black border border-neutral-800 shadow-2xl">
-                <GaussianSplatViewer
-                  modelUrl={property.model3D.url}
-                  format={property.model3D.format}
-                  initialCameraPosition={property.model3D.initialCameraPosition}
-                  initialCameraTarget={property.model3D.initialCameraTarget}
-                  propertyTitle={property.title}
-                />
+            {/* Vista 3D Gaussian Splatting por Habitaciones */}
+            {activeMediaTab === "3d" && currentRoom?.url ? (
+              <div className="space-y-3">
+                {/* Selector de habitaciones cuando hay múltiples ambientes */}
+                {rooms3D.length > 1 && (
+                  <div className="bg-stone-50 border border-neutral-200 rounded-sm p-3 space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-neutral-800 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
+                        <Box className="w-3.5 h-3.5 text-gold-600" />
+                        <span>Habitaciones Escaneadas en 3D ({rooms3D.length})</span>
+                      </span>
+                      <span className="text-[11px] text-neutral-500">
+                        Hacé clic en cualquier ambiente para recorrerlo
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                      {rooms3D.map((room, idx) => {
+                        const isSelected = room.id === currentRoom.id;
+                        return (
+                          <button
+                            key={room.id}
+                            type="button"
+                            onClick={() => setActiveRoomId(room.id)}
+                            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-sm whitespace-nowrap transition-all border ${
+                              isSelected
+                                ? "bg-luxury-black text-gold-300 border-gold-500 font-semibold shadow-sm"
+                                : "bg-white text-neutral-700 hover:bg-neutral-100 border-neutral-300"
+                            }`}
+                          >
+                            <span className={`w-2 h-2 rounded-full ${isSelected ? "bg-gold-400 animate-pulse" : "bg-neutral-400"}`} />
+                            <span>{room.name || `Habitación ${idx + 1}`}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Contenedor del visor 3D */}
+                <div className="relative w-full rounded-sm overflow-hidden bg-luxury-black border border-neutral-800 shadow-2xl">
+                  {rooms3D.length > 1 && (
+                    <div className="absolute top-3 left-3 z-10 bg-black/80 backdrop-blur-md text-white text-[11px] sm:text-xs px-3 py-1.5 rounded-full border border-white/20 flex items-center gap-2 shadow-lg pointer-events-none">
+                      <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
+                      <span className="text-neutral-400">Recorriendo:</span>
+                      <span className="font-semibold text-gold-300">{currentRoom.name}</span>
+                    </div>
+                  )}
+
+                  <GaussianSplatViewer
+                    key={currentRoom.id + currentRoom.url}
+                    modelUrl={currentRoom.url}
+                    format={currentRoom.format}
+                    initialCameraPosition={currentRoom.initialCameraPosition}
+                    initialCameraTarget={currentRoom.initialCameraTarget}
+                    propertyTitle={`${property.title} - ${currentRoom.name}`}
+                  />
+                </div>
               </div>
             ) : activeMediaTab === "video" && property.videoUrl ? (
               /* Vista de Video Tour */

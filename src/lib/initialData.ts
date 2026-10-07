@@ -99,6 +99,32 @@ export const INITIAL_PROPERTIES: Property[] = [
       "initialCameraPosition": [0, 1.5, 3.5],
       "initialCameraTarget": [0, 0, 0]
     },
+    "rooms3D": [
+      {
+        "id": "room-01-living",
+        "name": "Living Comedor & Galería",
+        "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+        "format": "splat",
+        "initialCameraPosition": [0, 1.5, 3.5],
+        "initialCameraTarget": [0, 0, 0]
+      },
+      {
+        "id": "room-01-suite",
+        "name": "Master Suite Principal",
+        "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+        "format": "splat",
+        "initialCameraPosition": [0.8, 1.2, 2.8],
+        "initialCameraTarget": [0, 0, 0]
+      },
+      {
+        "id": "room-01-cocina",
+        "name": "Cocina & Desayunador",
+        "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+        "format": "splat",
+        "initialCameraPosition": [-0.6, 1.4, 3.0],
+        "initialCameraTarget": [0, 0, 0]
+      }
+    ],
     "has3DTour": true,
     "location": {
       "city": "Tigre",
@@ -151,6 +177,24 @@ export const INITIAL_PROPERTIES: Property[] = [
       "initialCameraPosition": [0, 1.5, 3],
       "initialCameraTarget": [0, 0, 0]
     },
+    "rooms3D": [
+      {
+        "id": "room-02-living",
+        "name": "Gran Salón Social & Vistas al Parque",
+        "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+        "format": "splat",
+        "initialCameraPosition": [0, 1.5, 3],
+        "initialCameraTarget": [0, 0, 0]
+      },
+      {
+        "id": "room-02-galeria",
+        "name": "Galería Techada & Solarium",
+        "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+        "format": "splat",
+        "initialCameraPosition": [0.5, 1.3, 3.2],
+        "initialCameraTarget": [0, 0, 0]
+      }
+    ],
     "has3DTour": true,
     "location": {
       "city": "Benavídez",
@@ -431,9 +475,9 @@ export const INITIAL_PROPERTIES: Property[] = [
     "title": "Departamento Apto Profesional de 3 Ambientes con Balcón Corrido",
     "slug": "departamento-apto-profesional-3-ambientes",
     "type": "departamento",
-    "operation": "venta",
+    "operation": "alquiler",
     "status": "disponible",
-    "price": 185000,
+    "price": 850,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-08.mp4",
     "hasVideoTour": true,
@@ -516,10 +560,10 @@ export const INITIAL_PROPERTIES: Property[] = [
   },
   {
     "id": "prop-tour-10",
-    "title": "Loft Industrial con Techos de Doble Altura y Balcón Terraza",
+    "title": "Loft Industrial & Suites Urbanas - Preventa en Pozo",
     "slug": "loft-industrial-techos-doble-altura",
-    "type": "departamento",
-    "operation": "venta",
+    "type": "desarrollo",
+    "operation": "pozo",
     "status": "oportunidad",
     "price": 165000,
     "currency": "USD",
@@ -604,10 +648,10 @@ export const INITIAL_PROPERTIES: Property[] = [
   },
   {
     "id": "prop-tour-12",
-    "title": "Piso Exclusivo en Torre con Amenities de Lujo y Palier Privado",
+    "title": "Residencias Terrazas del Golf - Preventa en Pozo",
     "slug": "piso-exclusivo-torre-amenities-lujo",
-    "type": "departamento",
-    "operation": "venta",
+    "type": "desarrollo",
+    "operation": "pozo",
     "status": "disponible",
     "price": 580000,
     "currency": "USD",
@@ -822,3 +866,4 @@ export const INITIAL_BANK_RATES: BankRate[] = [
     updatedAt: "2026-03-10"
   }
 ];
+

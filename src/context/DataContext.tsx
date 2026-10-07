@@ -52,15 +52,31 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed.properties) {
-          // Fusionar con datos iniciales para asegurar que model3D esté presente
+          // Fusionar con datos iniciales para asegurar que model3D, rooms3D y nuevas propiedades estén presentes
+          const existingIds = new Set(parsed.properties.map((p: Property) => p.id));
           const merged = parsed.properties.map((p: Property) => {
             const init = INITIAL_PROPERTIES.find((ip) => ip.id === p.id);
-            if (init?.model3D && (!p.model3D || !p.model3D.url || p.model3D.url.startsWith("/models/") || p.model3D.url.includes("demo-light") || p.model3D.url.includes("demo-room"))) {
-              return { ...p, model3D: init.model3D, has3DTour: init.has3DTour };
+            let updated = { ...p };
+            if (init) {
+              // Si no tiene operation o coincide con un cambio de base, sincronizar
+              if (!updated.operation || (init.operation !== "venta" && updated.operation === "venta")) {
+                updated.operation = init.operation;
+              }
+              if (init.model3D && (!p.model3D || !p.model3D.url || p.model3D.url.startsWith("/models/") || p.model3D.url.includes("demo-light") || p.model3D.url.includes("demo-room"))) {
+                updated.model3D = init.model3D;
+                updated.has3DTour = init.has3DTour;
+              }
+              if (init.rooms3D && (!p.rooms3D || p.rooms3D.length === 0)) {
+                updated.rooms3D = init.rooms3D;
+                updated.has3DTour = true;
+              }
             }
-            return p;
+            return updated;
           });
-          setProperties(merged);
+
+          // Agregar propiedades de INITIAL_PROPERTIES que no existan en el almacenamiento local
+          const missingInitProps = INITIAL_PROPERTIES.filter((ip) => !existingIds.has(ip.id));
+          setProperties([...merged, ...missingInitProps]);
         }
         if (parsed.bankRates) setBankRates(parsed.bankRates);
         if (parsed.banners) setBanners(parsed.banners);
@@ -98,16 +114,25 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
       if (propsData && propsData.length > 0) {
         const parsedProps: Property[] = propsData.map((row) => {
-          const prop = ((row.data as Property) || row) as Property;
+          const rawProp = ((row.data as Property) || row) as Property;
+          const prop: Property = {
+            ...rawProp,
+            operation: (row.operation as any) || rawProp.operation || "venta",
+            type: (row.type as any) || rawProp.type || "casa",
+            status: (row.status as any) || rawProp.status || "disponible",
+            price: typeof row.price === "number" ? row.price : rawProp.price,
+          };
           const init = INITIAL_PROPERTIES.find((ip) => ip.id === prop.id);
+          let updated = { ...prop };
           if (init?.model3D && (!prop.model3D || !prop.model3D.url || prop.model3D.url.startsWith("/models/") || prop.model3D.url.includes("demo-light") || prop.model3D.url.includes("demo-room"))) {
-            return {
-              ...prop,
-              model3D: init.model3D,
-              has3DTour: init.has3DTour ?? true,
-            };
+            updated.model3D = init.model3D;
+            updated.has3DTour = init.has3DTour ?? true;
           }
-          return prop;
+          if (init?.rooms3D && (!prop.rooms3D || prop.rooms3D.length === 0)) {
+            updated.rooms3D = init.rooms3D;
+            updated.has3DTour = true;
+          }
+          return updated;
         });
         setProperties(parsedProps);
       }

@@ -39,11 +39,21 @@ export interface Property {
     initialCameraPosition?: [number, number, number];
     initialCameraTarget?: [number, number, number];
   };
+  rooms3D?: PropertyRoom3D[]; // Múltiples habitaciones escaneadas en 3D
   has3DTour?: boolean;
   isFeatured: boolean;
   isOpportunity: boolean;
   opportunityBadge?: string; // ej: "Preventa Pozo -20%", "Último Lote al Lago"
   createdAt: string;
+}
+
+export interface PropertyRoom3D {
+  id: string;
+  name: string; // ej: "Living Comedor", "Master Suite", "Cocina", "Terraza"
+  url: string; // URL del modelo .ply / .splat / .ksplat
+  format?: 'ply' | 'splat' | 'ksplat';
+  initialCameraPosition?: [number, number, number];
+  initialCameraTarget?: [number, number, number];
 }
 
 export interface BankRate {
