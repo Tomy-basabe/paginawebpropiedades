@@ -73,6 +73,7 @@ export default function GaussianSplatViewer({
   const [loadProgress, setLoadProgress] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isInverted, setIsInverted] = useState(false);
 
   const cameraPosition = initialCameraPosition || SPLAT_VIEWER_CONFIG.defaultCameraPosition;
   const cameraTarget = initialCameraTarget || SPLAT_VIEWER_CONFIG.defaultCameraTarget;
@@ -89,7 +90,7 @@ export default function GaussianSplatViewer({
     }
   }, []);
 
-  // Inicializar el viewer
+  // Inicializar el viewer con orientación corregida
   const initViewer = useCallback(async () => {
     if (isEmbed) return;
     if (!containerRef.current || !modelUrl) return;
@@ -124,12 +125,15 @@ export default function GaussianSplatViewer({
         }
       }
 
-      const renderScale = capabilities.isMobile
-        ? SPLAT_VIEWER_CONFIG.mobileRenderScale
-        : SPLAT_VIEWER_CONFIG.desktopRenderScale;
+      // Resolución optimizada para nitidez fotorrealista
+      const screenDPR = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1;
+      const renderScale = capabilities.isMobile ? Math.min(screenDPR, 1.25) : Math.min(screenDPR, 2.0);
+
+      // Orientación vertical corregida: [0, 1, 0] es el estándar natural hacia arriba
+      const upVector = isInverted ? [0, -1, 0] : [0, 1, 0];
 
       const viewer = new GaussianSplats3D.Viewer({
-        cameraUp: [0, -1, -0.6],
+        cameraUp: upVector,
         initialCameraPosition: cameraPosition,
         initialCameraLookAt: cameraTarget,
         rootElement: container,
@@ -138,10 +142,10 @@ export default function GaussianSplatViewer({
         useBuiltInControls: true,
         renderMode: GaussianSplats3D.RenderMode.Always,
         sceneRevealMode: GaussianSplats3D.SceneRevealMode.Instant,
-        sharedMemoryForWorkers: false, // CRÍTICO: evita errores de SharedArrayBuffer en navegadores sin headers COOP/COEP
-        halfPrecisionCovariancesOnGPU: true, // Reduce a la mitad el consumo de memoria en GPU/móviles
+        sharedMemoryForWorkers: false,
+        halfPrecisionCovariancesOnGPU: false, // Máxima nitidez y fidelidad de los splats
         integerBasedSort: true,
-        antialiased: false,
+        antialiased: true, // Suavizado de bordes fotorrealista
         focalAdjustment: 1.0,
         logLevel: GaussianSplats3D.LogLevel.None,
         devicePixelRatio: renderScale,
@@ -175,7 +179,7 @@ export default function GaussianSplatViewer({
       // Carga estándar (más robusta y confiable que progressiveLoad en navegadores)
       const loadPromise = viewer.addSplatScene(modelUrl, {
         format: splatFormat,
-        splatAlphaRemovalThreshold: 1,
+        splatAlphaRemovalThreshold: 5, // Elimina ruido y splats transparentes flotantes que manchan la vista
         showLoadingUI: false,
         progressiveLoad: false,
         onProgress: (percentComplete: number) => {
@@ -210,7 +214,7 @@ export default function GaussianSplatViewer({
         setErrorMessage(`Error al cargar el recorrido 3D: ${message}`);
       }
     }
-  }, [modelUrl, format, cameraPosition, cameraTarget, disposeViewer]);
+  }, [modelUrl, format, cameraPosition, cameraTarget, disposeViewer, isInverted]);
 
   // Detectar formato por extensión
   function detectFormat(url: string): 'ply' | 'splat' | 'ksplat' {
@@ -232,14 +236,19 @@ export default function GaussianSplatViewer({
     }
   }
 
-  // Inicializar al montar
+  // Inicializar al montar o al invertir orientación
   useEffect(() => {
     initViewer();
     return () => {
       disposeViewer();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modelUrl]);
+  }, [modelUrl, isInverted]);
+
+  // Alternar orientación (arriba / abajo)
+  const handleToggleInvert = useCallback(() => {
+    setIsInverted((prev) => !prev);
+  }, []);
 
   // Reset de cámara
   const handleResetCamera = useCallback(() => {
@@ -477,6 +486,8 @@ export default function GaussianSplatViewer({
           onResetCamera={handleResetCamera}
           onToggleFullscreen={handleToggleFullscreen}
           isFullscreen={isFullscreen}
+          onToggleInvert={handleToggleInvert}
+          isInverted={isInverted}
         />
       )}
 

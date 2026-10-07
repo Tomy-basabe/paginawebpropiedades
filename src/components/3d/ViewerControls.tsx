@@ -6,15 +6,37 @@ interface ViewerControlsProps {
   onResetCamera: () => void;
   onToggleFullscreen: () => void;
   isFullscreen: boolean;
+  onToggleInvert?: () => void;
+  isInverted?: boolean;
 }
 
 export default function ViewerControls({
   onResetCamera,
   onToggleFullscreen,
   isFullscreen,
+  onToggleInvert,
+  isInverted,
 }: ViewerControlsProps) {
   return (
     <div className="absolute bottom-4 right-4 z-20 flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover/viewer:opacity-100 transition-opacity duration-300">
+      {/* Botón Invertir Orientación / Enderezar */}
+      {onToggleInvert && (
+        <button
+          onClick={onToggleInvert}
+          className={`w-11 h-11 backdrop-blur-md rounded-lg border transition-all flex items-center justify-center btn-tactile shadow-lg ${
+            isInverted
+              ? 'bg-gold-500 text-luxury-black border-gold-400 font-bold'
+              : 'bg-black/70 hover:bg-black/90 active:scale-95 text-white border-white/20 hover:border-white/40'
+          }`}
+          aria-label="Invertir orientación vertical"
+          title="Invertir / Enderezar orientación (180°)"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 4v12m0 0l4-4m-4 4l-4-4" />
+          </svg>
+        </button>
+      )}
+
       {/* Fullscreen */}
       <button
         onClick={onToggleFullscreen}

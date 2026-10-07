@@ -337,7 +337,7 @@
       "file_type": "code",
       "norm_label": "detectformat()",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L216"
+      "source_location": "L220"
     },
     {
       "id": "src_components_3d_gaussiansplatviewer_gaussiansplatviewer_mapformat",
@@ -349,7 +349,7 @@
       "file_type": "code",
       "norm_label": "mapformat()",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L224"
+      "source_location": "L228"
     },
     {
       "id": "src_components_3d_gaussiansplatviewer_interactionhint",
@@ -361,7 +361,7 @@
       "file_type": "code",
       "norm_label": "interactionhint()",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L490"
+      "source_location": "L501"
     },
     {
       "id": "src_components_3d_gaussiansplatviewer_isembedviewer",
@@ -397,7 +397,7 @@
       "file_type": "code",
       "norm_label": "viewercontrols()",
       "source_file": "src/components/3d/ViewerControls.tsx",
-      "source_location": "L11"
+      "source_location": "L13"
     },
     {
       "id": "src_components_3d_viewerfallback_viewerfallback",
@@ -2313,6 +2313,7 @@
     {
       "id": "ref_fs",
       "label": "ref_fs",
+      "_origin": "semantic",
       "community": 14,
       "community_name": "route.ts",
       "external": true,
@@ -2324,6 +2325,7 @@
     {
       "id": "ref_path",
       "label": "ref_path",
+      "_origin": "semantic",
       "community": 14,
       "community_name": "route.ts",
       "external": true,
@@ -2727,7 +2729,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L115",
+      "source_location": "L116",
       "weight": 1.0
     },
     {
@@ -2739,7 +2741,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L424",
+      "source_location": "L433",
       "weight": 1.0
     },
     {
@@ -2751,7 +2753,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L438",
+      "source_location": "L447",
       "weight": 1.0
     },
     {
@@ -2763,7 +2765,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L476",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -2775,7 +2777,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L484",
+      "source_location": "L495",
       "weight": 1.0
     },
     {
@@ -2811,7 +2813,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L98",
+      "source_location": "L99",
       "weight": 1.0
     },
     {
@@ -3327,7 +3329,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L216",
+      "source_location": "L220",
       "weight": 1.0
     },
     {
@@ -3339,7 +3341,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L224",
+      "source_location": "L228",
       "weight": 1.0
     },
     {
@@ -3437,7 +3439,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L114",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -7166,7 +7168,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L490",
+      "source_location": "L501",
       "weight": 1.0
     },
     {
@@ -7199,7 +7201,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/3d/ViewerControls.tsx",
-      "source_location": "L11",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -8107,5 +8109,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "012a1bc40aeb124cf7970423da1d59f1feb4a31f"
+  "built_at_commit": "3d712b69a742b1ce333a4a0a69305d83312d5568"
 }
