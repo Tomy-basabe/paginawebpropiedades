@@ -178,8 +178,9 @@ export default function GaussianSplatViewer({
         sceneRevealMode: GaussianSplats3D.SceneRevealMode.Instant,
         sharedMemoryForWorkers: false,
         halfPrecisionCovariancesOnGPU: false, // Máxima nitidez y fidelidad de los splats
-        integerBasedSort: true,
+        integerBasedSort: false, // Máxima precisión geométrica en escenas arquitectónicas
         antialiased: true, // Suavizado de bordes fotorrealista
+        sphericalHarmonicsDegree: 2, // ¡Fotorrealismo completo! Renderiza reflejos y colores direccionales del escaneo
         focalAdjustment: 1.0,
         logLevel: GaussianSplats3D.LogLevel.None,
         devicePixelRatio: renderScale,
@@ -187,15 +188,9 @@ export default function GaussianSplatViewer({
 
       viewerRef.current = viewer;
 
-      // Resolver URL segura: si apunta al storage externo de Supabase o modelo no encontrado, usar el modelo local ultrarrápido
+      // Resolver URL: respeta URLs de Supabase, relativas o externas; si no se provee, usa la casa completa
       const resolvedModelUrl = (() => {
-        if (!modelUrl) return '/models/demo-fast.splat';
-        if (modelUrl.includes('supabase.co') && (modelUrl.endsWith('.splat') || modelUrl.includes('properties/'))) {
-          return '/models/demo-fast.splat';
-        }
-        if (modelUrl === '/models/demo-room.splat') {
-          return '/models/demo-fast.splat';
-        }
+        if (!modelUrl) return '/models/casa-completa.ply';
         return modelUrl;
       })();
 
@@ -214,18 +209,18 @@ export default function GaussianSplatViewer({
         });
       }, 350);
 
-      // Timeout de seguridad (60s)
+      // Timeout de seguridad (90s para modelos detallados HD)
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(
-          () => reject(new Error('Tiempo de espera agotado al descargar el modelo 3D (60s). Verificá tu conexión a internet.')),
-          60000
+          () => reject(new Error('Tiempo de espera agotado al descargar el modelo 3D (90s). Verificá tu conexión a internet.')),
+          90000
         );
       });
 
-      // Carga estándar con fallback automático al modelo local si la URL externa falla
+      // Carga estándar de la escena 3D con máxima fidelidad (alpha threshold = 1)
       const loadPromise = viewer.addSplatScene(resolvedModelUrl, {
         format: splatFormat,
-        splatAlphaRemovalThreshold: 5,
+        splatAlphaRemovalThreshold: 1, // Calidad pura: no descarta splats finos de la casa
         showLoadingUI: false,
         progressiveLoad: false,
         onProgress: (percentComplete: number) => {
@@ -239,12 +234,12 @@ export default function GaussianSplatViewer({
       try {
         await Promise.race([loadPromise, timeoutPromise]);
       } catch (firstErr) {
-        if (resolvedModelUrl !== '/models/demo-fast.splat') {
-          // Si el servidor externo falló, recuperar de inmediato con el modelo local precargado
-          console.warn('Fallo al descargar modelo 3D externo, cargando modelo local de respaldo:', firstErr);
-          const fallbackPromise = viewer.addSplatScene('/models/demo-fast.splat', {
-            format: mapFormat('splat', GaussianSplats3D),
-            splatAlphaRemovalThreshold: 5,
+        if (resolvedModelUrl !== '/models/casa-completa.ply') {
+          // Si el servidor externo falló por red, recuperar con el modelo completo local de respaldo
+          console.warn('Fallo al descargar modelo 3D externo, cargando copia local de respaldo:', firstErr);
+          const fallbackPromise = viewer.addSplatScene('/models/casa-completa.ply', {
+            format: mapFormat('ply', GaussianSplats3D),
+            splatAlphaRemovalThreshold: 1,
             showLoadingUI: false,
             progressiveLoad: false,
             onProgress: (percentComplete: number) => {

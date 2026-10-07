@@ -87,24 +87,33 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
                 updated.operation = init.operation;
               }
               if (init.model3D) {
-                if (
+                // Solo reemplazar si no tiene modelo, está vacío o apunta a los archivos demo viejos de 800KB
+                const isObsoleteDemo =
                   !p.model3D ||
                   !p.model3D.url ||
-                  p.model3D.url.includes("supabase.co") ||
                   p.model3D.url.includes("demo-light") ||
                   p.model3D.url.includes("demo-room") ||
-                  (p.model3D.initialCameraPosition && p.model3D.initialCameraPosition[1] > 0.8)
-                ) {
+                  p.model3D.url.includes("demo-fast");
+
+                if (isObsoleteDemo) {
                   updated.model3D = init.model3D;
                   updated.has3DTour = init.has3DTour;
                 }
               }
               if (init.rooms3D) {
-                if (
-                  !p.rooms3D ||
-                  p.rooms3D.length === 0 ||
-                  p.rooms3D.some((r) => !r.initialCameraPosition || r.initialCameraPosition[1] > 0.8 || r.url.includes("supabase.co"))
-                ) {
+                // Solo reemplazar si no tiene habitaciones o si todas apuntan a demos obsoletos
+                const hasValidUserRooms =
+                  p.rooms3D &&
+                  p.rooms3D.length > 0 &&
+                  p.rooms3D.some(
+                    (r) =>
+                      r.url &&
+                      !r.url.includes("demo-light") &&
+                      !r.url.includes("demo-room") &&
+                      !r.url.includes("demo-fast")
+                  );
+
+                if (!hasValidUserRooms) {
                   updated.rooms3D = init.rooms3D;
                   updated.has3DTour = true;
                 }
