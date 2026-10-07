@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
+import { TourViewer } from "@/components/TourViewer";
 
 const GaussianSplatViewer = dynamic(
   () => import("@/components/3d/GaussianSplatViewer"),
@@ -84,8 +85,8 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
 
   const has3DContent = rooms3D.length > 0;
 
-  const [activeMediaTab, setActiveMediaTab] = useState<"3d" | "video" | "photos">(
-    has3DContent ? "3d" : property?.videoUrl ? "video" : "photos"
+  const [activeMediaTab, setActiveMediaTab] = useState<"3d" | "video" | "photos" | "luma3d">(
+    has3DContent ? "3d" : property?.videoUrl ? "luma3d" : "photos"
   );
 
   // Sincronizar tab por defecto al cambiar propiedad
@@ -93,7 +94,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
     if (has3DContent) {
       setActiveMediaTab("3d");
     } else if (property?.videoUrl) {
-      setActiveMediaTab("video");
+      setActiveMediaTab("luma3d");
     } else {
       setActiveMediaTab("photos");
     }
@@ -201,6 +202,21 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
                 {property.videoUrl && (
                   <button
                     type="button"
+                    onClick={() => setActiveMediaTab("luma3d")}
+                    className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile ${
+                      activeMediaTab === "luma3d"
+                        ? "bg-purple-600 text-white shadow-md shadow-purple-600/30"
+                        : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+                    }`}
+                  >
+                    <Sparkles className="w-3.5 h-3.5 fill-current" />
+                    <span>Recorrido IA 3D</span>
+                  </button>
+                )}
+
+                {property.videoUrl && (
+                  <button
+                    type="button"
                     onClick={() => setActiveMediaTab("video")}
                     className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile ${
                       activeMediaTab === "video"
@@ -209,7 +225,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
                     }`}
                   >
                     <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>Video Tour Oficial</span>
+                    <span>Video Tour</span>
                   </button>
                 )}
 
@@ -285,6 +301,20 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
                     initialCameraTarget={currentRoom.initialCameraTarget}
                     propertyTitle={`${property.title} - ${currentRoom.name}`}
                   />
+                </div>
+              </div>
+            ) : activeMediaTab === "luma3d" && property.videoUrl ? (
+              <div className="space-y-3">
+                <div className="bg-stone-50 border border-neutral-200 rounded-sm p-3 flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-purple-600" />
+                    <span className="text-xs font-semibold text-neutral-800">Modelo 3D IA Generado Automáticamente</span>
+                  </div>
+                  <span className="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-sm font-bold">LUMA AI API</span>
+                </div>
+                <div className="relative w-full rounded-sm overflow-hidden bg-black border border-neutral-800 shadow-2xl">
+                  {/* Simulamos que ya está renderizado usando un ID de Luma para el ejemplo */}
+                  <TourViewer artifactUrl="https://lumalabs.ai/capture/d80d4876-cf71-4b8a-8b5b-49ffac44cd4a" />
                 </div>
               </div>
             ) : activeMediaTab === "video" && property.videoUrl ? (

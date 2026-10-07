@@ -78,9 +78,9 @@
     "semantic_hash": "c89768d5d69f9ff968c251390908ddcb"
   },
   "src/components/3d/GaussianSplatViewer.tsx": {
-    "mtime": 1791406356.5186837,
-    "seen": 1791406425.979446,
-    "ast_hash": "051f1115d73932c18822a0ddd0141c66",
+    "mtime": 1791412264.6891825,
+    "seen": 1791412367.7747014,
+    "ast_hash": "2c6c08c0d7a527d7ef4ba1fb0dde0166",
     "semantic_hash": ""
   },
   "src/components/3d/ViewerControls.tsx": {
@@ -327,6 +327,18 @@
     "mtime": 1791405473.024462,
     "seen": 1791405573.7218404,
     "ast_hash": "3afba5da2ebce2f04a0c07548df94539",
+    "semantic_hash": ""
+  },
+  "src/components/3d/WalkNavigationOverlay.tsx": {
+    "mtime": 1791411823.352376,
+    "seen": 1791412367.774709,
+    "ast_hash": "6c433b3ea6acdf76994f6e46e75b41ea",
+    "semantic_hash": ""
+  },
+  "src/components/PropertyVirtualTourUploader.tsx": {
+    "mtime": 1791412356.0678837,
+    "seen": 1791412367.7747276,
+    "ast_hash": "4a30975d399303ab1c504126e6feae0e",
     "semantic_hash": ""
   }
 }
