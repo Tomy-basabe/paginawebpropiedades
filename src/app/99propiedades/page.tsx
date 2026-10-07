@@ -33,9 +33,31 @@ import {
   Search,
   Eye,
   EyeOff,
-  DollarSign
+  DollarSign,
+  Users,
+  KeyRound,
+  Shield,
+  UserPlus
 } from "lucide-react";
 import { SPLAT_VIEWER_CONFIG } from "@/lib/gaussian-splat/config";
+
+export interface AdminUser {
+  id: string;
+  username: string;
+  password: string;
+  name: string;
+  role: "admin" | "asesor";
+  createdAt: string;
+}
+
+const DEFAULT_ADMIN_USER: AdminUser = {
+  id: "admin-root",
+  username: "admin",
+  password: "admin",
+  name: "Administrador",
+  role: "admin",
+  createdAt: new Date().toISOString(),
+};
 
 export default function AdminSecretPage() {
   const {
@@ -59,10 +81,30 @@ export default function AdminSecretPage() {
     setHideSoldProperties,
   } = useData();
 
-  // Autenticación de sesión con persistencia
+  // Usuarios y autenticación
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [currentUser, setCurrentUser] = useState<AdminUser | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [pinInput, setPinInput] = useState("");
-  const [pinError, setPinError] = useState(false);
+
+  // Formulario de login
+  const [loginUsername, setLoginUsername] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+
+  // Cambio de contraseña propia del usuario actual
+  const [currentPasswordInput, setCurrentPasswordInput] = useState("");
+  const [newPasswordInput, setNewPasswordInput] = useState("");
+  const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
+
+  // Crear nuevo usuario
+  const [newUserName, setNewUserName] = useState("");
+  const [newUserUsername, setNewUserUsername] = useState("");
+  const [newUserPassword, setNewUserPassword] = useState("");
+  const [newUserRole, setNewUserRole] = useState<"admin" | "asesor">("asesor");
+
+  // Edición rápida de contraseña para otro usuario
+  const [editingPasswordUserId, setEditingPasswordUserId] = useState<string | null>(null);
+  const [tempUserPassword, setTempUserPassword] = useState("");
 
   // Mensaje de feedback/notificación global
   const [feedbackMessage, setFeedbackMessage] = useState<{ text: string; type: "success" | "error" | "info" } | null>(null);
@@ -75,7 +117,7 @@ export default function AdminSecretPage() {
   };
 
   // Tabs (sin 'backup' ni restablecer datos)
-  const [activeTab, setActiveTab] = useState<"propiedades" | "banners" | "tasas" | "perfil">("propiedades");
+  const [activeTab, setActiveTab] = useState<"propiedades" | "banners" | "tasas" | "perfil" | "usuarios">("propiedades");
 
   // Filtros y búsqueda en catálogo de propiedades
   const [filterOperation, setFilterOperation] = useState<"todas" | "venta" | "alquiler" | "pozo">("todas");
@@ -287,39 +329,229 @@ export default function AdminSecretPage() {
     }
   };
 
-  // Persistencia de sesión en navegador
+  // Carga inicial y persistencia de usuarios
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const stored = sessionStorage.getItem("admin_authenticated");
-      if (stored === "true") {
-        setIsAuthenticated(true);
-        setProfileForm(agentProfile);
+      try {
+        const storedUsers = localStorage.getItem("aurea_admin_users");
+        if (storedUsers) {
+          const parsed = JSON.parse(storedUsers);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setUsers(parsed);
+          } else {
+            setUsers([DEFAULT_ADMIN_USER]);
+            localStorage.setItem("aurea_admin_users", JSON.stringify([DEFAULT_ADMIN_USER]));
+          }
+        } else {
+          setUsers([DEFAULT_ADMIN_USER]);
+          localStorage.setItem("aurea_admin_users", JSON.stringify([DEFAULT_ADMIN_USER]));
+        }
+
+        const isAuth = sessionStorage.getItem("admin_authenticated") === "true";
+        if (isAuth) {
+          setIsAuthenticated(true);
+          const activeUserRaw = sessionStorage.getItem("admin_current_user");
+          if (activeUserRaw) {
+            try {
+              setCurrentUser(JSON.parse(activeUserRaw));
+            } catch {
+              setCurrentUser(DEFAULT_ADMIN_USER);
+            }
+          } else {
+            setCurrentUser(DEFAULT_ADMIN_USER);
+          }
+          setProfileForm(agentProfile);
+        }
+      } catch (err) {
+        console.error("Error al cargar usuarios:", err);
       }
     }
   }, [agentProfile]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    const validPins = ["99propiedades", "aurea2026", "admin", "admin123"];
-    if (validPins.includes(pinInput.trim())) {
+    setLoginError("");
+
+    const u = loginUsername.trim().toLowerCase();
+    const p = loginPassword.trim();
+
+    if (!u || !p) {
+      setLoginError("Por favor ingresa usuario y contraseña.");
+      return;
+    }
+
+    const currentUsersList = users.length > 0 ? users : [DEFAULT_ADMIN_USER];
+    const foundUser = currentUsersList.find((user) => user.username.toLowerCase() === u);
+
+    // Si es el usuario admin y su clave actual sigue siendo la de fábrica ("admin"), también permitimos "99propiedades" o "aurea2026"
+    const isValidPassword =
+      foundUser &&
+      (foundUser.password === p ||
+        (foundUser.username.toLowerCase() === "admin" &&
+          foundUser.password === "admin" &&
+          (p === "99propiedades" || p === "aurea2026")));
+
+    if (foundUser && isValidPassword) {
       setIsAuthenticated(true);
+      setCurrentUser(foundUser);
+      setLoginError("");
+      setLoginPassword("");
       if (typeof window !== "undefined") {
         sessionStorage.setItem("admin_authenticated", "true");
+        sessionStorage.setItem("admin_current_user", JSON.stringify(foundUser));
       }
-      setPinError(false);
       setProfileForm(agentProfile);
-      showFeedback("Sesión iniciada con éxito.", "success");
+      showFeedback(`Bienvenido al panel, ${foundUser.name}.`, "success");
     } else {
-      setPinError(true);
+      setLoginError("Usuario o contraseña incorrectos.");
     }
   };
 
   const handleLogout = () => {
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("admin_authenticated");
+      sessionStorage.removeItem("admin_current_user");
     }
     setIsAuthenticated(false);
+    setCurrentUser(null);
     showFeedback("Sesión cerrada.", "info");
+  };
+
+  // Cambio de contraseña del usuario activo
+  const handleChangeOwnPassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentUser) return;
+
+    if (!currentPasswordInput) {
+      showFeedback("Ingresa tu contraseña actual.", "error");
+      return;
+    }
+
+    const isCurrentValid =
+      currentPasswordInput === currentUser.password ||
+      (currentUser.username.toLowerCase() === "admin" &&
+        currentUser.password === "admin" &&
+        (currentPasswordInput === "99propiedades" || currentPasswordInput === "aurea2026"));
+
+    if (!isCurrentValid) {
+      showFeedback("La contraseña actual es incorrecta.", "error");
+      return;
+    }
+
+    if (newPasswordInput.length < 4) {
+      showFeedback("La nueva contraseña debe tener al menos 4 caracteres.", "error");
+      return;
+    }
+
+    if (newPasswordInput !== confirmPasswordInput) {
+      showFeedback("Las nuevas contraseñas no coinciden.", "error");
+      return;
+    }
+
+    const updatedUser: AdminUser = {
+      ...currentUser,
+      password: newPasswordInput,
+    };
+
+    const updatedUsers = users.map((u) => (u.id === currentUser.id ? updatedUser : u));
+
+    setUsers(updatedUsers);
+    setCurrentUser(updatedUser);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
+      sessionStorage.setItem("admin_current_user", JSON.stringify(updatedUser));
+    }
+
+    setCurrentPasswordInput("");
+    setNewPasswordInput("");
+    setConfirmPasswordInput("");
+    showFeedback("Tu contraseña se ha cambiado exitosamente.", "success");
+  };
+
+  // Crear nuevo usuario
+  const handleCreateUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanUsername = newUserUsername.trim().toLowerCase().replace(/\s+/g, "");
+
+    if (!cleanUsername || !newUserPassword.trim() || !newUserName.trim()) {
+      showFeedback("Por favor completa nombre, usuario y contraseña.", "error");
+      return;
+    }
+
+    if (cleanUsername.length < 3) {
+      showFeedback("El nombre de usuario debe tener al menos 3 caracteres.", "error");
+      return;
+    }
+
+    if (newUserPassword.trim().length < 4) {
+      showFeedback("La contraseña debe tener al menos 4 caracteres.", "error");
+      return;
+    }
+
+    if (users.some((u) => u.username.toLowerCase() === cleanUsername)) {
+      showFeedback(`El usuario "${cleanUsername}" ya existe. Elige otro.`, "error");
+      return;
+    }
+
+    const newUser: AdminUser = {
+      id: `user-${Date.now()}`,
+      username: cleanUsername,
+      password: newUserPassword.trim(),
+      name: newUserName.trim(),
+      role: newUserRole,
+      createdAt: new Date().toISOString(),
+    };
+
+    const updatedUsers = [...users, newUser];
+    setUsers(updatedUsers);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
+    }
+
+    setNewUserName("");
+    setNewUserUsername("");
+    setNewUserPassword("");
+    setNewUserRole("asesor");
+    showFeedback(`Usuario "${newUser.name}" creado con éxito.`, "success");
+  };
+
+  // Eliminar usuario
+  const handleDeleteUser = (userId: string) => {
+    if (currentUser?.id === userId) {
+      showFeedback("No puedes eliminar la cuenta con la que tienes sesión abierta.", "error");
+      return;
+    }
+
+    const target = users.find((u) => u.id === userId);
+    if (!target) return;
+
+    if (!confirm(`¿Eliminar al usuario "${target.name}" (@${target.username})?`)) {
+      return;
+    }
+
+    const updatedUsers = users.filter((u) => u.id !== userId);
+    setUsers(updatedUsers);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
+    }
+    showFeedback(`Usuario "${target.name}" eliminado.`, "info");
+  };
+
+  // Actualizar contraseña de otro usuario
+  const handleUpdateOtherUserPassword = (userId: string) => {
+    if (!tempUserPassword.trim() || tempUserPassword.trim().length < 4) {
+      showFeedback("La contraseña debe tener al menos 4 caracteres.", "error");
+      return;
+    }
+
+    const updatedUsers = users.map((u) => (u.id === userId ? { ...u, password: tempUserPassword.trim() } : u));
+    setUsers(updatedUsers);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
+    }
+    setEditingPasswordUserId(null);
+    setTempUserPassword("");
+    showFeedback("Contraseña actualizada con éxito.", "success");
   };
 
   // ------------------ GESTIÓN DE PROPIEDADES ------------------
@@ -560,32 +792,44 @@ export default function AdminSecretPage() {
           <form onSubmit={handleLogin} className="space-y-4 text-xs">
             <div>
               <label className="block font-semibold text-neutral-700 mb-1">
-                Clave de Acceso
+                Usuario
+              </label>
+              <input
+                type="text"
+                placeholder="Ingresa tu usuario..."
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                className="w-full p-3 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none text-sm"
+                autoFocus
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-neutral-700 mb-1">
+                Contraseña
               </label>
               <input
                 type="password"
-                placeholder="Ingrese clave de acceso..."
-                value={pinInput}
-                onChange={(e) => setPinInput(e.target.value)}
+                placeholder="Ingresa tu contraseña..."
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
                 className="w-full p-3 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none text-sm"
-                autoFocus
+                required
               />
-              <span className="block text-[10px] text-neutral-400 mt-1">
-                (Claves válidas: <code className="text-neutral-700 font-mono">99propiedades</code>, <code className="text-neutral-700 font-mono">aurea2026</code> o <code className="text-neutral-700 font-mono">admin</code>)
-              </span>
             </div>
 
-            {pinError && (
+            {loginError && (
               <p className="text-xs text-rose-600 bg-rose-50 p-2.5 rounded-sm border border-rose-200">
-                Clave incorrecta. Por favor intente de nuevo.
+                {loginError}
               </p>
             )}
 
             <button
               type="submit"
-              className="w-full bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold uppercase tracking-wider py-3 rounded-sm transition-colors shadow-sm btn-tactile cursor-pointer"
+              className="w-full bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold uppercase tracking-wider py-3 rounded-sm transition-colors shadow-sm btn-tactile cursor-pointer mt-2"
             >
-              Ingresar al Gestor
+              Iniciar Sesión
             </button>
           </form>
         </div>
@@ -648,6 +892,19 @@ export default function AdminSecretPage() {
             </button>
           )}
 
+          {currentUser && (
+            <button
+              onClick={() => setActiveTab("usuarios")}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 rounded-sm text-xs text-neutral-800 transition-colors cursor-pointer"
+              title="Click para ver usuarios o cambiar tu contraseña"
+            >
+              <UserCheck className="w-3.5 h-3.5 text-gold-600" />
+              <span>
+                {currentUser.name} <strong className="text-neutral-500 font-normal">(@{currentUser.username})</strong>
+              </span>
+            </button>
+          )}
+
           <button
             onClick={handleLogout}
             className="text-xs text-neutral-600 hover:text-neutral-900 px-3 py-2 border border-neutral-300 rounded-sm hover:bg-neutral-100 transition-colors flex items-center gap-1.5 cursor-pointer"
@@ -706,6 +963,18 @@ export default function AdminSecretPage() {
         >
           <UserCheck className="w-4 h-4" />
           <span>Perfil & Marca Personal</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("usuarios")}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer ${
+            activeTab === "usuarios"
+              ? "bg-neutral-900 text-white"
+              : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+          }`}
+        >
+          <Users className="w-4 h-4" />
+          <span>Usuarios & Seguridad ({users.length})</span>
         </button>
       </div>
 
@@ -2277,6 +2546,284 @@ export default function AdminSecretPage() {
             </div>
           </div>
         </form>
+      )}
+
+      {/* CONTENIDO DEL TAB 5: USUARIOS & SEGURIDAD */}
+      {activeTab === "usuarios" && (
+        <div className="space-y-8">
+          {/* Fila superior: Mi cuenta y cambio de clave propia + Crear nuevo usuario */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Card 1: Cambiar Mi Contraseña */}
+            <div className="bg-white p-6 border border-neutral-200 rounded-sm shadow-sm space-y-4">
+              <div className="flex items-center gap-2 border-b border-neutral-200 pb-3">
+                <KeyRound className="w-5 h-5 text-gold-600" />
+                <div>
+                  <h3 className="font-semibold text-neutral-900 text-sm">Cambiar Mi Contraseña</h3>
+                  <p className="text-xs text-neutral-500">
+                    Usuario activo: <strong className="text-neutral-800">{currentUser?.name}</strong> (@{currentUser?.username})
+                  </p>
+                </div>
+              </div>
+
+              <form onSubmit={handleChangeOwnPassword} className="space-y-3 text-xs">
+                <div>
+                  <label className="block font-semibold text-neutral-700 mb-1">
+                    Contraseña Actual
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="Ingresa tu contraseña actual..."
+                    value={currentPasswordInput}
+                    onChange={(e) => setCurrentPasswordInput(e.target.value)}
+                    className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-neutral-700 mb-1">
+                    Nueva Contraseña
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="Mínimo 4 caracteres..."
+                    value={newPasswordInput}
+                    onChange={(e) => setNewPasswordInput(e.target.value)}
+                    className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-neutral-700 mb-1">
+                    Confirmar Nueva Contraseña
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="Repite la nueva contraseña..."
+                    value={confirmPasswordInput}
+                    onChange={(e) => setConfirmPasswordInput(e.target.value)}
+                    className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-semibold py-2.5 rounded-sm transition-colors cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>Guardar Nueva Contraseña</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* Card 2: Crear Nuevo Usuario */}
+            <div className="bg-white p-6 border border-neutral-200 rounded-sm shadow-sm space-y-4">
+              <div className="flex items-center gap-2 border-b border-neutral-200 pb-3">
+                <UserPlus className="w-5 h-5 text-emerald-600" />
+                <div>
+                  <h3 className="font-semibold text-neutral-900 text-sm">Registrar Nuevo Usuario</h3>
+                  <p className="text-xs text-neutral-500">Crea accesos para otros colaboradores o administradores</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleCreateUser} className="space-y-3 text-xs">
+                <div>
+                  <label className="block font-semibold text-neutral-700 mb-1">
+                    Nombre Completo
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ej. Juan Pérez"
+                    value={newUserName}
+                    onChange={(e) => setNewUserName(e.target.value)}
+                    className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-semibold text-neutral-700 mb-1">
+                      Nombre de Usuario
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ej. asesor_juan"
+                      value={newUserUsername}
+                      onChange={(e) => setNewUserUsername(e.target.value)}
+                      className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-neutral-700 mb-1">
+                      Rol de Permisos
+                    </label>
+                    <select
+                      value={newUserRole}
+                      onChange={(e) => setNewUserRole(e.target.value as "admin" | "asesor")}
+                      className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
+                    >
+                      <option value="asesor">Asesor Inmobiliario</option>
+                      <option value="admin">Administrador Total</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-neutral-700 mb-1">
+                    Contraseña Inicial
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="Mínimo 4 caracteres..."
+                    value={newUserPassword}
+                    onChange={(e) => setNewUserPassword(e.target.value)}
+                    className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
+                    required
+                  />
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-2.5 rounded-sm transition-colors cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <UserPlus className="w-4 h-4" />
+                    <span>Crear Usuario</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          {/* Card 3: Lista de Usuarios Registrados */}
+          <div className="bg-white border border-neutral-200 rounded-sm shadow-sm overflow-hidden space-y-4 p-6">
+            <div className="flex items-center justify-between border-b border-neutral-200 pb-3">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-neutral-700" />
+                <h3 className="font-semibold text-neutral-900 text-sm">
+                  Usuarios del Sistema ({users.length})
+                </h3>
+              </div>
+              <span className="text-xs text-neutral-500">
+                Los usuarios pueden autenticarse con su propio usuario y contraseña.
+              </span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-stone-50 border-b border-neutral-200 uppercase text-neutral-500 font-semibold tracking-wider">
+                  <tr>
+                    <th className="py-3 px-4">Usuario</th>
+                    <th className="py-3 px-4">Nombre Completo</th>
+                    <th className="py-3 px-4">Rol</th>
+                    <th className="py-3 px-4">Fecha de Registro</th>
+                    <th className="py-3 px-4 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-neutral-200">
+                  {users.map((u) => {
+                    const isSelf = currentUser?.id === u.id;
+                    const isEditingPwd = editingPasswordUserId === u.id;
+
+                    return (
+                      <tr key={u.id} className="hover:bg-stone-50/70 transition-colors">
+                        <td className="py-3 px-4 font-mono font-medium text-neutral-800">
+                          @{u.username}
+                          {isSelf && (
+                            <span className="ml-2 text-[10px] bg-gold-100 text-gold-800 border border-gold-300 px-1.5 py-0.5 rounded font-sans font-semibold">
+                              Tu Cuenta
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4 font-medium text-neutral-900">
+                          {u.name}
+                        </td>
+                        <td className="py-3 px-4">
+                          <span
+                            className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold border ${
+                              u.role === "admin"
+                                ? "bg-purple-50 text-purple-700 border-purple-200"
+                                : "bg-blue-50 text-blue-700 border-blue-200"
+                            }`}
+                          >
+                            {u.role === "admin" ? "Administrador" : "Asesor"}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-neutral-500">
+                          {u.createdAt ? new Date(u.createdAt).toLocaleDateString("es-AR") : "Inicial"}
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            {isEditingPwd ? (
+                              <div className="flex items-center gap-1.5 bg-neutral-100 p-1 rounded border border-neutral-300">
+                                <input
+                                  type="password"
+                                  placeholder="Nueva clave..."
+                                  value={tempUserPassword}
+                                  onChange={(e) => setTempUserPassword(e.target.value)}
+                                  className="p-1 text-xs border rounded bg-white w-28"
+                                  autoFocus
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleUpdateOtherUserPassword(u.id)}
+                                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[11px] font-semibold cursor-pointer"
+                                >
+                                  OK
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditingPasswordUserId(null);
+                                    setTempUserPassword("");
+                                  }}
+                                  className="text-neutral-500 hover:text-neutral-700 px-1 text-xs cursor-pointer"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingPasswordUserId(u.id);
+                                  setTempUserPassword("");
+                                }}
+                                className="text-neutral-600 hover:text-neutral-900 px-2 py-1 border border-neutral-200 rounded hover:bg-neutral-100 transition-colors flex items-center gap-1 cursor-pointer"
+                                title="Cambiar contraseña de este usuario"
+                              >
+                                <KeyRound className="w-3 h-3 text-gold-600" />
+                                <span>Cambiar Clave</span>
+                              </button>
+                            )}
+
+                            {!isSelf && (
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteUser(u.id)}
+                                className="text-rose-600 hover:text-rose-700 p-1.5 rounded hover:bg-rose-50 transition-colors cursor-pointer"
+                                title="Eliminar usuario"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
