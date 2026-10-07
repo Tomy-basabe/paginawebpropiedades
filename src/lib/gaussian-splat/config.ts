@@ -10,11 +10,11 @@ export const SPLAT_VIEWER_CONFIG = {
   /** Extensiones permitidas para validación */
   allowedExtensions: ['.ply', '.splat', '.ksplat'],
 
-  /** Posición de cámara por defecto si la propiedad no define una (altura de ojos, 1.2m) */
-  defaultCameraPosition: [0, 1.2, 2.5] as [number, number, number],
+  /** Posición de cámara por defecto en el centro de la casa a la altura de los ojos humanos (~1.7m sobre el suelo) */
+  defaultCameraPosition: [-0.3, 0.55, 0.6] as [number, number, number],
 
-  /** Target de cámara por defecto (al frente a nivel horizonte) */
-  defaultCameraTarget: [0, 1.0, 0] as [number, number, number],
+  /** Target de cámara por defecto mirando al frente en línea de horizonte natural */
+  defaultCameraTarget: [-0.3, 0.55, -0.8] as [number, number, number],
 
   /** Tamaño máximo de modelo recomendado (en bytes) — 200 MB */
   maxRecommendedModelSize: 200 * 1024 * 1024,

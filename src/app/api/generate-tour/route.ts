@@ -14,14 +14,14 @@ export async function POST(req: Request) {
 
     // Simulación para propósitos de UI sin una key real:
     if (LUMA_API_KEY === "simulacion") {
-      // Simular un tiempo de procesamiento del servidor
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Simular tiempo de procesamiento
+      await new Promise(resolve => setTimeout(resolve, 2500));
       
-      // Retornar un ID de splat público de Luma AI de ejemplo para que el renderizado funcione en la simulación
       return NextResponse.json({ 
-        message: "Procesamiento simulado exitoso",
-        artifactId: "b59a6d36-8a5e-4bb5-950c-35bc858bc100", // Ejemplo público
-        artifactUrl: "https://lumalabs.ai/capture/b59a6d36-8a5e-4bb5-950c-35bc858bc100" // El LumaSplatsThree extrae el ID de la URL
+        success: true,
+        message: "Recorrido 3D arquitectónico generado con éxito",
+        artifactId: `luma-prop-${propertyId}`,
+        artifactUrl: "/models/demo-fast.splat"
       });
     }
 

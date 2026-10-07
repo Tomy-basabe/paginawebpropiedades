@@ -18,8 +18,8 @@ export default function TourDemoPage() {
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold text-gray-800">Visualizador (Luma AI Gaussian Splats)</h2>
           <p className="text-sm text-gray-500">Ejemplo de un renderizado 3D (Gaussian Splatting) usando React Three Fiber y Luma Web.</p>
-          {/* Usamos un artifactUrl de prueba público de Luma AI */}
-          <TourViewer artifactUrl="https://lumalabs.ai/capture/d80d4876-cf71-4b8a-8b5b-49ffac44cd4a" />
+          {/* Recorrido arquitectónico de demostración */}
+          <TourViewer artifactUrl="/models/demo-fast.splat" />
         </section>
       </div>
     </div>

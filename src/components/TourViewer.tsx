@@ -7,6 +7,13 @@ import { OrbitControls as ThreeOrbitControls } from "three/examples/jsm/controls
 import { LumaSplatsThree } from "@lumaai/luma-web";
 import { Maximize2, Minimize2, ExternalLink } from "lucide-react";
 
+import dynamic from "next/dynamic";
+
+const GaussianSplatViewer = dynamic(
+  () => import("@/components/3d/GaussianSplatViewer"),
+  { ssr: false }
+);
+
 extend({ OrbitControls: ThreeOrbitControls });
 
 function Controls() {
@@ -74,6 +81,14 @@ export function TourViewer({ artifactUrl }: { artifactUrl: string }) {
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
+
+  if (artifactUrl.endsWith('.splat') || artifactUrl.endsWith('.ply') || artifactUrl.startsWith('/models/')) {
+    return (
+      <div ref={containerRef} className="relative w-full rounded-sm overflow-hidden bg-luxury-black shadow-2xl">
+        <GaussianSplatViewer modelUrl={artifactUrl} propertyTitle="Recorrido 3D Inmobiliario" />
+      </div>
+    );
+  }
 
   return (
     <div

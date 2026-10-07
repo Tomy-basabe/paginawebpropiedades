@@ -96,8 +96,8 @@ export const INITIAL_PROPERTIES: Property[] = [
     "model3D": {
       "url": "/models/demo-fast.splat",
       "format": "splat",
-      "initialCameraPosition": [0, 1.5, 3.5],
-      "initialCameraTarget": [0, 0, 0]
+      "initialCameraPosition": [-0.3, 0.55, 0.6],
+      "initialCameraTarget": [-0.3, 0.55, -0.8]
     },
     "rooms3D": [
       {
@@ -105,24 +105,24 @@ export const INITIAL_PROPERTIES: Property[] = [
         "name": "Living Comedor & Galería",
         "url": "/models/demo-fast.splat",
         "format": "splat",
-        "initialCameraPosition": [0, 1.5, 3.5],
-        "initialCameraTarget": [0, 0, 0]
+        "initialCameraPosition": [-0.3, 0.55, 0.6],
+        "initialCameraTarget": [-0.3, 0.55, -0.8]
       },
       {
         "id": "room-01-suite",
         "name": "Master Suite Principal",
         "url": "/models/demo-fast.splat",
         "format": "splat",
-        "initialCameraPosition": [0.8, 1.2, 2.8],
-        "initialCameraTarget": [0, 0, 0]
+        "initialCameraPosition": [-0.3, 0.55, 0.6],
+        "initialCameraTarget": [-0.3, 0.55, -0.8]
       },
       {
         "id": "room-01-cocina",
         "name": "Cocina & Desayunador",
         "url": "/models/demo-fast.splat",
         "format": "splat",
-        "initialCameraPosition": [-0.6, 1.4, 3.0],
-        "initialCameraTarget": [0, 0, 0]
+        "initialCameraPosition": [-0.3, 0.55, 0.6],
+        "initialCameraTarget": [-0.3, 0.55, -0.8]
       }
     ],
     "has3DTour": true,
@@ -174,8 +174,8 @@ export const INITIAL_PROPERTIES: Property[] = [
     "model3D": {
       "url": "/models/demo-fast.splat",
       "format": "splat",
-      "initialCameraPosition": [0, 1.5, 3],
-      "initialCameraTarget": [0, 0, 0]
+      "initialCameraPosition": [-0.3, 0.55, 0.6],
+      "initialCameraTarget": [-0.3, 0.55, -0.8]
     },
     "rooms3D": [
       {
@@ -183,16 +183,16 @@ export const INITIAL_PROPERTIES: Property[] = [
         "name": "Gran Salón Social & Vistas al Parque",
         "url": "/models/demo-fast.splat",
         "format": "splat",
-        "initialCameraPosition": [0, 1.5, 3],
-        "initialCameraTarget": [0, 0, 0]
+        "initialCameraPosition": [-0.3, 0.55, 0.6],
+        "initialCameraTarget": [-0.3, 0.55, -0.8]
       },
       {
         "id": "room-02-galeria",
         "name": "Galería Techada & Solarium",
         "url": "/models/demo-fast.splat",
         "format": "splat",
-        "initialCameraPosition": [0.5, 1.3, 3.2],
-        "initialCameraTarget": [0, 0, 0]
+        "initialCameraPosition": [-0.3, 0.55, 0.6],
+        "initialCameraTarget": [-0.3, 0.55, -0.8]
       }
     ],
     "has3DTour": true,
@@ -243,8 +243,8 @@ export const INITIAL_PROPERTIES: Property[] = [
     "model3D": {
       "url": "/models/demo-fast.splat",
       "format": "splat",
-      "initialCameraPosition": [0, 1.5, 3.5],
-      "initialCameraTarget": [0, 0, 0]
+      "initialCameraPosition": [-0.3, 0.55, 0.6],
+      "initialCameraTarget": [-0.3, 0.55, -0.8]
     },
     "has3DTour": true,
     "location": {
@@ -294,8 +294,8 @@ export const INITIAL_PROPERTIES: Property[] = [
     "model3D": {
       "url": "/models/demo-fast.splat",
       "format": "splat",
-      "initialCameraPosition": [0, 1.5, 3],
-      "initialCameraTarget": [0, 0, 0]
+      "initialCameraPosition": [-0.3, 0.55, 0.6],
+      "initialCameraTarget": [-0.3, 0.55, -0.8]
     },
     "has3DTour": true,
     "location": {
@@ -345,8 +345,8 @@ export const INITIAL_PROPERTIES: Property[] = [
     "model3D": {
       "url": "/models/demo-room.splat",
       "format": "splat",
-      "initialCameraPosition": [0, 1.5, 3.5],
-      "initialCameraTarget": [0, 0, 0]
+      "initialCameraPosition": [-0.3, 0.55, 0.6],
+      "initialCameraTarget": [-0.3, 0.55, -0.8]
     },
     "has3DTour": true,
     "location": {

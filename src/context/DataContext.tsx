@@ -92,7 +92,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
                   !p.model3D.url ||
                   p.model3D.url.includes("supabase.co") ||
                   p.model3D.url.includes("demo-light") ||
-                  p.model3D.url.includes("demo-room")
+                  p.model3D.url.includes("demo-room") ||
+                  (p.model3D.initialCameraPosition && p.model3D.initialCameraPosition[1] > 0.8)
                 ) {
                   updated.model3D = init.model3D;
                   updated.has3DTour = init.has3DTour;
@@ -102,7 +103,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
                 if (
                   !p.rooms3D ||
                   p.rooms3D.length === 0 ||
-                  p.rooms3D.some((r) => r.url.includes("supabase.co"))
+                  p.rooms3D.some((r) => !r.initialCameraPosition || r.initialCameraPosition[1] > 0.8 || r.url.includes("supabase.co"))
                 ) {
                   updated.rooms3D = init.rooms3D;
                   updated.has3DTour = true;
