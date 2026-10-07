@@ -94,7 +94,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-01.mp4",
     "hasVideoTour": true,
     "model3D": {
-      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+      "url": "/models/demo-fast.splat",
       "format": "splat",
       "initialCameraPosition": [0, 1.5, 3.5],
       "initialCameraTarget": [0, 0, 0]
@@ -103,7 +103,7 @@ export const INITIAL_PROPERTIES: Property[] = [
       {
         "id": "room-01-living",
         "name": "Living Comedor & Galería",
-        "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+        "url": "/models/demo-fast.splat",
         "format": "splat",
         "initialCameraPosition": [0, 1.5, 3.5],
         "initialCameraTarget": [0, 0, 0]
@@ -111,7 +111,7 @@ export const INITIAL_PROPERTIES: Property[] = [
       {
         "id": "room-01-suite",
         "name": "Master Suite Principal",
-        "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+        "url": "/models/demo-fast.splat",
         "format": "splat",
         "initialCameraPosition": [0.8, 1.2, 2.8],
         "initialCameraTarget": [0, 0, 0]
@@ -119,7 +119,7 @@ export const INITIAL_PROPERTIES: Property[] = [
       {
         "id": "room-01-cocina",
         "name": "Cocina & Desayunador",
-        "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+        "url": "/models/demo-fast.splat",
         "format": "splat",
         "initialCameraPosition": [-0.6, 1.4, 3.0],
         "initialCameraTarget": [0, 0, 0]
@@ -172,7 +172,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-02.mp4",
     "hasVideoTour": true,
     "model3D": {
-      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+      "url": "/models/demo-fast.splat",
       "format": "splat",
       "initialCameraPosition": [0, 1.5, 3],
       "initialCameraTarget": [0, 0, 0]
@@ -181,7 +181,7 @@ export const INITIAL_PROPERTIES: Property[] = [
       {
         "id": "room-02-living",
         "name": "Gran Salón Social & Vistas al Parque",
-        "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+        "url": "/models/demo-fast.splat",
         "format": "splat",
         "initialCameraPosition": [0, 1.5, 3],
         "initialCameraTarget": [0, 0, 0]
@@ -189,7 +189,7 @@ export const INITIAL_PROPERTIES: Property[] = [
       {
         "id": "room-02-galeria",
         "name": "Galería Techada & Solarium",
-        "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+        "url": "/models/demo-fast.splat",
         "format": "splat",
         "initialCameraPosition": [0.5, 1.3, 3.2],
         "initialCameraTarget": [0, 0, 0]
@@ -241,7 +241,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-03.mp4",
     "hasVideoTour": true,
     "model3D": {
-      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+      "url": "/models/demo-fast.splat",
       "format": "splat",
       "initialCameraPosition": [0, 1.5, 3.5],
       "initialCameraTarget": [0, 0, 0]
@@ -292,7 +292,7 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-04.mp4",
     "hasVideoTour": true,
     "model3D": {
-      "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/properties/demo-fast.splat",
+      "url": "/models/demo-fast.splat",
       "format": "splat",
       "initialCameraPosition": [0, 1.5, 3],
       "initialCameraTarget": [0, 0, 0]

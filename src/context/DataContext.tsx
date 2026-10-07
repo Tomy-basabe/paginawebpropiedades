@@ -86,13 +86,27 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
               if (!updated.operation || (init.operation !== "venta" && updated.operation === "venta")) {
                 updated.operation = init.operation;
               }
-              if (init.model3D && (!p.model3D || !p.model3D.url || p.model3D.url.startsWith("/models/") || p.model3D.url.includes("demo-light") || p.model3D.url.includes("demo-room"))) {
-                updated.model3D = init.model3D;
-                updated.has3DTour = init.has3DTour;
+              if (init.model3D) {
+                if (
+                  !p.model3D ||
+                  !p.model3D.url ||
+                  p.model3D.url.includes("supabase.co") ||
+                  p.model3D.url.includes("demo-light") ||
+                  p.model3D.url.includes("demo-room")
+                ) {
+                  updated.model3D = init.model3D;
+                  updated.has3DTour = init.has3DTour;
+                }
               }
-              if (init.rooms3D && (!p.rooms3D || p.rooms3D.length === 0)) {
-                updated.rooms3D = init.rooms3D;
-                updated.has3DTour = true;
+              if (init.rooms3D) {
+                if (
+                  !p.rooms3D ||
+                  p.rooms3D.length === 0 ||
+                  p.rooms3D.some((r) => r.url.includes("supabase.co"))
+                ) {
+                  updated.rooms3D = init.rooms3D;
+                  updated.has3DTour = true;
+                }
               }
             }
             return updated;

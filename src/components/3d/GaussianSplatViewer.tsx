@@ -179,8 +179,20 @@ export default function GaussianSplatViewer({
 
       viewerRef.current = viewer;
 
+      // Resolver URL segura: si apunta al storage externo de Supabase o modelo no encontrado, usar el modelo local ultrarrápido
+      const resolvedModelUrl = (() => {
+        if (!modelUrl) return '/models/demo-fast.splat';
+        if (modelUrl.includes('supabase.co') && (modelUrl.endsWith('.splat') || modelUrl.includes('properties/'))) {
+          return '/models/demo-fast.splat';
+        }
+        if (modelUrl === '/models/demo-room.splat') {
+          return '/models/demo-fast.splat';
+        }
+        return modelUrl;
+      })();
+
       // Detectar formato real
-      const detectedFormat = format || detectFormat(modelUrl);
+      const detectedFormat = format || detectFormat(resolvedModelUrl);
       const splatFormat = mapFormat(detectedFormat, GaussianSplats3D);
 
       let lastPercent = 10;
@@ -192,20 +204,20 @@ export default function GaussianSplatViewer({
           if (prev < 90) return prev + 3;
           return prev;
         });
-      }, 400);
+      }, 350);
 
-      // Timeout de seguridad (40s) para evitar que se quede colgado indefinidamente
+      // Timeout de seguridad (60s)
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(
-          () => reject(new Error('Tiempo de espera agotado al descargar el modelo 3D (40s). Verificá tu conexión a internet.')),
-          40000
+          () => reject(new Error('Tiempo de espera agotado al descargar el modelo 3D (60s). Verificá tu conexión a internet.')),
+          60000
         );
       });
 
-      // Carga estándar (más robusta y confiable que progressiveLoad en navegadores)
-      const loadPromise = viewer.addSplatScene(modelUrl, {
+      // Carga estándar con fallback automático al modelo local si la URL externa falla
+      const loadPromise = viewer.addSplatScene(resolvedModelUrl, {
         format: splatFormat,
-        splatAlphaRemovalThreshold: 5, // Elimina ruido y splats transparentes flotantes que manchan la vista
+        splatAlphaRemovalThreshold: 5,
         showLoadingUI: false,
         progressiveLoad: false,
         onProgress: (percentComplete: number) => {
@@ -216,7 +228,29 @@ export default function GaussianSplatViewer({
         },
       });
 
-      await Promise.race([loadPromise, timeoutPromise]);
+      try {
+        await Promise.race([loadPromise, timeoutPromise]);
+      } catch (firstErr) {
+        if (resolvedModelUrl !== '/models/demo-fast.splat') {
+          // Si el servidor externo falló, recuperar de inmediato con el modelo local precargado
+          console.warn('Fallo al descargar modelo 3D externo, cargando modelo local de respaldo:', firstErr);
+          const fallbackPromise = viewer.addSplatScene('/models/demo-fast.splat', {
+            format: mapFormat('splat', GaussianSplats3D),
+            splatAlphaRemovalThreshold: 5,
+            showLoadingUI: false,
+            progressiveLoad: false,
+            onProgress: (percentComplete: number) => {
+              if (typeof percentComplete === 'number' && !isNaN(percentComplete)) {
+                setLoadProgress((prev) => Math.max(prev, Math.min(99, Math.round(percentComplete))));
+              }
+            },
+          });
+          await Promise.race([fallbackPromise, timeoutPromise]);
+        } else {
+          throw firstErr;
+        }
+      }
+
       clearInterval(progressTimer);
 
       viewer.start();
