@@ -1,7 +1,56 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
+import { Canvas, extend, useThree } from "@react-three/fiber";
+// @ts-ignore
+import { OrbitControls as ThreeOrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { LumaSplatsThree } from "@lumaai/luma-web";
 import { Maximize2, Minimize2, ExternalLink } from "lucide-react";
+
+extend({ OrbitControls: ThreeOrbitControls });
+
+function Controls() {
+  const { camera, gl } = useThree();
+  const controlsRef = useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      controlsRef.current?.dispose();
+    };
+  }, []);
+
+  return (
+    // @ts-ignore
+    <orbitControls
+      ref={controlsRef}
+      args={[camera, gl.domElement]}
+      enablePan={true}
+      enableZoom={true}
+      enableRotate={true}
+      autoRotate={false}
+      maxPolarAngle={Math.PI / 2}
+    />
+  );
+}
+
+function LumaSplats({ url }: { url: string }) {
+  const splatRef = useRef<LumaSplatsThree | null>(null);
+
+  useEffect(() => {
+    const splat = new LumaSplatsThree({
+      source: url,
+    });
+    splatRef.current = splat;
+
+    return () => {
+      splat.dispose();
+    };
+  }, [url]);
+
+  if (!splatRef.current) return null;
+
+  return <primitive object={splatRef.current} />;
+}
 
 export function TourViewer({ artifactUrl }: { artifactUrl: string }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -17,7 +66,7 @@ export function TourViewer({ artifactUrl }: { artifactUrl: string }) {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };
@@ -26,14 +75,9 @@ export function TourViewer({ artifactUrl }: { artifactUrl: string }) {
     return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
   }, []);
 
-  // Formatear URL de Luma a embed si aplica
-  const embedUrl = artifactUrl.includes("lumalabs.ai") && !artifactUrl.includes("embed")
-    ? artifactUrl.replace("/capture/", "/embed/")
-    : artifactUrl;
-
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className={`relative w-full overflow-hidden bg-black rounded-xl shadow-2xl ${
         isFullscreen ? "h-screen" : "h-[500px]"
       }`}
@@ -58,17 +102,20 @@ export function TourViewer({ artifactUrl }: { artifactUrl: string }) {
       </div>
 
       <div className="absolute top-4 left-4 z-10 px-3 py-1.5 bg-black/60 text-white text-xs rounded-full backdrop-blur-sm font-medium border border-white/10 shadow-md">
-        Recorrido 3D Interactivo
+        Recorrido 3D Interactivo (Luma Splats)
       </div>
 
-      <iframe
-        src={embedUrl}
-        title="Recorrido 3D Interactivo"
-        className="w-full h-full border-0"
-        allow="accelerometer; autoplay; camera; gyroscope; vr; xr; xr-spatial-tracking; fullscreen"
-        allowFullScreen
-        loading="lazy"
-      />
+      <Canvas
+        camera={{ position: [0, 1.5, 4], fov: 65 }}
+        gl={{ antialias: false, powerPreference: "high-performance" }}
+      >
+        <Controls />
+        <LumaSplats url={artifactUrl} />
+      </Canvas>
+
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-black/60 text-white text-xs rounded-full backdrop-blur-sm pointer-events-none">
+        Usa el ratón o táctil para rotar, acercar y recorrer
+      </div>
     </div>
   );
 }

@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@lumaai/luma-web": "^0.2.2",
     "@mkkellogg/gaussian-splats-3d": "^0.4.7",
+    "@react-three/fiber": "^8.18.0",
     "@supabase/supabase-js": "^2.117.2",
     "clsx": "^2.1.1",
     "lucide-react": "^0.475.0",
