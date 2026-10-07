@@ -37,3 +37,6 @@ next-env.d.ts
 /Imagenes/
 /scripts/
 /public/videos/tour-propiedad-*.mp4
+
+# graphify cache
+graphify-out/cache/
