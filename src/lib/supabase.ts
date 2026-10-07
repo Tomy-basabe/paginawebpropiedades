@@ -238,12 +238,6 @@ export async function uploadPropertyModel3D(
   file: File,
   onStatus?: (status: string) => void
 ): Promise<{ url: string; format: 'ply' | 'splat' | 'ksplat'; fileName: string; sizeMB: string }> {
-  // Intentar crear bucket de modelos si no existe
-  await supabase.storage.createBucket("property-models", {
-    public: true,
-    fileSizeLimit: 524288000, // 500 MB max
-  }).catch(() => { /* ya existe, ignorar */ });
-
   const rawExt = file.name.split(".").pop()?.toLowerCase() || "ply";
   const format: 'ply' | 'splat' | 'ksplat' =
     rawExt === "ksplat" ? "ksplat" : rawExt === "splat" ? "splat" : "ply";
@@ -252,44 +246,59 @@ export async function uploadPropertyModel3D(
   const fileName = `splat-${Date.now()}-${cleanName}`;
   const filePath = `models/${fileName}`;
 
-  onStatus?.("Subiendo archivo 3D a la nube...");
+  onStatus?.("Subiendo archivo 3D...");
 
-  let uploadTarget = "property-models";
-  let uploadResult = await supabase.storage
-    .from("property-models")
-    .upload(filePath, file, {
-      cacheControl: "86400",
-      upsert: true,
-      contentType: "application/octet-stream",
-    });
-
-  // Si el bucket nuevo no tiene permisos configurados, intentar fallback a buckets existentes
-  if (uploadResult.error) {
-    console.warn("Fallo en bucket property-models, reintentando en fallback:", uploadResult.error.message);
-    uploadTarget = "property-videos";
-    uploadResult = await supabase.storage
-      .from("property-videos")
+  // Intento 1: Supabase en el bucket con RLS permitido ('property-images')
+  try {
+    const { error: uploadError } = await supabase.storage
+      .from("property-images")
       .upload(filePath, file, {
         cacheControl: "86400",
         upsert: true,
         contentType: "application/octet-stream",
       });
+
+    if (!uploadError) {
+      const { data: publicUrlData } = supabase.storage
+        .from("property-images")
+        .getPublicUrl(filePath);
+
+      onStatus?.("¡Modelo 3D subido con éxito a la nube!");
+      return {
+        url: publicUrlData.publicUrl,
+        format,
+        fileName: file.name,
+        sizeMB: (file.size / (1024 * 1024)).toFixed(1),
+      };
+    } else {
+      console.warn("Supabase Storage rechazó la subida (RLS), recurriendo al servidor local:", uploadError.message);
+    }
+  } catch (err) {
+    console.warn("Error con Supabase Storage:", err);
   }
 
-  if (uploadResult.error) {
-    throw new Error(`Error al subir archivo 3D: ${uploadResult.error.message}`);
+  // Intento 2: Servidor local /api/upload-model (fallback infalible)
+  onStatus?.("Guardando archivo en el servidor...");
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch("/api/upload-model", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || `Error del servidor (${res.status}) al guardar el archivo 3D.`);
   }
 
-  const { data: publicUrlData } = supabase.storage
-    .from(uploadTarget)
-    .getPublicUrl(filePath);
-
-  onStatus?.("¡Modelo 3D subido con éxito!");
+  const result = await res.json();
+  onStatus?.("¡Modelo 3D procesado con éxito!");
 
   return {
-    url: publicUrlData.publicUrl,
+    url: result.url,
     format,
     fileName: file.name,
-    sizeMB: (file.size / (1024 * 1024)).toFixed(1),
+    sizeMB: result.sizeMB || (file.size / (1024 * 1024)).toFixed(1),
   };
 }
