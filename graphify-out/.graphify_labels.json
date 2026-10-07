@@ -1,9 +1,9 @@
 {
   "0": "GaussianSplatViewer.tsx",
   "1": "package.json",
-  "2": "WhatsAppIcon",
+  "2": "useData",
   "3": "DataContext.tsx",
-  "4": "useData",
+  "4": "admin/page.tsx",
   "5": "compilerOptions",
   "6": "CLAUDE.md",
   "7": ".claude/CLAUDE.md",

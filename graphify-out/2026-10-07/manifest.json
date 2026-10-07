@@ -78,16 +78,16 @@
     "semantic_hash": "c89768d5d69f9ff968c251390908ddcb"
   },
   "src/components/3d/GaussianSplatViewer.tsx": {
-    "mtime": 1791404292.2199588,
-    "seen": 1791404358.6704419,
-    "ast_hash": "d8ea736e4d5a1a3c6970982af5b8708e",
+    "mtime": 1791406356.5186837,
+    "seen": 1791406425.979446,
+    "ast_hash": "051f1115d73932c18822a0ddd0141c66",
     "semantic_hash": ""
   },
   "src/components/3d/ViewerControls.tsx": {
-    "mtime": 1790780552.0929956,
-    "seen": 1791396937.504744,
-    "ast_hash": "70e4d8e96994c1b1f1295b9216991811",
-    "semantic_hash": "70e4d8e96994c1b1f1295b9216991811"
+    "mtime": 1791406181.7754767,
+    "seen": 1791406425.9794528,
+    "ast_hash": "ae70792cbc814dc84eea9cfc56d0a9b7",
+    "semantic_hash": ""
   },
   "src/components/3d/ViewerFallback.tsx": {
     "mtime": 1790743312.3044002,
@@ -192,10 +192,10 @@
     "semantic_hash": "e77ffaf2cedce11b3796f8d3b4978ae7"
   },
   "src/lib/gaussian-splat/config.ts": {
-    "mtime": 1790779811.663316,
-    "seen": 1791396937.5047677,
-    "ast_hash": "436e8ba2307710fd66eea5a6364dd0b2",
-    "semantic_hash": "436e8ba2307710fd66eea5a6364dd0b2"
+    "mtime": 1791406152.8835633,
+    "seen": 1791406425.9840994,
+    "ast_hash": "9f32ef529c8f5ea431a5a245b56ab5e7",
+    "semantic_hash": ""
   },
   "src/lib/initialData.ts": {
     "mtime": 1791395206.3023174,

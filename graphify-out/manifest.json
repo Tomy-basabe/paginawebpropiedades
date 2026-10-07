@@ -253,8 +253,8 @@
   },
   "supabase_setup.sql": {
     "mtime": 1790740417.9020164,
-    "seen": 1791397079.7367933,
-    "ast_hash": "",
+    "seen": 1791406438.486422,
+    "ast_hash": "30cc520a0993d052a6b7b8bbce556b20",
     "semantic_hash": ""
   },
   ".claude/CLAUDE.md": {

@@ -6,6 +6,7 @@ import { canRun3DViewer, getDeviceCapabilities } from '@/lib/gaussian-splat/capa
 import ViewerControls from './ViewerControls';
 import ViewerLoader from './ViewerLoader';
 import ViewerFallback from './ViewerFallback';
+import WalkNavigationOverlay, { WalkDirection } from './WalkNavigationOverlay';
 
 export interface GaussianSplatViewerProps {
   modelUrl: string;
@@ -74,6 +75,31 @@ export default function GaussianSplatViewer({
   const [errorMessage, setErrorMessage] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isInverted, setIsInverted] = useState(false);
+
+  // Estados de navegación en primera persona (POV)
+  const [activeDirections, setActiveDirections] = useState({
+    forward: false,
+    backward: false,
+    left: false,
+    right: false,
+  });
+  const [isWalking, setIsWalking] = useState(false);
+
+  // Refs de posición física del usuario, ángulo de los ojos y simulación de paso
+  const playerPosRef = useRef<{ x: number; y: number; z: number }>({ x: 0, y: 0, z: 0 });
+  const baseEyeHeightRef = useRef<number>(0);
+  const yawRef = useRef<number>(0);
+  const pitchRef = useRef<number>(0);
+  const walkCycleRef = useRef<number>(0);
+  const activeDirectionsRef = useRef({
+    forward: false,
+    backward: false,
+    left: false,
+    right: false,
+  });
+  const isDraggingRef = useRef(false);
+  const lastPointerPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const animFrameRef = useRef<number | null>(null);
 
   const cameraPosition = initialCameraPosition || SPLAT_VIEWER_CONFIG.defaultCameraPosition;
   const cameraTarget = initialCameraTarget || SPLAT_VIEWER_CONFIG.defaultCameraTarget;
@@ -196,6 +222,24 @@ export default function GaussianSplatViewer({
       viewer.start();
       setLoadProgress(100);
 
+      // Inicializar posición física del usuario y ángulos de mirada (POV Primera Persona)
+      const posX = cameraPosition[0];
+      const posY = cameraPosition[1];
+      const posZ = cameraPosition[2];
+
+      playerPosRef.current = { x: posX, y: posY, z: posZ };
+      baseEyeHeightRef.current = posY; // Altura fija de ojos humanos: no puede subir ni volar
+
+      // Calcular yaw y pitch inicial mirando hacia cameraTarget
+      const dx = cameraTarget[0] - posX;
+      const dy = cameraTarget[1] - posY;
+      const dz = cameraTarget[2] - posZ;
+      const horizDist = Math.hypot(dx, dz);
+
+      yawRef.current = Math.atan2(dx, -dz);
+      pitchRef.current = Math.max(-1.4, Math.min(1.4, Math.atan2(dy, Math.max(horizDist, 0.001))));
+      walkCycleRef.current = 0;
+
       setTimeout(() => {
         setViewerState('ready');
       }, 250);
@@ -215,6 +259,228 @@ export default function GaussianSplatViewer({
       }
     }
   }, [modelUrl, format, cameraPosition, cameraTarget, disposeViewer, isInverted]);
+
+  // Sincronizar referencia de direcciones activas
+  useEffect(() => {
+    activeDirectionsRef.current = activeDirections;
+    const walking = activeDirections.forward || activeDirections.backward || activeDirections.left || activeDirections.right;
+    setIsWalking(walking);
+  }, [activeDirections]);
+
+  // Controles de inicio/fin de movimiento para la cruceta y pantalla táctil
+  const handleMoveStart = useCallback((direction: WalkDirection) => {
+    setActiveDirections((prev) => ({ ...prev, [direction]: true }));
+  }, []);
+
+  const handleMoveEnd = useCallback((direction: WalkDirection) => {
+    setActiveDirections((prev) => ({ ...prev, [direction]: false }));
+  }, []);
+
+  // Navegación con teclado (WASD y Teclas de Flechas estilo Street View / Maps)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignorar si el usuario está tipeando en un input o textarea
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+
+      let matched = false;
+      if (e.code === 'KeyW' || e.key === 'ArrowUp') {
+        setActiveDirections((prev) => ({ ...prev, forward: true }));
+        matched = true;
+      } else if (e.code === 'KeyS' || e.key === 'ArrowDown') {
+        setActiveDirections((prev) => ({ ...prev, backward: true }));
+        matched = true;
+      } else if (e.code === 'KeyA' || e.key === 'ArrowLeft') {
+        setActiveDirections((prev) => ({ ...prev, left: true }));
+        matched = true;
+      } else if (e.code === 'KeyD' || e.key === 'ArrowRight') {
+        setActiveDirections((prev) => ({ ...prev, right: true }));
+        matched = true;
+      }
+
+      if (matched) {
+        e.preventDefault();
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'KeyW' || e.key === 'ArrowUp') {
+        setActiveDirections((prev) => ({ ...prev, forward: false }));
+      } else if (e.code === 'KeyS' || e.key === 'ArrowDown') {
+        setActiveDirections((prev) => ({ ...prev, backward: false }));
+      } else if (e.code === 'KeyA' || e.key === 'ArrowLeft') {
+        setActiveDirections((prev) => ({ ...prev, left: false }));
+      } else if (e.code === 'KeyD' || e.key === 'ArrowRight') {
+        setActiveDirections((prev) => ({ ...prev, right: false }));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  // Interacción de mirada (POV Eyes): Arrastrar con mouse o dedo para rotar la cabeza/ojos
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || viewerState !== 'ready') return;
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.button !== 0 && e.pointerType === 'mouse') return;
+      isDraggingRef.current = true;
+      lastPointerPosRef.current = { x: e.clientX, y: e.clientY };
+      try {
+        container.setPointerCapture?.(e.pointerId);
+      } catch {}
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDraggingRef.current) return;
+      const deltaX = e.clientX - lastPointerPosRef.current.x;
+      const deltaY = e.clientY - lastPointerPosRef.current.y;
+      lastPointerPosRef.current = { x: e.clientX, y: e.clientY };
+
+      const sensitivity = 0.0034;
+      yawRef.current -= deltaX * sensitivity;
+
+      // Restricción vertical estricta: solo mover como si fueran los ojos/cuello de la persona (pitch)
+      const pitchDelta = deltaY * sensitivity;
+      pitchRef.current = Math.max(-1.35, Math.min(1.35, pitchRef.current - pitchDelta));
+    };
+
+    const onPointerUp = (e: PointerEvent) => {
+      isDraggingRef.current = false;
+      try {
+        container.releasePointerCapture?.(e.pointerId);
+      } catch {}
+    };
+
+    // Rueda del mouse estilo Street View (avanzar / retroceder pasos)
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const stepMagnitude = -Math.sign(e.deltaY) * 0.15;
+      const yaw = yawRef.current;
+      const fwdX = Math.sin(yaw);
+      const fwdZ = -Math.cos(yaw);
+      playerPosRef.current.x += fwdX * stepMagnitude;
+      playerPosRef.current.z += fwdZ * stepMagnitude;
+    };
+
+    container.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
+    container.addEventListener('wheel', onWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
+      container.removeEventListener('wheel', onWheel);
+    };
+  }, [viewerState]);
+
+  // Bucle de simulación física en tiempo real (Head-Bobbing de caminata humana y POV fijo)
+  useEffect(() => {
+    if (viewerState !== 'ready') return;
+    const viewer = viewerRef.current;
+    if (!viewer || !viewer.camera) return;
+
+    // Desactivar controles de órbita para control total en primera persona
+    if (viewer.controls) {
+      viewer.controls.enabled = false;
+    }
+
+    let lastTimestamp = performance.now();
+
+    const updatePhysicsLoop = (now: number) => {
+      const dt = Math.min((now - lastTimestamp) / 1000, 0.1);
+      lastTimestamp = now;
+
+      const dirs = activeDirectionsRef.current;
+      const moving = dirs.forward || dirs.backward || dirs.left || dirs.right;
+
+      const yaw = yawRef.current;
+      const pitch = pitchRef.current;
+
+      // Vectores horizontalizados de dirección
+      const forwardX = Math.sin(yaw);
+      const forwardZ = -Math.cos(yaw);
+      const rightX = Math.cos(yaw);
+      const rightZ = Math.sin(yaw);
+
+      // Velocidad de caminata humana (~2.3 metros/segundo)
+      const stepDistance = 2.3 * dt;
+      let moveX = 0;
+      let moveZ = 0;
+
+      if (dirs.forward) {
+        moveX += forwardX * stepDistance;
+        moveZ += forwardZ * stepDistance;
+      }
+      if (dirs.backward) {
+        moveX -= forwardX * stepDistance;
+        moveZ -= forwardZ * stepDistance;
+      }
+      if (dirs.left) {
+        moveX -= rightX * stepDistance;
+        moveZ -= rightZ * stepDistance;
+      }
+      if (dirs.right) {
+        moveX += rightX * stepDistance;
+        moveZ += rightZ * stepDistance;
+      }
+
+      playerPosRef.current.x += moveX;
+      playerPosRef.current.z += moveZ;
+
+      // Emulación de movimiento natural de una persona (Head-Bobbing de pasos)
+      let bobY = 0;
+      let bobLateral = 0;
+
+      if (moving) {
+        walkCycleRef.current += dt * 10.5; // ~1.67 pasos por segundo
+        bobY = Math.sin(walkCycleRef.current) * 0.024; // Elevación/descenso de cada pisada
+        bobLateral = Math.cos(walkCycleRef.current * 0.5) * 0.012; // Oscilación sutil de hombros/cadera
+      } else {
+        walkCycleRef.current = 0;
+      }
+
+      // POSICIÓN ESTRICTA: El usuario nunca puede elevarse hacia arriba más allá de la altura de los ojos
+      const currentCameraX = playerPosRef.current.x + rightX * bobLateral;
+      const currentCameraY = baseEyeHeightRef.current + bobY;
+      const currentCameraZ = playerPosRef.current.z + rightZ * bobLateral;
+
+      viewer.camera.position.set(currentCameraX, currentCameraY, currentCameraZ);
+
+      // Vector de mirada de los ojos humanos (hacia el techo o hacia el suelo, sin alterar la altura corporal)
+      const lookDistance = 2.0;
+      const lookAtX = currentCameraX + Math.sin(yaw) * Math.cos(pitch) * lookDistance;
+      const lookAtY = currentCameraY + (isInverted ? -Math.sin(pitch) : Math.sin(pitch)) * lookDistance;
+      const lookAtZ = currentCameraZ - Math.cos(yaw) * Math.cos(pitch) * lookDistance;
+
+      viewer.camera.lookAt(lookAtX, lookAtY, lookAtZ);
+
+      // Actualizar el target interno para que la ordenación de splats de la librería se mantenga perfecta
+      if (viewer.controls && viewer.controls.target) {
+        viewer.controls.target.set(lookAtX, lookAtY, lookAtZ);
+      }
+
+      animFrameRef.current = requestAnimationFrame(updatePhysicsLoop);
+    };
+
+    animFrameRef.current = requestAnimationFrame(updatePhysicsLoop);
+
+    return () => {
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+        animFrameRef.current = null;
+      }
+    };
+  }, [viewerState, isInverted]);
 
   // Detectar formato por extensión
   function detectFormat(url: string): 'ply' | 'splat' | 'ksplat' {
@@ -250,11 +516,26 @@ export default function GaussianSplatViewer({
     setIsInverted((prev) => !prev);
   }, []);
 
-  // Reset de cámara
+  // Reset de cámara a la posición POV inicial
   const handleResetCamera = useCallback(() => {
-    // Re-init es la forma más confiable de resetear con esta librería
+    const posX = cameraPosition[0];
+    const posY = cameraPosition[1];
+    const posZ = cameraPosition[2];
+
+    playerPosRef.current = { x: posX, y: posY, z: posZ };
+    baseEyeHeightRef.current = posY;
+
+    const dx = cameraTarget[0] - posX;
+    const dy = cameraTarget[1] - posY;
+    const dz = cameraTarget[2] - posZ;
+    const horizDist = Math.hypot(dx, dz);
+
+    yawRef.current = Math.atan2(dx, -dz);
+    pitchRef.current = Math.max(-1.4, Math.min(1.4, Math.atan2(dy, Math.max(horizDist, 0.001))));
+    walkCycleRef.current = 0;
+
     initViewer();
-  }, [initViewer]);
+  }, [cameraPosition, cameraTarget, initViewer]);
 
   // Fullscreen
   const handleToggleFullscreen = useCallback(async () => {
@@ -281,24 +562,6 @@ export default function GaussianSplatViewer({
     };
     document.addEventListener('fullscreenchange', handleFSChange);
     return () => document.removeEventListener('fullscreenchange', handleFSChange);
-  }, []);
-
-  // Prevenir scroll de la página al interactuar con el visor
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const preventScroll = (e: WheelEvent | TouchEvent) => {
-      e.preventDefault();
-    };
-
-    container.addEventListener('wheel', preventScroll, { passive: false });
-    container.addEventListener('touchmove', preventScroll, { passive: false });
-
-    return () => {
-      container.removeEventListener('wheel', preventScroll);
-      container.removeEventListener('touchmove', preventScroll);
-    };
   }, []);
 
   // CASO 1: Si es un enlace de Scaniverse (evita el bloqueo X-Frame-Options de Niantic)
@@ -480,19 +743,24 @@ export default function GaussianSplatViewer({
         tabIndex={0}
       />
 
-      {/* Controles — solo visibles cuando el visor está listo */}
+      {/* Controles y Cruceta POV Humano — solo visibles cuando el visor está listo */}
       {viewerState === 'ready' && (
-        <ViewerControls
-          onResetCamera={handleResetCamera}
-          onToggleFullscreen={handleToggleFullscreen}
-          isFullscreen={isFullscreen}
-          onToggleInvert={handleToggleInvert}
-          isInverted={isInverted}
-        />
+        <>
+          <WalkNavigationOverlay
+            onMoveStart={handleMoveStart}
+            onMoveEnd={handleMoveEnd}
+            activeDirections={activeDirections}
+            isWalking={isWalking}
+          />
+          <ViewerControls
+            onResetCamera={handleResetCamera}
+            onToggleFullscreen={handleToggleFullscreen}
+            isFullscreen={isFullscreen}
+            onToggleInvert={handleToggleInvert}
+            isInverted={isInverted}
+          />
+        </>
       )}
-
-      {/* Hint de interacción — se oculta tras unos segundos */}
-      {viewerState === 'ready' && <InteractionHint />}
     </div>
   );
 }
