@@ -257,17 +257,27 @@ export default function GaussianSplatViewer({
       setLoadProgress(100);
 
       // Inicializar posición física del usuario y ángulos de mirada (POV Primera Persona)
-      const posX = cameraPosition[0];
-      const posY = cameraPosition[1];
-      const posZ = cameraPosition[2];
+      // Piso de la casa en Y ≈ -1.1m -> Altura calibrada a ~1.7m sobre el suelo = Y ≈ 0.55m
+      // Centro horizontal de la casa: X ≈ -0.3m, Z ≈ 0.6m
+      const rawX = cameraPosition[0];
+      const rawY = cameraPosition[1];
+      const rawZ = cameraPosition[2];
+
+      const posX = (rawX === 0 && rawZ === 0) ? -0.3 : rawX;
+      const posY = rawY > 0.8 ? 0.55 : rawY; // Calibración estricta de ojos humanos (evita aparecer en el techo)
+      const posZ = rawZ;
 
       playerPosRef.current = { x: posX, y: posY, z: posZ };
       baseEyeHeightRef.current = posY; // Altura fija de ojos humanos: no puede subir ni volar
 
-      // Calcular yaw y pitch inicial mirando hacia cameraTarget
-      const dx = cameraTarget[0] - posX;
-      const dy = cameraTarget[1] - posY;
-      const dz = cameraTarget[2] - posZ;
+      // Mirar horizontalmente hacia adelante (nivel de horizonte natural, evitando mirar al suelo)
+      const targetX = cameraTarget[0] === 0 && posX === -0.3 ? -0.3 : cameraTarget[0];
+      const targetY = cameraTarget[1] <= 0 ? posY : cameraTarget[1];
+      const targetZ = cameraTarget[2] === 0 && posZ === 0.6 ? -0.8 : cameraTarget[2];
+
+      const dx = targetX - posX;
+      const dy = targetY - posY;
+      const dz = targetZ - posZ;
       const horizDist = Math.hypot(dx, dz);
 
       yawRef.current = Math.atan2(dx, -dz);
@@ -552,16 +562,24 @@ export default function GaussianSplatViewer({
 
   // Reset de cámara a la posición POV inicial
   const handleResetCamera = useCallback(() => {
-    const posX = cameraPosition[0];
-    const posY = cameraPosition[1];
-    const posZ = cameraPosition[2];
+    const rawX = cameraPosition[0];
+    const rawY = cameraPosition[1];
+    const rawZ = cameraPosition[2];
+
+    const posX = (rawX === 0 && rawZ === 0) ? -0.3 : rawX;
+    const posY = rawY > 0.8 ? 0.55 : rawY;
+    const posZ = rawZ;
 
     playerPosRef.current = { x: posX, y: posY, z: posZ };
     baseEyeHeightRef.current = posY;
 
-    const dx = cameraTarget[0] - posX;
-    const dy = cameraTarget[1] - posY;
-    const dz = cameraTarget[2] - posZ;
+    const targetX = cameraTarget[0] === 0 && posX === -0.3 ? -0.3 : cameraTarget[0];
+    const targetY = cameraTarget[1] <= 0 ? posY : cameraTarget[1];
+    const targetZ = cameraTarget[2] === 0 && posZ === 0.6 ? -0.8 : cameraTarget[2];
+
+    const dx = targetX - posX;
+    const dy = targetY - posY;
+    const dz = targetZ - posZ;
     const horizDist = Math.hypot(dx, dz);
 
     yawRef.current = Math.atan2(dx, -dz);

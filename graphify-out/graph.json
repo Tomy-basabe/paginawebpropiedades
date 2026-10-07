@@ -108,30 +108,108 @@
       "source_location": "L6"
     },
     {
-      "id": "src_lib_gaussian_splat_config_splatformat",
-      "label": "SplatFormat",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "GaussianSplatViewer.tsx",
-      "file_type": "code",
-      "norm_label": "splatformat",
-      "source_file": "src/lib/gaussian-splat/config.ts",
-      "source_location": "L35"
-    },
-    {
       "id": "src_components_propertyvirtualtouruploader_uploadstate",
       "label": "UploadState",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 15,
-      "community_name": "PropertyVirtualTourUploader.tsx",
+      "community_name": "TourViewer.tsx",
       "file_type": "code",
       "norm_label": "uploadstate",
       "source_file": "src/components/PropertyVirtualTourUploader.tsx",
       "source_location": "L7"
+    },
+    {
+      "id": "src_app_99propiedades_page_adminuser",
+      "label": "AdminUser",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "adminuser",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L44"
+    },
+    {
+      "id": "src_components_brandlogo_brandlogoprops",
+      "label": "BrandLogoProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "brandlogoprops",
+      "source_file": "src/components/BrandLogo.tsx",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_lib_gaussian_splat_config_splatformat",
+      "label": "SplatFormat",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "splatformat",
+      "source_file": "src/lib/gaussian-splat/config.ts",
+      "source_location": "L35"
+    },
+    {
+      "id": "src_lib_types_propertystatus",
+      "label": "PropertyStatus",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "propertystatus",
+      "source_file": "src/lib/types.ts",
+      "source_location": "L3"
+    },
+    {
+      "id": "src_components_header_headerprops",
+      "label": "HeaderProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "headerprops",
+      "source_file": "src/components/Header.tsx",
+      "source_location": "L20"
+    },
+    {
+      "id": "src_components_mobilebottomnav_mobilebottomnavprops",
+      "label": "MobileBottomNavProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "mobilebottomnavprops",
+      "source_file": "src/components/MobileBottomNav.tsx",
+      "source_location": "L17"
+    },
+    {
+      "id": "src_components_valuationmodal_valuationmodalprops",
+      "label": "ValuationModalProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "valuationmodalprops",
+      "source_file": "src/components/ValuationModal.tsx",
+      "source_location": "L9"
     },
     {
       "id": "src_components_whatsappicon_whatsappiconprops",
@@ -145,32 +223,6 @@
       "norm_label": "whatsappiconprops",
       "source_file": "src/components/WhatsAppIcon.tsx",
       "source_location": "L3"
-    },
-    {
-      "id": "src_lib_types_propertyroom3d",
-      "label": "PropertyRoom3D",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "useData",
-      "file_type": "code",
-      "norm_label": "propertyroom3d",
-      "source_file": "src/lib/types.ts",
-      "source_location": "L50"
-    },
-    {
-      "id": "src_app_99propiedades_page_adminuser",
-      "label": "AdminUser",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "adminuser",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L44"
     },
     {
       "id": "src_components_propertycard_propertycardprops",
@@ -196,7 +248,7 @@
       "file_type": "code",
       "norm_label": "propertydetailmodalprops",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L48"
+      "source_location": "L49"
     },
     {
       "id": "src_context_datacontext_datacontexttype",
@@ -277,17 +329,17 @@
       "source_location": "L5"
     },
     {
-      "id": "src_lib_types_propertystatus",
-      "label": "PropertyStatus",
+      "id": "src_lib_types_propertyroom3d",
+      "label": "PropertyRoom3D",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 3,
       "community_name": "DataContext.tsx",
       "file_type": "code",
-      "norm_label": "propertystatus",
+      "norm_label": "propertyroom3d",
       "source_file": "src/lib/types.ts",
-      "source_location": "L3"
+      "source_location": "L50"
     },
     {
       "id": "src_lib_types_propertytype",
@@ -301,58 +353,6 @@
       "norm_label": "propertytype",
       "source_file": "src/lib/types.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "src_components_brandlogo_brandlogoprops",
-      "label": "BrandLogoProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "brandlogoprops",
-      "source_file": "src/components/BrandLogo.tsx",
-      "source_location": "L6"
-    },
-    {
-      "id": "src_components_header_headerprops",
-      "label": "HeaderProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "headerprops",
-      "source_file": "src/components/Header.tsx",
-      "source_location": "L20"
-    },
-    {
-      "id": "src_components_mobilebottomnav_mobilebottomnavprops",
-      "label": "MobileBottomNavProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "mobilebottomnavprops",
-      "source_file": "src/components/MobileBottomNav.tsx",
-      "source_location": "L17"
-    },
-    {
-      "id": "src_components_valuationmodal_valuationmodalprops",
-      "label": "ValuationModalProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "valuationmodalprops",
-      "source_file": "src/components/ValuationModal.tsx",
-      "source_location": "L9"
     },
     {
       "id": "src_components_3d_gaussiansplatviewer_gaussiansplatviewer",
@@ -376,7 +376,7 @@
       "file_type": "code",
       "norm_label": "detectformat()",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L486"
+      "source_location": "L520"
     },
     {
       "id": "src_components_3d_gaussiansplatviewer_gaussiansplatviewer_mapformat",
@@ -388,7 +388,7 @@
       "file_type": "code",
       "norm_label": "mapformat()",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L494"
+      "source_location": "L528"
     },
     {
       "id": "src_components_3d_gaussiansplatviewer_interactionhint",
@@ -400,7 +400,7 @@
       "file_type": "code",
       "norm_label": "interactionhint()",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L769"
+      "source_location": "L803"
     },
     {
       "id": "src_components_3d_gaussiansplatviewer_isembedviewer",
@@ -571,40 +571,16 @@
       "source_location": "L9"
     },
     {
-      "id": "src_components_tourviewer_controls",
-      "label": "Controls()",
+      "id": "src_app_admin_page_adminpage",
+      "label": "AdminPage()",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
+      "community": 13,
+      "community_name": "admin/page.tsx",
       "file_type": "code",
-      "norm_label": "controls()",
-      "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L12"
-    },
-    {
-      "id": "src_components_tourviewer_lumasplats",
-      "label": "LumaSplats()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "lumasplats()",
-      "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L36"
-    },
-    {
-      "id": "src_components_tourviewer_tourviewer",
-      "label": "TourViewer()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "tourviewer()",
-      "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L55"
+      "norm_label": "adminpage()",
+      "source_file": "src/app/admin/page.tsx",
+      "source_location": "L3"
     },
     {
       "id": "src_app_api_upload_model_route_post",
@@ -619,16 +595,148 @@
       "source_location": "L5"
     },
     {
+      "id": "src_app_tour_demo_page_tourdemopage",
+      "label": "TourDemoPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "tourdemopage()",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L5"
+    },
+    {
       "id": "src_components_propertyvirtualtouruploader_propertyvirtualtouruploader",
       "label": "PropertyVirtualTourUploader()",
       "_callable": true,
       "_origin": "ast",
       "community": 15,
-      "community_name": "PropertyVirtualTourUploader.tsx",
+      "community_name": "TourViewer.tsx",
       "file_type": "code",
       "norm_label": "propertyvirtualtouruploader()",
       "source_file": "src/components/PropertyVirtualTourUploader.tsx",
       "source_location": "L9"
+    },
+    {
+      "id": "src_components_tourviewer_controls",
+      "label": "Controls()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "controls()",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L19"
+    },
+    {
+      "id": "src_components_tourviewer_lumasplats",
+      "label": "LumaSplats()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "lumasplats()",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L43"
+    },
+    {
+      "id": "src_components_tourviewer_tourviewer",
+      "label": "TourViewer()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "tourviewer()",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L62"
+    },
+    {
+      "id": "src_app_99propiedades_page_adminsecretpage",
+      "label": "AdminSecretPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "adminsecretpage()",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L62"
+    },
+    {
+      "id": "src_components_brandlogo_brandlogo",
+      "label": "BrandLogo()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "brandlogo()",
+      "source_file": "src/components/BrandLogo.tsx",
+      "source_location": "L12"
+    },
+    {
+      "id": "src_lib_supabase_compressvideoinbrowser",
+      "label": "compressVideoInBrowser()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "compressvideoinbrowser()",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L49"
+    },
+    {
+      "id": "src_lib_supabase_uploadpropertyimage",
+      "label": "uploadPropertyImage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "uploadpropertyimage()",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L15"
+    },
+    {
+      "id": "src_lib_supabase_uploadpropertymodel3d",
+      "label": "uploadPropertyModel3D()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "uploadpropertymodel3d()",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L237"
+    },
+    {
+      "id": "src_lib_supabase_uploadpropertyvideo",
+      "label": "uploadPropertyVideo()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "uploadpropertyvideo()",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L162"
+    },
+    {
+      "id": "src_app_api_generate_tour_route_post",
+      "label": "POST()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "generate-tour/route.ts",
+      "file_type": "code",
+      "norm_label": "post()",
+      "source_file": "src/app/api/generate-tour/route.ts",
+      "source_location": "L4"
     },
     {
       "id": "src_app_contacto_page_contactocontent",
@@ -691,6 +799,18 @@
       "source_location": "L47"
     },
     {
+      "id": "src_app_propiedades_page_propiedadescontent",
+      "label": "PropiedadesContent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "propiedadescontent()",
+      "source_file": "src/app/propiedades/page.tsx",
+      "source_location": "L27"
+    },
+    {
       "id": "src_app_sobre_mi_page_sobremipage",
       "label": "SobreMiPage()",
       "_callable": true,
@@ -727,6 +847,54 @@
       "source_location": "L9"
     },
     {
+      "id": "src_components_clientshell_clientshell",
+      "label": "ClientShell()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "clientshell()",
+      "source_file": "src/components/ClientShell.tsx",
+      "source_location": "L10"
+    },
+    {
+      "id": "src_components_footer_footer",
+      "label": "Footer()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "footer()",
+      "source_file": "src/components/Footer.tsx",
+      "source_location": "L21"
+    },
+    {
+      "id": "src_components_header_header",
+      "label": "Header()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "header()",
+      "source_file": "src/components/Header.tsx",
+      "source_location": "L24"
+    },
+    {
+      "id": "src_components_mobilebottomnav_mobilebottomnav",
+      "label": "MobileBottomNav()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "mobilebottomnav()",
+      "source_file": "src/components/MobileBottomNav.tsx",
+      "source_location": "L21"
+    },
+    {
       "id": "src_components_mortgagecalculator_mortgagecalculator",
       "label": "MortgageCalculator()",
       "_callable": true,
@@ -760,7 +928,31 @@
       "file_type": "code",
       "norm_label": "propertydetailmodal()",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L53"
+      "source_location": "L54"
+    },
+    {
+      "id": "src_components_valuationmodal_valuationmodal",
+      "label": "ValuationModal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "valuationmodal()",
+      "source_file": "src/components/ValuationModal.tsx",
+      "source_location": "L14"
+    },
+    {
+      "id": "src_components_whatsappfloat_whatsappfloat",
+      "label": "WhatsAppFloat()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "whatsappfloat()",
+      "source_file": "src/components/WhatsAppFloat.tsx",
+      "source_location": "L10"
     },
     {
       "id": "src_components_whatsappicon_whatsappicon",
@@ -784,31 +976,31 @@
       "file_type": "code",
       "norm_label": "usedata()",
       "source_file": "src/context/DataContext.tsx",
-      "source_location": "L554"
+      "source_location": "L569"
     },
     {
-      "id": "src_app_99propiedades_page_adminsecretpage",
-      "label": "AdminSecretPage()",
+      "id": "src_lib_whatsapp_cleanwhatsappnumber",
+      "label": "cleanWhatsAppNumber()",
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
+      "community": 2,
+      "community_name": "useData",
       "file_type": "code",
-      "norm_label": "adminsecretpage()",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L62"
+      "norm_label": "cleanwhatsappnumber()",
+      "source_file": "src/lib/whatsapp.ts",
+      "source_location": "L5"
     },
     {
-      "id": "src_app_propiedades_page_propiedadescontent",
-      "label": "PropiedadesContent()",
+      "id": "src_lib_whatsapp_getwhatsappurl",
+      "label": "getWhatsAppUrl()",
       "_callable": true,
       "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
+      "community": 2,
+      "community_name": "useData",
       "file_type": "code",
-      "norm_label": "propiedadescontent()",
-      "source_file": "src/app/propiedades/page.tsx",
-      "source_location": "L27"
+      "norm_label": "getwhatsappurl()",
+      "source_file": "src/lib/whatsapp.ts",
+      "source_location": "L34"
     },
     {
       "id": "src_app_propiedades_page_propiedadespage",
@@ -823,160 +1015,16 @@
       "source_location": "L565"
     },
     {
-      "id": "src_lib_supabase_compressvideoinbrowser",
-      "label": "compressVideoInBrowser()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "compressvideoinbrowser()",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L49"
-    },
-    {
-      "id": "src_lib_supabase_uploadpropertyimage",
-      "label": "uploadPropertyImage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "uploadpropertyimage()",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L15"
-    },
-    {
-      "id": "src_lib_supabase_uploadpropertymodel3d",
-      "label": "uploadPropertyModel3D()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "uploadpropertymodel3d()",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L237"
-    },
-    {
-      "id": "src_lib_supabase_uploadpropertyvideo",
-      "label": "uploadPropertyVideo()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "uploadpropertyvideo()",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L162"
-    },
-    {
-      "id": "src_app_admin_page_adminpage",
-      "label": "AdminPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "adminpage()",
-      "source_file": "src/app/admin/page.tsx",
-      "source_location": "L3"
-    },
-    {
       "id": "src_app_layout_rootlayout",
       "label": "RootLayout()",
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "getWhatsAppUrl",
+      "community_name": "layout.tsx",
       "file_type": "code",
       "norm_label": "rootlayout()",
       "source_file": "src/app/layout.tsx",
       "source_location": "L16"
-    },
-    {
-      "id": "src_components_brandlogo_brandlogo",
-      "label": "BrandLogo()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "brandlogo()",
-      "source_file": "src/components/BrandLogo.tsx",
-      "source_location": "L12"
-    },
-    {
-      "id": "src_components_clientshell_clientshell",
-      "label": "ClientShell()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "clientshell()",
-      "source_file": "src/components/ClientShell.tsx",
-      "source_location": "L10"
-    },
-    {
-      "id": "src_components_footer_footer",
-      "label": "Footer()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "footer()",
-      "source_file": "src/components/Footer.tsx",
-      "source_location": "L21"
-    },
-    {
-      "id": "src_components_header_header",
-      "label": "Header()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "header()",
-      "source_file": "src/components/Header.tsx",
-      "source_location": "L24"
-    },
-    {
-      "id": "src_components_mobilebottomnav_mobilebottomnav",
-      "label": "MobileBottomNav()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "mobilebottomnav()",
-      "source_file": "src/components/MobileBottomNav.tsx",
-      "source_location": "L21"
-    },
-    {
-      "id": "src_components_valuationmodal_valuationmodal",
-      "label": "ValuationModal()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "valuationmodal()",
-      "source_file": "src/components/ValuationModal.tsx",
-      "source_location": "L14"
-    },
-    {
-      "id": "src_components_whatsappfloat_whatsappfloat",
-      "label": "WhatsAppFloat()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "whatsappfloat()",
-      "source_file": "src/components/WhatsAppFloat.tsx",
-      "source_location": "L10"
     },
     {
       "id": "src_context_datacontext_dataprovider",
@@ -984,35 +1032,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "getWhatsAppUrl",
+      "community_name": "layout.tsx",
       "file_type": "code",
       "norm_label": "dataprovider()",
       "source_file": "src/context/DataContext.tsx",
       "source_location": "L42"
-    },
-    {
-      "id": "src_lib_whatsapp_cleanwhatsappnumber",
-      "label": "cleanWhatsAppNumber()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "cleanwhatsappnumber()",
-      "source_file": "src/lib/whatsapp.ts",
-      "source_location": "L5"
-    },
-    {
-      "id": "src_lib_whatsapp_getwhatsappurl",
-      "label": "getWhatsAppUrl()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "getwhatsappurl()",
-      "source_file": "src/lib/whatsapp.ts",
-      "source_location": "L34"
     },
     {
       "id": "src_components_3d_gaussiansplatviewer",
@@ -1081,28 +1105,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_lib_gaussian_splat_config",
-      "label": "config.ts",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "GaussianSplatViewer.tsx",
-      "file_type": "code",
-      "norm_label": "config.ts",
-      "source_file": "src/lib/gaussian-splat/config.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_gaussian_splat_config_splat_viewer_config",
-      "label": "SPLAT_VIEWER_CONFIG",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "GaussianSplatViewer.tsx",
-      "file_type": "code",
-      "norm_label": "splat_viewer_config",
-      "source_file": "src/lib/gaussian-splat/config.ts",
-      "source_location": "L6"
-    },
-    {
       "id": "ref_mkkellogg_gaussian_splats_3d",
       "label": "@mkkellogg/gaussian-splats-3d",
       "_origin": "ast",
@@ -1123,6 +1125,94 @@
       "norm_label": "package.json",
       "source_file": "package.json",
       "source_location": "L1"
+    },
+    {
+      "id": "package_devdependencies",
+      "label": "devDependencies",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "devdependencies",
+      "source_file": "package.json",
+      "source_location": "L24"
+    },
+    {
+      "id": "package_devdependencies_autoprefixer",
+      "label": "autoprefixer",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "autoprefixer",
+      "source_file": "package.json",
+      "source_location": "L28"
+    },
+    {
+      "id": "package_devdependencies_postcss",
+      "label": "postcss",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "postcss",
+      "source_file": "package.json",
+      "source_location": "L29"
+    },
+    {
+      "id": "package_devdependencies_tailwindcss",
+      "label": "tailwindcss",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "tailwindcss",
+      "source_file": "package.json",
+      "source_location": "L30"
+    },
+    {
+      "id": "package_devdependencies_types_node",
+      "label": "@types/node",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "@types/node",
+      "source_file": "package.json",
+      "source_location": "L25"
+    },
+    {
+      "id": "package_devdependencies_types_react",
+      "label": "@types/react",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "@types/react",
+      "source_file": "package.json",
+      "source_location": "L26"
+    },
+    {
+      "id": "package_devdependencies_types_react_dom",
+      "label": "@types/react-dom",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "@types/react-dom",
+      "source_file": "package.json",
+      "source_location": "L27"
+    },
+    {
+      "id": "package_devdependencies_typescript",
+      "label": "typescript",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "package.json",
+      "file_type": "code",
+      "norm_label": "typescript",
+      "source_file": "package.json",
+      "source_location": "L31"
     },
     {
       "id": "package_name",
@@ -1235,17 +1325,6 @@
       "source_location": "L7"
     },
     {
-      "id": "src_components_tourviewer",
-      "label": "TourViewer.tsx",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "tourviewer.tsx",
-      "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "tailwind_config",
       "label": "tailwind.config.ts",
       "_origin": "ast",
@@ -1290,17 +1369,6 @@
       "source_location": "L16"
     },
     {
-      "id": "ref_lumaai_luma_web",
-      "label": "@lumaai/luma-web",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "@lumaai/luma-web",
-      "source_file": "package.json",
-      "source_location": "L12"
-    },
-    {
       "id": "ref_postcss",
       "label": "postcss",
       "_origin": "ast",
@@ -1321,17 +1389,6 @@
       "norm_label": "react-dom",
       "source_file": "package.json",
       "source_location": "L20"
-    },
-    {
-      "id": "ref_react_three_fiber",
-      "label": "@react-three/fiber",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "@react-three/fiber",
-      "source_file": "package.json",
-      "source_location": "L14"
     },
     {
       "id": "ref_supabase_supabase_js",
@@ -1365,17 +1422,6 @@
       "norm_label": "tailwindcss",
       "source_file": "package.json",
       "source_location": "L30"
-    },
-    {
-      "id": "ref_three",
-      "label": "three",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "three",
-      "source_file": "package.json",
-      "source_location": "L22"
     },
     {
       "id": "ref_types_node",
@@ -1514,102 +1560,36 @@
       "source_location": "L1"
     },
     {
-      "id": "package_devdependencies",
-      "label": "devDependencies",
+      "id": "src_app_admin_page",
+      "label": "admin/page.tsx",
       "_origin": "ast",
       "community": 13,
-      "community_name": "devDependencies",
+      "community_name": "admin/page.tsx",
       "file_type": "code",
-      "norm_label": "devdependencies",
-      "source_file": "package.json",
-      "source_location": "L24"
-    },
-    {
-      "id": "package_devdependencies_autoprefixer",
-      "label": "autoprefixer",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "devDependencies",
-      "file_type": "code",
-      "norm_label": "autoprefixer",
-      "source_file": "package.json",
-      "source_location": "L28"
-    },
-    {
-      "id": "package_devdependencies_postcss",
-      "label": "postcss",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "devDependencies",
-      "file_type": "code",
-      "norm_label": "postcss",
-      "source_file": "package.json",
-      "source_location": "L29"
-    },
-    {
-      "id": "package_devdependencies_tailwindcss",
-      "label": "tailwindcss",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "devDependencies",
-      "file_type": "code",
-      "norm_label": "tailwindcss",
-      "source_file": "package.json",
-      "source_location": "L30"
-    },
-    {
-      "id": "package_devdependencies_types_node",
-      "label": "@types/node",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "devDependencies",
-      "file_type": "code",
-      "norm_label": "@types/node",
-      "source_file": "package.json",
-      "source_location": "L25"
-    },
-    {
-      "id": "package_devdependencies_types_react",
-      "label": "@types/react",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "devDependencies",
-      "file_type": "code",
-      "norm_label": "@types/react",
-      "source_file": "package.json",
-      "source_location": "L26"
-    },
-    {
-      "id": "package_devdependencies_types_react_dom",
-      "label": "@types/react-dom",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "devDependencies",
-      "file_type": "code",
-      "norm_label": "@types/react-dom",
-      "source_file": "package.json",
-      "source_location": "L27"
-    },
-    {
-      "id": "package_devdependencies_typescript",
-      "label": "typescript",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "devDependencies",
-      "file_type": "code",
-      "norm_label": "typescript",
-      "source_file": "package.json",
-      "source_location": "L31"
+      "norm_label": "admin/page.tsx",
+      "source_file": "src/app/admin/page.tsx",
+      "source_location": "L1"
     },
     {
       "id": "src_app_api_upload_model_route",
-      "label": "route.ts",
+      "label": "upload-model/route.ts",
       "_origin": "ast",
       "community": 14,
       "community_name": "route.ts",
       "file_type": "code",
-      "norm_label": "route.ts",
+      "norm_label": "upload-model/route.ts",
       "source_file": "src/app/api/upload-model/route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_tour_demo_page",
+      "label": "tour-demo/page.tsx",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "tour-demo/page.tsx",
+      "source_file": "src/app/tour-demo/page.tsx",
       "source_location": "L1"
     },
     {
@@ -1617,10 +1597,153 @@
       "label": "PropertyVirtualTourUploader.tsx",
       "_origin": "ast",
       "community": 15,
-      "community_name": "PropertyVirtualTourUploader.tsx",
+      "community_name": "TourViewer.tsx",
       "file_type": "code",
       "norm_label": "propertyvirtualtouruploader.tsx",
       "source_file": "src/components/PropertyVirtualTourUploader.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_tourviewer",
+      "label": "TourViewer.tsx",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "tourviewer.tsx",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_tourviewer_gaussiansplatviewer",
+      "label": "GaussianSplatViewer",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "code",
+      "norm_label": "gaussiansplatviewer",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L12"
+    },
+    {
+      "id": "ref_lumaai_luma_web",
+      "label": "@lumaai/luma-web",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "concept",
+      "norm_label": "@lumaai/luma-web",
+      "source_file": "package.json",
+      "source_location": "L12"
+    },
+    {
+      "id": "ref_react_three_fiber",
+      "label": "@react-three/fiber",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "concept",
+      "norm_label": "@react-three/fiber",
+      "source_file": "package.json",
+      "source_location": "L14"
+    },
+    {
+      "id": "ref_three",
+      "label": "three",
+      "_origin": "ast",
+      "community": 15,
+      "community_name": "TourViewer.tsx",
+      "file_type": "concept",
+      "norm_label": "three",
+      "source_file": "package.json",
+      "source_location": "L22"
+    },
+    {
+      "id": "src_app_99propiedades_page",
+      "label": "99propiedades/page.tsx",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "99propiedades/page.tsx",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_99propiedades_page_default_admin_user",
+      "label": "DEFAULT_ADMIN_USER",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "default_admin_user",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L53"
+    },
+    {
+      "id": "src_components_brandlogo",
+      "label": "BrandLogo.tsx",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "brandlogo.tsx",
+      "source_file": "src/components/BrandLogo.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_gaussian_splat_config",
+      "label": "config.ts",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "config.ts",
+      "source_file": "src/lib/gaussian-splat/config.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_gaussian_splat_config_splat_viewer_config",
+      "label": "SPLAT_VIEWER_CONFIG",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "splat_viewer_config",
+      "source_file": "src/lib/gaussian-splat/config.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_lib_supabase",
+      "label": "supabase.ts",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "supabase.ts",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_supabase_supabase",
+      "label": "supabase",
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "supabase",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L9"
+    },
+    {
+      "id": "src_app_api_generate_tour_route",
+      "label": "generate-tour/route.ts",
+      "_origin": "ast",
+      "community": 17,
+      "community_name": "generate-tour/route.ts",
+      "file_type": "code",
+      "norm_label": "generate-tour/route.ts",
+      "source_file": "src/app/api/generate-tour/route.ts",
       "source_location": "L1"
     },
     {
@@ -1712,6 +1835,50 @@
       "source_location": "L1"
     },
     {
+      "id": "src_components_clientshell",
+      "label": "ClientShell.tsx",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "clientshell.tsx",
+      "source_file": "src/components/ClientShell.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_footer",
+      "label": "Footer.tsx",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "footer.tsx",
+      "source_file": "src/components/Footer.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_header",
+      "label": "Header.tsx",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "header.tsx",
+      "source_file": "src/components/Header.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_mobilebottomnav",
+      "label": "MobileBottomNav.tsx",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "mobilebottomnav.tsx",
+      "source_file": "src/components/MobileBottomNav.tsx",
+      "source_location": "L1"
+    },
+    {
       "id": "src_components_mortgagecalculator",
       "label": "MortgageCalculator.tsx",
       "_origin": "ast",
@@ -1723,37 +1890,26 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_propertycard",
-      "label": "PropertyCard.tsx",
+      "id": "src_components_valuationmodal",
+      "label": "ValuationModal.tsx",
       "_origin": "ast",
       "community": 2,
       "community_name": "useData",
       "file_type": "code",
-      "norm_label": "propertycard.tsx",
-      "source_file": "src/components/PropertyCard.tsx",
+      "norm_label": "valuationmodal.tsx",
+      "source_file": "src/components/ValuationModal.tsx",
       "source_location": "L1"
     },
     {
-      "id": "src_components_propertydetailmodal",
-      "label": "PropertyDetailModal.tsx",
+      "id": "src_components_whatsappfloat",
+      "label": "WhatsAppFloat.tsx",
       "_origin": "ast",
       "community": 2,
       "community_name": "useData",
       "file_type": "code",
-      "norm_label": "propertydetailmodal.tsx",
-      "source_file": "src/components/PropertyDetailModal.tsx",
+      "norm_label": "whatsappfloat.tsx",
+      "source_file": "src/components/WhatsAppFloat.tsx",
       "source_location": "L1"
-    },
-    {
-      "id": "src_components_propertydetailmodal_gaussiansplatviewer",
-      "label": "GaussianSplatViewer",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "useData",
-      "file_type": "code",
-      "norm_label": "gaussiansplatviewer",
-      "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L33"
     },
     {
       "id": "src_components_whatsappicon",
@@ -1764,6 +1920,17 @@
       "file_type": "code",
       "norm_label": "whatsappicon.tsx",
       "source_file": "src/components/WhatsAppIcon.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_whatsapp",
+      "label": "whatsapp.ts",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "code",
+      "norm_label": "whatsapp.ts",
+      "source_file": "src/lib/whatsapp.ts",
       "source_location": "L1"
     },
     {
@@ -1778,6 +1945,17 @@
       "source_location": "L17"
     },
     {
+      "id": "ref_next",
+      "label": "next",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "useData",
+      "file_type": "concept",
+      "norm_label": "next",
+      "source_file": "package.json",
+      "source_location": "L18"
+    },
+    {
       "id": "ref_react",
       "label": "react",
       "_origin": "ast",
@@ -1789,28 +1967,6 @@
       "source_location": "L19"
     },
     {
-      "id": "src_app_99propiedades_page",
-      "label": "99propiedades/page.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "99propiedades/page.tsx",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_app_99propiedades_page_default_admin_user",
-      "label": "DEFAULT_ADMIN_USER",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "default_admin_user",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L53"
-    },
-    {
       "id": "src_app_propiedades_page",
       "label": "propiedades/page.tsx",
       "_origin": "ast",
@@ -1820,6 +1976,39 @@
       "norm_label": "propiedades/page.tsx",
       "source_file": "src/app/propiedades/page.tsx",
       "source_location": "L1"
+    },
+    {
+      "id": "src_components_propertycard",
+      "label": "PropertyCard.tsx",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propertycard.tsx",
+      "source_file": "src/components/PropertyCard.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_propertydetailmodal",
+      "label": "PropertyDetailModal.tsx",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propertydetailmodal.tsx",
+      "source_file": "src/components/PropertyDetailModal.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_propertydetailmodal_gaussiansplatviewer",
+      "label": "GaussianSplatViewer",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "gaussiansplatviewer",
+      "source_file": "src/components/PropertyDetailModal.tsx",
+      "source_location": "L34"
     },
     {
       "id": "src_context_datacontext",
@@ -1897,28 +2086,6 @@
       "norm_label": "initial_properties",
       "source_file": "src/lib/initialData.ts",
       "source_location": "L84"
-    },
-    {
-      "id": "src_lib_supabase",
-      "label": "supabase.ts",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "supabase.ts",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_supabase_supabase",
-      "label": "supabase",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "DataContext.tsx",
-      "file_type": "code",
-      "norm_label": "supabase",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L9"
     },
     {
       "id": "src_lib_types",
@@ -2310,22 +2477,11 @@
       "source_location": "L1"
     },
     {
-      "id": "src_app_admin_page",
-      "label": "admin/page.tsx",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "admin/page.tsx",
-      "source_file": "src/app/admin/page.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "src_app_layout",
       "label": "layout.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "getWhatsAppUrl",
+      "community_name": "layout.tsx",
       "file_type": "code",
       "norm_label": "layout.tsx",
       "source_file": "src/app/layout.tsx",
@@ -2336,110 +2492,11 @@
       "label": "metadata",
       "_origin": "ast",
       "community": 8,
-      "community_name": "getWhatsAppUrl",
+      "community_name": "layout.tsx",
       "file_type": "code",
       "norm_label": "metadata",
       "source_file": "src/app/layout.tsx",
       "source_location": "L6"
-    },
-    {
-      "id": "src_components_brandlogo",
-      "label": "BrandLogo.tsx",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "brandlogo.tsx",
-      "source_file": "src/components/BrandLogo.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_clientshell",
-      "label": "ClientShell.tsx",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "clientshell.tsx",
-      "source_file": "src/components/ClientShell.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_footer",
-      "label": "Footer.tsx",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "footer.tsx",
-      "source_file": "src/components/Footer.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_header",
-      "label": "Header.tsx",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "header.tsx",
-      "source_file": "src/components/Header.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_mobilebottomnav",
-      "label": "MobileBottomNav.tsx",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "mobilebottomnav.tsx",
-      "source_file": "src/components/MobileBottomNav.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_valuationmodal",
-      "label": "ValuationModal.tsx",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "valuationmodal.tsx",
-      "source_file": "src/components/ValuationModal.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_whatsappfloat",
-      "label": "WhatsAppFloat.tsx",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "whatsappfloat.tsx",
-      "source_file": "src/components/WhatsAppFloat.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_whatsapp",
-      "label": "whatsapp.ts",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "code",
-      "norm_label": "whatsapp.ts",
-      "source_file": "src/lib/whatsapp.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "ref_next",
-      "label": "next",
-      "_origin": "ast",
-      "community": 8,
-      "community_name": "getWhatsAppUrl",
-      "file_type": "concept",
-      "norm_label": "next",
-      "source_file": "package.json",
-      "source_location": "L18"
     },
     {
       "id": "next_config",
@@ -2492,7 +2549,7 @@
       "label": "ref_framer_motion",
       "_origin": "semantic",
       "community": 15,
-      "community_name": "PropertyVirtualTourUploader.tsx",
+      "community_name": "TourViewer.tsx",
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_framer_motion",
@@ -2504,7 +2561,7 @@
       "label": "src_app_globals",
       "_origin": "semantic",
       "community": 8,
-      "community_name": "getWhatsAppUrl",
+      "community_name": "layout.tsx",
       "external": true,
       "file_type": "concept",
       "norm_label": "src_app_globals",
@@ -2898,6 +2955,30 @@
       "weight": 1.0
     },
     {
+      "source": "src_app_tour_demo_page_tourdemopage",
+      "target": "src_components_propertyvirtualtouruploader_propertyvirtualtouruploader",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_tour_demo_page_tourdemopage",
+      "target": "src_components_tourviewer_tourviewer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
       "source": "src_components_3d_gaussiansplatviewer_gaussiansplatviewer",
       "target": "src_lib_gaussian_splat_capabilities_canrun3dviewer",
       "relation": "calls",
@@ -2935,18 +3016,6 @@
     },
     {
       "source": "src_components_3d_gaussiansplatviewer_gaussiansplatviewer",
-      "target": "src_components_3d_viewerfallback_viewerfallback",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L696",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_3d_gaussiansplatviewer_gaussiansplatviewer",
       "target": "src_components_3d_gaussiansplatviewer_isembedviewer",
       "relation": "calls",
       "_origin": "ast",
@@ -2959,6 +3028,18 @@
     },
     {
       "source": "src_components_3d_gaussiansplatviewer_gaussiansplatviewer",
+      "target": "src_components_3d_viewerfallback_viewerfallback",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/3d/GaussianSplatViewer.tsx",
+      "source_location": "L730",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_3d_gaussiansplatviewer_gaussiansplatviewer",
       "target": "src_components_3d_viewerloader_viewerloader",
       "relation": "calls",
       "_origin": "ast",
@@ -2966,7 +3047,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L710",
+      "source_location": "L744",
       "weight": 1.0
     },
     {
@@ -2978,7 +3059,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L749",
+      "source_location": "L783",
       "weight": 1.0
     },
     {
@@ -2990,7 +3071,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L755",
+      "source_location": "L789",
       "weight": 1.0
     },
     {
@@ -3290,7 +3371,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L280",
+      "source_location": "L344",
       "weight": 1.0
     },
     {
@@ -3302,7 +3383,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L54",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -3314,7 +3395,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L608",
+      "source_location": "L788",
       "weight": 1.0
     },
     {
@@ -3326,7 +3407,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L613",
+      "source_location": "L793",
       "weight": 1.0
     },
     {
@@ -3338,7 +3419,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L112",
+      "source_location": "L127",
       "weight": 1.0
     },
     {
@@ -3350,7 +3431,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L113",
+      "source_location": "L128",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_tourviewer_tourviewer",
+      "target": "src_components_tourviewer_gaussiansplatviewer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L88",
       "weight": 1.0
     },
     {
@@ -3530,7 +3623,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L486",
+      "source_location": "L520",
       "weight": 1.0
     },
     {
@@ -3542,7 +3635,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L494",
+      "source_location": "L528",
       "weight": 1.0
     },
     {
@@ -3566,7 +3659,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L49",
+      "source_location": "L50",
       "weight": 1.0
     },
     {
@@ -3653,7 +3746,20 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L34",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_tourviewer_gaussiansplatviewer",
+      "target": "src_components_3d_gaussiansplatviewer",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "deferred": true,
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -4437,6 +4543,30 @@
       "weight": 1.0
     },
     {
+      "source": "src_app_tour_demo_page",
+      "target": "src_components_propertyvirtualtouruploader_propertyvirtualtouruploader",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_tour_demo_page",
+      "target": "src_components_tourviewer_tourviewer",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
       "source": "src_components_3d_gaussiansplatviewer",
       "target": "src_lib_gaussian_splat_config_splat_viewer_config",
       "relation": "imports",
@@ -4475,18 +4605,6 @@
     {
       "source": "src_components_3d_gaussiansplatviewer",
       "target": "src_components_3d_walknavigationoverlay_walkdirection",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L9",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_3d_gaussiansplatviewer",
-      "target": "src_components_3d_walknavigationoverlay_walknavigationoverlay",
       "relation": "imports",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -4798,18 +4916,6 @@
     },
     {
       "source": "src_components_propertydetailmodal",
-      "target": "src_components_whatsappicon_whatsappicon",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L30",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_propertydetailmodal",
       "target": "src_lib_whatsapp_getwhatsappurl",
       "relation": "imports",
       "_origin": "ast",
@@ -4818,6 +4924,18 @@
       "context": "import",
       "source_file": "src/components/PropertyDetailModal.tsx",
       "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_propertydetailmodal",
+      "target": "src_components_tourviewer_tourviewer",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/PropertyDetailModal.tsx",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -5225,6 +5343,18 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/admin/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_generate_tour_route",
+      "target": "ref_next",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/api/generate-tour/route.ts",
       "source_location": "L1",
       "weight": 1.0
     },
@@ -5815,6 +5945,42 @@
       "context": "import",
       "source_file": "src/app/sobre-mi/page.tsx",
       "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_tour_demo_page",
+      "target": "ref_react",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_tour_demo_page",
+      "target": "src_components_propertyvirtualtouruploader",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_tour_demo_page",
+      "target": "src_components_tourviewer",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L3",
       "weight": 1.0
     },
     {
@@ -6563,6 +6729,18 @@
     },
     {
       "source": "src_components_propertydetailmodal",
+      "target": "src_components_tourviewer",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/PropertyDetailModal.tsx",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_propertydetailmodal",
       "target": "ref_next",
       "relation": "imports_from",
       "_origin": "ast",
@@ -6643,6 +6821,18 @@
       "context": "import",
       "source_file": "src/components/PropertyVirtualTourUploader.tsx",
       "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_tourviewer",
+      "target": "ref_next",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L10",
       "weight": 1.0
     },
     {
@@ -7386,6 +7576,17 @@
       "weight": 1.0
     },
     {
+      "source": "src_app_api_generate_tour_route",
+      "target": "src_app_api_generate_tour_route_post",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/api/generate-tour/route.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
       "source": "src_app_api_upload_model_route",
       "target": "src_app_api_upload_model_route_post",
       "relation": "contains",
@@ -7518,6 +7719,17 @@
       "weight": 1.0
     },
     {
+      "source": "src_app_tour_demo_page",
+      "target": "src_app_tour_demo_page_tourdemopage",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/tour-demo/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
       "source": "src_components_3d_gaussiansplatviewer",
       "target": "src_components_3d_gaussiansplatviewer_gaussiansplatviewerprops",
       "relation": "contains",
@@ -7580,7 +7792,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/3d/GaussianSplatViewer.tsx",
-      "source_location": "L769",
+      "source_location": "L803",
       "weight": 1.0
     },
     {
@@ -7833,7 +8045,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -7844,7 +8056,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L48",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -7855,7 +8067,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L53",
+      "source_location": "L54",
       "weight": 1.0
     },
     {
@@ -7882,7 +8094,7 @@
     },
     {
       "source": "src_components_tourviewer",
-      "target": "src_components_tourviewer_controls",
+      "target": "src_components_tourviewer_gaussiansplatviewer",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -7893,13 +8105,24 @@
     },
     {
       "source": "src_components_tourviewer",
+      "target": "src_components_tourviewer_controls",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/TourViewer.tsx",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_tourviewer",
       "target": "src_components_tourviewer_lumasplats",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L36",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -7910,7 +8133,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/TourViewer.tsx",
-      "source_location": "L55",
+      "source_location": "L62",
       "weight": 1.0
     },
     {
@@ -8009,7 +8232,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/context/DataContext.tsx",
-      "source_location": "L554",
+      "source_location": "L569",
       "weight": 1.0
     },
     {
@@ -8557,8 +8780,17 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/PropertyDetailModal.tsx"
+    },
+    {
+      "source": "src_components_tourviewer",
+      "target": "src_components_3d_gaussiansplatviewer",
+      "relation": "dynamic_import",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/components/TourViewer.tsx"
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "fa7f82d8e903182bc6e0277baf65c6978815d7e6"
+  "built_at_commit": "ad7bbdee92f00d5c9e017c75e380f3dd5f9fdaa2"
 }

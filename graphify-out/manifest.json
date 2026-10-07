@@ -78,9 +78,9 @@
     "semantic_hash": "c89768d5d69f9ff968c251390908ddcb"
   },
   "src/components/3d/GaussianSplatViewer.tsx": {
-    "mtime": 1791412264.6891825,
-    "seen": 1791412367.7747014,
-    "ast_hash": "2c6c08c0d7a527d7ef4ba1fb0dde0166",
+    "mtime": 1791413946.863185,
+    "seen": 1791414017.2740552,
+    "ast_hash": "d888e2f472526f79b0bc16d6609fa92e",
     "semantic_hash": ""
   },
   "src/components/3d/ViewerControls.tsx": {
@@ -156,9 +156,9 @@
     "semantic_hash": "b04b95a336790c921e90696bb6feab92"
   },
   "src/components/PropertyDetailModal.tsx": {
-    "mtime": 1791412915.6930623,
-    "seen": 1791413696.068592,
-    "ast_hash": "d00c1ed9f04ea0191de88e6792f0fb73",
+    "mtime": 1791414355.3369572,
+    "seen": 1791414675.7011106,
+    "ast_hash": "d44c7afa5ebbe9ce5b778b227a663356",
     "semantic_hash": ""
   },
   "src/components/ValuationModal.tsx": {
@@ -180,9 +180,9 @@
     "semantic_hash": "4809646b4995dc46675d57c46915f917"
   },
   "src/context/DataContext.tsx": {
-    "mtime": 1791397921.2457426,
-    "seen": 1791398522.9976635,
-    "ast_hash": "37bd8d9ef7fff5e5da9c3a2afb2b9d6c",
+    "mtime": 1791414533.8499484,
+    "seen": 1791414675.7011187,
+    "ast_hash": "f70100446b3e3c989c97137ce9365324",
     "semantic_hash": ""
   },
   "src/lib/gaussian-splat/capabilities.ts": {
@@ -192,16 +192,16 @@
     "semantic_hash": "e77ffaf2cedce11b3796f8d3b4978ae7"
   },
   "src/lib/gaussian-splat/config.ts": {
-    "mtime": 1791406152.8835633,
-    "seen": 1791406425.9840994,
-    "ast_hash": "9f32ef529c8f5ea431a5a245b56ab5e7",
+    "mtime": 1791414335.6838286,
+    "seen": 1791414675.7011218,
+    "ast_hash": "e11ad15692593204c511c7ffe0e6d37f",
     "semantic_hash": ""
   },
   "src/lib/initialData.ts": {
-    "mtime": 1791395206.3023174,
-    "seen": 1791396937.504769,
-    "ast_hash": "27b47fada63a6f827c49e1092df0d22b",
-    "semantic_hash": "27b47fada63a6f827c49e1092df0d22b"
+    "mtime": 1791414490.4007447,
+    "seen": 1791414675.701123,
+    "ast_hash": "efa8c40a170a7ef5594dd79c76508990",
+    "semantic_hash": ""
   },
   "src/lib/supabase.ts": {
     "mtime": 1791405498.3131542,
@@ -342,21 +342,21 @@
     "semantic_hash": ""
   },
   "src/app/api/generate-tour/route.ts": {
-    "mtime": 1791412398.3650806,
-    "seen": 1791413696.0685568,
-    "ast_hash": "4643c906a49e2f931ba048b9817cf43f",
+    "mtime": 1791414245.5640256,
+    "seen": 1791414675.7010608,
+    "ast_hash": "fb0662a634f11c12affee77ad8c779df",
     "semantic_hash": ""
   },
   "src/app/tour-demo/page.tsx": {
-    "mtime": 1791412405.709798,
-    "seen": 1791413696.0685709,
-    "ast_hash": "2606c718e546769144e2d53918134625",
+    "mtime": 1791414460.8830087,
+    "seen": 1791414675.7010899,
+    "ast_hash": "e19da8ff9f10ac3b58acaca7699019fe",
     "semantic_hash": ""
   },
   "src/components/TourViewer.tsx": {
-    "mtime": 1791413650.0194774,
-    "seen": 1791413696.0685945,
-    "ast_hash": "bc328a6a4f804688ff0d13d5aa6f59bb",
+    "mtime": 1791414506.1461143,
+    "seen": 1791414675.701114,
+    "ast_hash": "790d14be379f6cacf871a7a586a76e26",
     "semantic_hash": ""
   }
 }
