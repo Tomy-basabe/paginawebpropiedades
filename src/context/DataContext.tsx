@@ -33,6 +33,8 @@ interface DataContextType {
   resetToDefaults: () => Promise<void>;
   exportDataJSON: () => string;
   importDataJSON: (jsonString: string) => boolean;
+  hideSoldProperties: boolean;
+  setHideSoldProperties: (hide: boolean) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -44,6 +46,28 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [agentProfile, setAgentProfile] = useState<AgentProfile>(INITIAL_AGENT_PROFILE);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [isCloudConnected, setIsCloudConnected] = useState<boolean>(true);
+  const [hideSoldProperties, setHideSoldPropertiesState] = useState<boolean>(false);
+
+  // Cargar preferencia de ocultar vendidas
+  useEffect(() => {
+    try {
+      const storedHide = localStorage.getItem("aurea_hide_sold");
+      if (storedHide !== null) {
+        setHideSoldPropertiesState(storedHide === "true");
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const setHideSoldProperties = (hide: boolean) => {
+    setHideSoldPropertiesState(hide);
+    try {
+      localStorage.setItem("aurea_hide_sold", hide ? "true" : "false");
+    } catch {
+      // ignore
+    }
+  };
 
   // 1. Cargar datos locales de inmediato (para evitar parpadeo)
   useEffect(() => {
@@ -518,6 +542,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         resetToDefaults,
         exportDataJSON,
         importDataJSON,
+        hideSoldProperties,
+        setHideSoldProperties,
       }}
     >
       {children}

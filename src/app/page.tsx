@@ -30,8 +30,13 @@ import { getWhatsAppUrl } from "@/lib/whatsapp";
 
 export default function HomePage() {
   const router = useRouter();
-  const { properties, agentProfile } = useData();
+  const { properties, agentProfile, hideSoldProperties } = useData();
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+
+  // Propiedades visibles (respetando si el admin decidió ocultar vendidas)
+  const activeProperties = useMemo(() => {
+    return hideSoldProperties ? properties.filter((p) => p.status !== "vendido") : properties;
+  }, [properties, hideSoldProperties]);
 
   // Filtros rápidos del Hero
   const [heroOperation, setHeroOperation] = useState("venta");
@@ -39,9 +44,9 @@ export default function HomePage() {
   const [heroLocation, setHeroLocation] = useState("");
 
   // Conteos dinámicos por operación
-  const countVenta = useMemo(() => properties.filter((p) => p.operation === "venta").length, [properties]);
-  const countAlquiler = useMemo(() => properties.filter((p) => p.operation === "alquiler").length, [properties]);
-  const countPozo = useMemo(() => properties.filter((p) => p.operation === "pozo").length, [properties]);
+  const countVenta = useMemo(() => activeProperties.filter((p) => p.operation === "venta").length, [activeProperties]);
+  const countAlquiler = useMemo(() => activeProperties.filter((p) => p.operation === "alquiler").length, [activeProperties]);
+  const countPozo = useMemo(() => activeProperties.filter((p) => p.operation === "pozo").length, [activeProperties]);
 
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,13 +68,13 @@ export default function HomePage() {
 
   // Propiedades destacadas reactivas según la operación elegida en el Hero
   const featuredProperties = useMemo(() => {
-    const matching = properties.filter((p) => p.operation === heroOperation);
+    const matching = activeProperties.filter((p) => p.operation === heroOperation);
     if (matching.length > 0) {
       const feat = matching.filter((p) => p.isFeatured);
       return feat.length > 0 ? feat.slice(0, 6) : matching.slice(0, 6);
     }
-    return properties.filter((p) => p.isFeatured).slice(0, 6);
-  }, [properties, heroOperation]);
+    return activeProperties.filter((p) => p.isFeatured).slice(0, 6);
+  }, [activeProperties, heroOperation]);
 
   return (
     <div className="space-y-16 sm:space-y-24">

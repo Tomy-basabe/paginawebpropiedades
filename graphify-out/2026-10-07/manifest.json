@@ -30,10 +30,10 @@
     "semantic_hash": "52cd7cf68e097c938e8617826e1776d2"
   },
   "src/app/admin/page.tsx": {
-    "mtime": 1791398456.3218534,
-    "seen": 1791398522.9926922,
-    "ast_hash": "a7a88c4b8c6b1c6698ff68c0a32fff10",
-    "semantic_hash": ""
+    "mtime": 1791395090.1453786,
+    "seen": 1791396937.504731,
+    "ast_hash": "8df78cd70cb8b8392ff578b625e25bda",
+    "semantic_hash": "8df78cd70cb8b8392ff578b625e25bda"
   },
   "src/app/contacto/page.tsx": {
     "mtime": 1790733876.587345,
@@ -54,22 +54,22 @@
     "semantic_hash": "061efde6e1e78850f4f6cc230a804f5d"
   },
   "src/app/page.tsx": {
-    "mtime": 1791397947.109982,
-    "seen": 1791398522.993788,
-    "ast_hash": "6e711e33f1892472f0b57f8fd6db0365",
-    "semantic_hash": ""
+    "mtime": 1791394714.8843389,
+    "seen": 1791396937.5047371,
+    "ast_hash": "8cf649b35b6a9e1eb83d8f5050d9ce26",
+    "semantic_hash": "8cf649b35b6a9e1eb83d8f5050d9ce26"
   },
   "src/app/propiedades/[id]/page.tsx": {
-    "mtime": 1791398040.1356747,
-    "seen": 1791398522.9937928,
-    "ast_hash": "ce71c38e70ec85f5de78ff19a357a057",
-    "semantic_hash": ""
+    "mtime": 1791385641.877097,
+    "seen": 1791396937.5047383,
+    "ast_hash": "ffc0cf5befd7e219a6f4f2508e4cd554",
+    "semantic_hash": "ffc0cf5befd7e219a6f4f2508e4cd554"
   },
   "src/app/propiedades/page.tsx": {
-    "mtime": 1791397987.3163447,
-    "seen": 1791398522.993797,
-    "ast_hash": "eac8921a87bae86d8641cffaf7acd428",
-    "semantic_hash": ""
+    "mtime": 1791394594.7508914,
+    "seen": 1791396937.5047398,
+    "ast_hash": "2307895da280985210bf08ed06a75a3e",
+    "semantic_hash": "2307895da280985210bf08ed06a75a3e"
   },
   "src/app/sobre-mi/page.tsx": {
     "mtime": 1790733692.593936,
@@ -126,16 +126,16 @@
     "semantic_hash": "5a363fb3dac58ebff3a82112c5860824"
   },
   "src/components/Footer.tsx": {
-    "mtime": 1791398184.8850696,
-    "seen": 1791398522.99624,
-    "ast_hash": "d263bec9ccde57882aaa1ba6d9383124",
-    "semantic_hash": ""
+    "mtime": 1790741487.4755633,
+    "seen": 1791396937.504753,
+    "ast_hash": "06547c2a2307fffe2eb0d485c80580b9",
+    "semantic_hash": "06547c2a2307fffe2eb0d485c80580b9"
   },
   "src/components/Header.tsx": {
-    "mtime": 1791398169.1517463,
-    "seen": 1791398522.9962442,
-    "ast_hash": "9e8e91103a8c04aa255bfecd42ee9252",
-    "semantic_hash": ""
+    "mtime": 1790780582.260549,
+    "seen": 1791396937.5047555,
+    "ast_hash": "d5e6292ab44fd43bffe44d26c0490652",
+    "semantic_hash": "d5e6292ab44fd43bffe44d26c0490652"
   },
   "src/components/MobileBottomNav.tsx": {
     "mtime": 1790780394.322281,
@@ -156,10 +156,10 @@
     "semantic_hash": "b04b95a336790c921e90696bb6feab92"
   },
   "src/components/PropertyDetailModal.tsx": {
-    "mtime": 1791398005.8576388,
-    "seen": 1791398522.9971015,
-    "ast_hash": "91d19b2ab9a3f20b2c8cb9504c8a33b3",
-    "semantic_hash": ""
+    "mtime": 1791385580.8602328,
+    "seen": 1791396937.5047605,
+    "ast_hash": "970b2292ad453b88eceda19458c80616",
+    "semantic_hash": "970b2292ad453b88eceda19458c80616"
   },
   "src/components/ValuationModal.tsx": {
     "mtime": 1790741655.9029415,
@@ -180,10 +180,10 @@
     "semantic_hash": "4809646b4995dc46675d57c46915f917"
   },
   "src/context/DataContext.tsx": {
-    "mtime": 1791397921.2457426,
-    "seen": 1791398522.9976635,
-    "ast_hash": "37bd8d9ef7fff5e5da9c3a2afb2b9d6c",
-    "semantic_hash": ""
+    "mtime": 1791394494.724804,
+    "seen": 1791396937.5047657,
+    "ast_hash": "21c71938cf1f580cd8d0018753efc692",
+    "semantic_hash": "21c71938cf1f580cd8d0018753efc692"
   },
   "src/lib/gaussian-splat/capabilities.ts": {
     "mtime": 1790743220.2249217,
@@ -254,7 +254,7 @@
   "supabase_setup.sql": {
     "mtime": 1790740417.9020164,
     "seen": 1791397079.7367933,
-    "ast_hash": "",
+    "ast_hash": "30cc520a0993d052a6b7b8bbce556b20",
     "semantic_hash": ""
   },
   ".claude/CLAUDE.md": {
@@ -315,12 +315,6 @@
     "mtime": 1790604313.4877312,
     "seen": 1791397079.7368128,
     "ast_hash": "525b6f3c8bc145fa167e370ab6aa9481",
-    "semantic_hash": ""
-  },
-  "src/app/99propiedades/page.tsx": {
-    "mtime": 1791398420.898335,
-    "seen": 1791398522.9926825,
-    "ast_hash": "42c8a7a1885d0753a341bbbad49992c7",
     "semantic_hash": ""
   }
 }

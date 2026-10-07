@@ -26,7 +26,7 @@ import {
 
 function PropiedadesContent() {
   const searchParams = useSearchParams();
-  const { properties } = useData();
+  const { properties, hideSoldProperties } = useData();
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
 
   // Estados de filtros leídos inicialmente de la URL
@@ -100,6 +100,11 @@ function PropiedadesContent() {
 
       // Tipo de inmueble
       if (typeFilter !== "todos" && item.type !== typeFilter) {
+        return false;
+      }
+
+      // Ocultar vendidas si la configuración global del admin está activa
+      if (hideSoldProperties && item.status === "vendido") {
         return false;
       }
 

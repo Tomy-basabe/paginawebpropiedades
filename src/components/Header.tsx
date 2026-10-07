@@ -12,7 +12,6 @@ import {
   Phone, 
   TrendingUp, 
   ShieldCheck, 
-  SlidersHorizontal,
   FileCheck
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
@@ -95,15 +94,6 @@ export default function Header({ onOpenValuation }: HeaderProps) {
               <WhatsAppIcon className="w-3.5 h-3.5 group-hover/wa:scale-110 transition-transform" />
               <span className="font-semibold text-neutral-200 group-hover/wa:text-white">WhatsApp</span>
             </a>
-
-            <Link
-              href="/admin"
-              className="text-xs text-neutral-400 hover:text-gold-400 transition-all duration-200 flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-white/10 hover:border-gold-400/40 hover:bg-white/5 btn-tactile"
-              title="Panel de Gestión de Contenido"
-            >
-              <SlidersHorizontal className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-45" />
-              <span>Admin</span>
-            </Link>
 
             {onOpenValuation ? (
               <button
@@ -194,13 +184,6 @@ export default function Header({ onOpenValuation }: HeaderProps) {
                 Tasación Sin Cargo
               </Link>
             )}
-            <Link
-              href="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center text-xs text-neutral-400 hover:text-white py-2 rounded border border-white/10"
-            >
-              Acceso Panel Administrador
-            </Link>
           </div>
         </div>
       )}

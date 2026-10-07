@@ -1,0 +1,339 @@
+{
+  "communities": {
+    "0": [
+      "gaussian_splats_3d",
+      "ref_mkkellogg_gaussian_splats_3d",
+      "src_components_3d_gaussiansplatviewer",
+      "src_components_3d_gaussiansplatviewer_gaussiansplatviewer",
+      "src_components_3d_gaussiansplatviewer_gaussiansplatviewer_detectformat",
+      "src_components_3d_gaussiansplatviewer_gaussiansplatviewer_mapformat",
+      "src_components_3d_gaussiansplatviewer_gaussiansplatviewerprops",
+      "src_components_3d_gaussiansplatviewer_interactionhint",
+      "src_components_3d_gaussiansplatviewer_viewerstate",
+      "src_components_3d_viewercontrols",
+      "src_components_3d_viewercontrols_viewercontrols",
+      "src_components_3d_viewercontrols_viewercontrolsprops",
+      "src_components_3d_viewerfallback",
+      "src_components_3d_viewerfallback_viewerfallback",
+      "src_components_3d_viewerfallback_viewerfallbackprops",
+      "src_components_3d_viewerloader",
+      "src_components_3d_viewerloader_viewerloader",
+      "src_components_3d_viewerloader_viewerloaderprops",
+      "src_lib_gaussian_splat_capabilities",
+      "src_lib_gaussian_splat_capabilities_canrun3dviewer",
+      "src_lib_gaussian_splat_capabilities_checkmobile",
+      "src_lib_gaussian_splat_capabilities_checktouchscreen",
+      "src_lib_gaussian_splat_capabilities_checkwebgl",
+      "src_lib_gaussian_splat_capabilities_checkwebgl2",
+      "src_lib_gaussian_splat_capabilities_devicecapabilities",
+      "src_lib_gaussian_splat_capabilities_estimateperformance",
+      "src_lib_gaussian_splat_capabilities_getdevicecapabilities",
+      "src_lib_gaussian_splat_config",
+      "src_lib_gaussian_splat_config_splat_viewer_config",
+      "src_lib_gaussian_splat_config_splatformat"
+    ],
+    "1": [
+      "package",
+      "package_devdependencies",
+      "package_devdependencies_autoprefixer",
+      "package_devdependencies_postcss",
+      "package_devdependencies_tailwindcss",
+      "package_devdependencies_types_node",
+      "package_devdependencies_types_react",
+      "package_devdependencies_types_react_dom",
+      "package_devdependencies_typescript",
+      "package_name",
+      "package_private",
+      "package_scripts",
+      "package_scripts_build",
+      "package_scripts_dev",
+      "package_scripts_lint",
+      "package_scripts_start",
+      "package_version",
+      "ref_autoprefixer",
+      "ref_clsx",
+      "ref_postcss",
+      "ref_react_dom",
+      "ref_tailwind_merge",
+      "ref_tailwindcss",
+      "ref_types_node",
+      "ref_types_react",
+      "ref_types_react_dom",
+      "ref_typescript",
+      "tailwind_config",
+      "tailwind_config_config"
+    ],
+    "2": [
+      "ref_next",
+      "src_app_admin_page",
+      "src_app_admin_page_adminpage",
+      "src_components_brandlogo",
+      "src_components_brandlogo_brandlogo",
+      "src_components_brandlogo_brandlogoprops",
+      "src_components_clientshell",
+      "src_components_clientshell_clientshell",
+      "src_components_footer",
+      "src_components_footer_footer",
+      "src_components_header",
+      "src_components_header_header",
+      "src_components_header_headerprops",
+      "src_components_mobilebottomnav",
+      "src_components_mobilebottomnav_mobilebottomnav",
+      "src_components_mobilebottomnav_mobilebottomnavprops",
+      "src_components_valuationmodal",
+      "src_components_valuationmodal_valuationmodal",
+      "src_components_valuationmodal_valuationmodalprops",
+      "src_components_whatsappfloat",
+      "src_components_whatsappfloat_whatsappfloat",
+      "src_components_whatsappicon_whatsappicon",
+      "src_lib_supabase_uploadpropertyimage",
+      "src_lib_supabase_uploadpropertymodel3d",
+      "src_lib_types_propertystatus",
+      "src_lib_whatsapp",
+      "src_lib_whatsapp_cleanwhatsappnumber",
+      "src_lib_whatsapp_getwhatsappurl"
+    ],
+    "3": [
+      "src_app_propiedades_id_page",
+      "src_app_propiedades_id_page_gaussiansplatviewer",
+      "src_app_propiedades_id_page_propertydetailpage",
+      "src_app_propiedades_page",
+      "src_app_propiedades_page_propiedadescontent",
+      "src_app_propiedades_page_propiedadespage",
+      "src_components_propertycard",
+      "src_components_propertycard_propertycardprops",
+      "src_components_propertydetailmodal",
+      "src_components_propertydetailmodal_gaussiansplatviewer",
+      "src_components_propertydetailmodal_propertydetailmodal",
+      "src_components_propertydetailmodal_propertydetailmodalprops",
+      "src_context_datacontext",
+      "src_context_datacontext_datacontext",
+      "src_context_datacontext_datacontexttype",
+      "src_lib_initialdata",
+      "src_lib_initialdata_initial_agent_profile",
+      "src_lib_initialdata_initial_bank_rates",
+      "src_lib_initialdata_initial_featured_banners",
+      "src_lib_initialdata_initial_properties",
+      "src_lib_types",
+      "src_lib_types_agentprofile",
+      "src_lib_types_bankrate",
+      "src_lib_types_featuredbanner",
+      "src_lib_types_operationtype",
+      "src_lib_types_property",
+      "src_lib_types_propertyroom3d",
+      "src_lib_types_propertytype"
+    ],
+    "4": [
+      "ref_lucide_react",
+      "ref_react",
+      "src_app_contacto_page",
+      "src_app_contacto_page_contactocontent",
+      "src_app_contacto_page_contactopage",
+      "src_app_financiamiento_page",
+      "src_app_financiamiento_page_financiamientopage",
+      "src_app_page",
+      "src_app_page_homepage",
+      "src_app_sobre_mi_page",
+      "src_app_sobre_mi_page_sobremipage",
+      "src_components_bankratestable",
+      "src_components_bankratestable_bankratestable",
+      "src_components_bannerhero",
+      "src_components_bannerhero_bannerhero",
+      "src_components_mortgagecalculator",
+      "src_components_mortgagecalculator_mortgagecalculator",
+      "src_components_propertycard_propertycard",
+      "src_components_whatsappicon",
+      "src_components_whatsappicon_whatsappiconprops",
+      "src_context_datacontext_usedata"
+    ],
+    "5": [
+      "tsconfig",
+      "tsconfig_compileroptions",
+      "tsconfig_compileroptions_allowjs",
+      "tsconfig_compileroptions_esmoduleinterop",
+      "tsconfig_compileroptions_incremental",
+      "tsconfig_compileroptions_isolatedmodules",
+      "tsconfig_compileroptions_jsx",
+      "tsconfig_compileroptions_lib",
+      "tsconfig_compileroptions_module",
+      "tsconfig_compileroptions_moduleresolution",
+      "tsconfig_compileroptions_noemit",
+      "tsconfig_compileroptions_paths",
+      "tsconfig_compileroptions_plugins",
+      "tsconfig_compileroptions_resolvejsonmodule",
+      "tsconfig_compileroptions_skiplibcheck",
+      "tsconfig_compileroptions_strict",
+      "tsconfig_exclude",
+      "tsconfig_include"
+    ],
+    "6": [
+      "package_dependencies",
+      "package_dependencies_clsx",
+      "package_dependencies_lucide_react",
+      "package_dependencies_mkkellogg_gaussian_splats_3d",
+      "package_dependencies_next",
+      "package_dependencies_react",
+      "package_dependencies_react_dom",
+      "package_dependencies_supabase_supabase_js",
+      "package_dependencies_tailwind_merge"
+    ],
+    "7": [
+      "ref_supabase_supabase_js",
+      "scripts_test_connection",
+      "scripts_test_connection_runtest",
+      "scripts_test_connection_supabase",
+      "src_lib_supabase",
+      "src_lib_supabase_compressvideoinbrowser",
+      "src_lib_supabase_supabase",
+      "src_lib_supabase_uploadpropertyvideo"
+    ],
+    "8": [
+      "src_app_globals",
+      "src_app_layout",
+      "src_app_layout_metadata",
+      "src_app_layout_rootlayout",
+      "src_context_datacontext_dataprovider"
+    ],
+    "9": [
+      "next",
+      "next_config",
+      "next_config_nextconfig"
+    ],
+    "10": [
+      "postcss_config",
+      "postcss_config_config",
+      "postcss_load_config"
+    ],
+    "11": [
+      "src_types_declarations_d",
+      "src_types_declarations_d_mkkellogg_gaussian_splats_3d"
+    ]
+  },
+  "cohesion": {
+    "0": 0.10804597701149425,
+    "1": 0.06896551724137931,
+    "2": 0.21693121693121692,
+    "3": 0.17195767195767195,
+    "4": 0.29523809523809524,
+    "5": 0.1111111111111111,
+    "6": 0.2222222222222222,
+    "7": 0.2857142857142857,
+    "8": 0.5,
+    "9": 0.6666666666666666,
+    "10": 0.6666666666666666,
+    "11": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_context_datacontext_usedata",
+      "label": "useData()",
+      "degree": 35
+    },
+    {
+      "id": "src_components_whatsappicon_whatsappicon",
+      "label": "WhatsAppIcon()",
+      "degree": 29
+    },
+    {
+      "id": "ref_react",
+      "label": "react",
+      "degree": 26
+    },
+    {
+      "id": "src_lib_whatsapp_getwhatsappurl",
+      "label": "getWhatsAppUrl()",
+      "degree": 24
+    },
+    {
+      "id": "ref_lucide_react",
+      "label": "lucide-react",
+      "degree": 18
+    },
+    {
+      "id": "ref_next",
+      "label": "next",
+      "degree": 16
+    },
+    {
+      "id": "tsconfig_compileroptions",
+      "label": "compilerOptions",
+      "degree": 15
+    },
+    {
+      "id": "src_lib_types_property",
+      "label": "Property",
+      "degree": 12
+    },
+    {
+      "id": "src_components_3d_gaussiansplatviewer_gaussiansplatviewer",
+      "label": "GaussianSplatViewer()",
+      "degree": 10
+    },
+    {
+      "id": "src_app_admin_page_adminpage",
+      "label": "AdminPage()",
+      "degree": 9
+    }
+  ],
+  "surprises": [
+    {
+      "source": "AdminPage()",
+      "target": "useData()",
+      "source_files": [
+        "src/app/admin/page.tsx",
+        "src/context/DataContext.tsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "AdminPage()",
+      "target": "uploadPropertyVideo()",
+      "source_files": [
+        "src/app/admin/page.tsx",
+        "src/lib/supabase.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "ContactoContent()",
+      "target": "WhatsAppIcon()",
+      "source_files": [
+        "src/app/contacto/page.tsx",
+        "src/components/WhatsAppIcon.tsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "FinanciamientoPage()",
+      "target": "WhatsAppIcon()",
+      "source_files": [
+        "src/app/financiamiento/page.tsx",
+        "src/components/WhatsAppIcon.tsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "RootLayout()",
+      "target": "ClientShell()",
+      "source_files": [
+        "src/app/layout.tsx",
+        "src/components/ClientShell.tsx"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    }
+  ],
+  "tokens": {
+    "input": 0,
+    "output": 0
+  }
+}

@@ -137,11 +137,6 @@ export default function Footer() {
                   Solicitar Tasación Profesional
                 </Link>
               </li>
-              <li>
-                <Link href="/admin" className="text-neutral-400 hover:text-white transition-colors">
-                  Portal de Gestión (Admin)
-                </Link>
-              </li>
             </ul>
           </div>
 

@@ -117,7 +117,8 @@ export default function PropertyDetailPage() {
     ? (has3D ? '3d' : 'photos')
     : activeMediaTab;
 
-  const formatPrice = (price: number) => `USD ${price.toLocaleString('es-AR')}`;
+  const formatPrice = (price: number) =>
+    `${property.currency === 'ARS' ? '$' : 'USD'} ${price.toLocaleString('es-AR')}`;
 
   const whatsappMessage = `Hola ${agentProfile.name}, quisiera coordinar una visita a la propiedad "${property.title}" (Ref #${property.id}) en ${property.location.neighborhood}. ¿Qué días y horarios tiene disponibles?`;
 

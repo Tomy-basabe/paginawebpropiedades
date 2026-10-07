@@ -107,7 +107,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
   if (!property) return null;
 
   const formatPrice = (price: number) => {
-    return `USD ${price.toLocaleString("es-AR")}`;
+    return `${property.currency === "ARS" ? "$" : "USD"} ${price.toLocaleString("es-AR")}`;
   };
 
   // Cálculo de hipoteca
