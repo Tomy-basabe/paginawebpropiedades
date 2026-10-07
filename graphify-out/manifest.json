@@ -78,9 +78,9 @@
     "semantic_hash": "c89768d5d69f9ff968c251390908ddcb"
   },
   "src/components/3d/GaussianSplatViewer.tsx": {
-    "mtime": 1791401489.6669283,
-    "seen": 1791401664.1489172,
-    "ast_hash": "1da004529434f7bacda14f4994eac194",
+    "mtime": 1791404292.2199588,
+    "seen": 1791404358.6704419,
+    "ast_hash": "d8ea736e4d5a1a3c6970982af5b8708e",
     "semantic_hash": ""
   },
   "src/components/3d/ViewerControls.tsx": {

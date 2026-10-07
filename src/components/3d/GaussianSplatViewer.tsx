@@ -16,6 +16,16 @@ export interface GaussianSplatViewerProps {
   propertyTitle?: string;
 }
 
+export function parseScaniverseUrl(url: string): { isScaniverse: boolean; scanId: string | null } {
+  if (!url) return { isScaniverse: false, scanId: null };
+  const lower = url.toLowerCase();
+  const match = url.match(/scaniverse\.com\/scan\/([a-zA-Z0-9_-]+)/i);
+  if (match && match[1]) {
+    return { isScaniverse: true, scanId: match[1] };
+  }
+  return { isScaniverse: lower.includes('scaniverse.com'), scanId: null };
+}
+
 export function isEmbedViewer(url: string, format?: string): boolean {
   if (format === 'embed') return true;
   if (!url) return false;
@@ -55,6 +65,7 @@ export default function GaussianSplatViewer({
   className = '',
   propertyTitle,
 }: GaussianSplatViewerProps) {
+  const scaniverseInfo = parseScaniverseUrl(modelUrl);
   const isEmbed = isEmbedViewer(modelUrl, format);
   const containerRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<any>(null);
@@ -281,7 +292,98 @@ export default function GaussianSplatViewer({
     };
   }, []);
 
-  // Si es un enlace interactivo de SuperSplat / PlayCanvas / Visor Web
+  // CASO 1: Si es un enlace de Scaniverse (evita el bloqueo X-Frame-Options de Niantic)
+  if (scaniverseInfo.isScaniverse) {
+    const scanId = scaniverseInfo.scanId;
+    const previewImg = scanId ? `https://scaniverse.com/api/media/${scanId}/preview.jpg` : '';
+    const videoPreview = scanId ? `https://scaniverse.com/api/media/${scanId}/videops.mp4` : '';
+
+    return (
+      <div
+        className={`relative w-full bg-luxury-black rounded-sm overflow-hidden group/viewer ${className}`}
+        style={{ aspectRatio: '16/9' }}
+      >
+        {/* Fondo con video tour dinámico o póster HD de Scaniverse */}
+        {videoPreview ? (
+          <video
+            src={videoPreview}
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster={previewImg}
+            className="absolute inset-0 w-full h-full object-cover opacity-60 filter brightness-90 group-hover/viewer:scale-105 transition-transform duration-700"
+          />
+        ) : previewImg ? (
+          <img
+            src={previewImg}
+            alt={propertyTitle || 'Escaneo 3D Scaniverse'}
+            className="absolute inset-0 w-full h-full object-cover opacity-60 filter brightness-90 group-hover/viewer:scale-105 transition-transform duration-700"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-neutral-900 via-neutral-950 to-black" />
+        )}
+
+        {/* Gradiente cinemático de fondo */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/30" />
+
+        {/* Badge superior */}
+        <div className="absolute top-3 left-3 z-20 flex items-center gap-2">
+          <div className="inline-flex items-center gap-2 bg-black/80 backdrop-blur-md border border-gold-400/40 text-gold-300 px-3 py-1.5 rounded-full text-[11px] font-semibold shadow-lg">
+            <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
+            <span>Tour 3D Scaniverse (Gaussian Splatting)</span>
+          </div>
+        </div>
+
+        {/* Botón superior directo */}
+        <div className="absolute top-3 right-3 z-20">
+          <a
+            href={modelUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-black/80 hover:bg-black text-white text-[11px] px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-md flex items-center gap-1.5 transition-colors shadow-lg"
+          >
+            <span>Scaniverse Web</span>
+            <svg className="w-3.5 h-3.5 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+
+        {/* Contenido principal central */}
+        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-6 text-center space-y-4">
+          <div className="space-y-1.5 max-w-lg">
+            <h3 className="font-serif text-xl sm:text-2xl font-bold text-white tracking-wide drop-shadow-md">
+              {propertyTitle || 'Recorrido Virtual 3D Inmersivo'}
+            </h3>
+            <p className="text-xs sm:text-sm text-neutral-200 drop-shadow">
+              Escaneo fotorrealista capturado con teléfono móvil • 186.000+ puntos de detalle
+            </p>
+          </div>
+
+          <div className="pt-2">
+            <a
+              href={modelUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gold-500 hover:bg-gold-400 text-luxury-black font-bold text-xs sm:text-sm px-6 py-3.5 rounded-sm transition-all shadow-xl shadow-gold-500/30 flex items-center gap-2.5 btn-tactile cursor-pointer transform hover:-translate-y-0.5"
+            >
+              <span>Explorar Recorrido 3D en Pantalla Completa</span>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+
+          <span className="text-[11px] text-neutral-300 drop-shadow">
+            Giralo en 360°, hacé zoom y caminá dentro de la casa en tiempo real
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  // CASO 2: Si es otro visor interactivo (SuperSplat / PlayCanvas / Matterport)
   if (isEmbed) {
     return (
       <div
@@ -306,7 +408,7 @@ export default function GaussianSplatViewer({
             className="bg-black/80 hover:bg-black text-white text-[11px] sm:text-xs px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-md flex items-center gap-1.5 transition-colors shadow-lg"
             title="Abrir en ventana completa"
           >
-            <span>SuperSplat 3D</span>
+            <span>Ver en Pantalla Completa</span>
             <svg className="w-3.5 h-3.5 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
