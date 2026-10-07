@@ -181,6 +181,7 @@ export default function AdminSecretPage() {
   const [isUploadingModel, setIsUploadingModel] = useState(false);
   const [modelUploadStatus, setModelUploadStatus] = useState("");
   const [uploadingRoomId, setUploadingRoomId] = useState<string | null>(null);
+  const [showGuide3D, setShowGuide3D] = useState(false);
 
   const handleImageFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -1476,7 +1477,7 @@ export default function AdminSecretPage() {
 
               {/* Recorridos 3D (Gaussian Splatting) */}
               <div className="p-4 bg-amber-50/50 border border-amber-200/80 rounded-sm space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-200/60 pb-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200/60 pb-3">
                   <div className="flex items-center gap-2">
                     <Box className="w-5 h-5 text-amber-600" />
                     <div>
@@ -1484,19 +1485,96 @@ export default function AdminSecretPage() {
                         Recorridos 3D por Habitaciones (Gaussian Splatting)
                       </label>
                       <span className="text-xs text-neutral-600">
-                        Ambientes escaneados en 3D (.ply, .splat, .ksplat)
+                        Scaniverse (.ply) o enlaces publicados de SuperSplat (PlayCanvas)
                       </span>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleAddRoom3D}
-                    className="bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs px-3 py-1.5 rounded-sm transition-all shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Agregar Habitación 3D</span>
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowGuide3D(!showGuide3D)}
+                      className="text-xs font-semibold px-3 py-1.5 rounded-sm border border-amber-300 bg-white hover:bg-amber-100/70 text-amber-900 transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                    >
+                      <span>📖 {showGuide3D ? "Ocultar Guía" : "Guía: Cómo Escanear"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleAddRoom3D}
+                      className="bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs px-3 py-1.5 rounded-sm transition-all shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Agregar Habitación 3D</span>
+                    </button>
+                  </div>
                 </div>
+
+                {/* GUÍA INTERACTIVA PASO A PASO */}
+                {showGuide3D && (
+                  <div className="bg-white border border-amber-300 p-5 rounded-sm shadow-sm space-y-4 animate-fade-in text-xs">
+                    <div className="flex items-center justify-between border-b border-neutral-200 pb-2">
+                      <h4 className="font-bold text-neutral-900 text-sm flex items-center gap-2">
+                        <span>📱 Cómo escanear una casa con tu celular y publicarla en 3D</span>
+                      </h4>
+                      <a
+                        href="https://playcanvas.com/supersplat/editor"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-amber-800 hover:text-amber-950 font-semibold underline flex items-center gap-1 text-[11px]"
+                      >
+                        <span>Abrir SuperSplat Editor</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-neutral-700">
+                      <div className="p-3 bg-stone-50 border border-neutral-200 rounded-sm space-y-1">
+                        <span className="font-bold text-neutral-900 block text-xs">1. Captura</span>
+                        <p className="text-[11px] leading-relaxed">
+                          Descargá <strong>Scaniverse</strong> (gratis en iOS/Android). Elegí el modo <strong>"Splat"</strong>. Caminá lento en círculos grabando cada ángulo del ambiente.
+                        </p>
+                      </div>
+
+                      <div className="p-3 bg-stone-50 border border-neutral-200 rounded-sm space-y-1">
+                        <span className="font-bold text-neutral-900 block text-xs">2. Genera</span>
+                        <p className="text-[11px] leading-relaxed">
+                          Scaniverse procesa la escena dentro de tu teléfono y crea el modelo Gaussian Splatting en minutos.
+                        </p>
+                      </div>
+
+                      <div className="p-3 bg-stone-50 border border-neutral-200 rounded-sm space-y-1">
+                        <span className="font-bold text-neutral-900 block text-xs">3. Exporta</span>
+                        <p className="text-[11px] leading-relaxed">
+                          Exportá el archivo en formato <strong>.ply</strong> (formato estándar del splat).
+                        </p>
+                      </div>
+
+                      <div className="p-3 bg-stone-50 border border-neutral-200 rounded-sm space-y-1">
+                        <span className="font-bold text-neutral-900 block text-xs">4. SuperSplat</span>
+                        <p className="text-[11px] leading-relaxed">
+                          Entrá a <strong>SuperSplat</strong> (PlayCanvas en tu navegador), subí tu .ply, recortá lo sobrante y dale a Publicar.
+                        </p>
+                      </div>
+
+                      <div className="p-3 bg-amber-50/70 border border-amber-300 rounded-sm space-y-1">
+                        <span className="font-bold text-amber-900 block text-xs">5. Pega en el panel</span>
+                        <p className="text-[11px] leading-relaxed">
+                          Pegá el link de SuperSplat en <strong>"URL del Modelo 3D"</strong> o subí directamente el archivo <strong>.ply</strong>.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 bg-neutral-100 rounded-sm text-[11px] text-neutral-600 flex items-center justify-between">
+                      <span>💡 <strong>Consejo pro:</strong> El movimiento lento y los ángulos completos hacen el 80% de la calidad fotorrealista.</span>
+                      <button
+                        type="button"
+                        onClick={() => setShowGuide3D(false)}
+                        className="text-neutral-500 hover:text-neutral-800 underline ml-2"
+                      >
+                        Entendido, cerrar guía
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {propForm.rooms3D && propForm.rooms3D.length > 0 && (
                   <div className="space-y-4">
@@ -1556,30 +1634,38 @@ export default function AdminSecretPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-1">
                           <div className="sm:col-span-8 space-y-1">
                             <label className="block text-[10px] font-semibold uppercase tracking-wider text-neutral-500">
-                              URL del Modelo 3D
+                              URL del Modelo 3D o Enlace de SuperSplat
                             </label>
                             <input
                               type="text"
                               value={room.url}
-                              onChange={(e) => handleUpdateRoom3D(room.id, { url: e.target.value })}
-                              placeholder="https://.../modelo.ply o .splat"
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                const isSuperSplat = val.includes("playcanvas.com") || val.includes("supersplat");
+                                handleUpdateRoom3D(room.id, {
+                                  url: val,
+                                  ...(isSuperSplat ? { format: "embed" } : {}),
+                                });
+                              }}
+                              placeholder="https://playcanvas.com/supersplat/editor o archivo .ply"
                               className="w-full p-2 bg-stone-50 border border-neutral-300 rounded-sm text-xs font-mono focus:border-gold-500 focus:outline-none"
                             />
                           </div>
                           <div className="sm:col-span-4 space-y-1">
                             <label className="block text-[10px] font-semibold uppercase tracking-wider text-neutral-500">
-                              Formato
+                              Formato / Tipo
                             </label>
                             <select
-                              value={room.format || "ply"}
+                              value={room.format || (room.url?.includes("playcanvas") ? "embed" : "ply")}
                               onChange={(e) =>
                                 handleUpdateRoom3D(room.id, {
-                                  format: e.target.value as "ply" | "splat" | "ksplat",
+                                  format: e.target.value as "ply" | "splat" | "ksplat" | "embed",
                                 })
                               }
                               className="w-full p-2 bg-stone-50 border border-neutral-300 rounded-sm text-xs focus:border-gold-500 focus:outline-none"
                             >
-                              <option value="ply">.PLY (Scaniverse)</option>
+                              <option value="ply">.PLY (Scaniverse / Estándar)</option>
+                              <option value="embed">Link SuperSplat / Visor Web</option>
                               <option value="splat">.SPLAT (Optimizado)</option>
                               <option value="ksplat">.KSPLAT (Comprimido)</option>
                             </select>

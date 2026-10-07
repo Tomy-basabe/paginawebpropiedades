@@ -9,11 +9,40 @@ import ViewerFallback from './ViewerFallback';
 
 export interface GaussianSplatViewerProps {
   modelUrl: string;
-  format?: 'ply' | 'splat' | 'ksplat';
+  format?: 'ply' | 'splat' | 'ksplat' | 'embed';
   initialCameraPosition?: [number, number, number];
   initialCameraTarget?: [number, number, number];
   className?: string;
   propertyTitle?: string;
+}
+
+export function isEmbedViewer(url: string, format?: string): boolean {
+  if (format === 'embed') return true;
+  if (!url) return false;
+  const lower = url.toLowerCase().trim();
+  if (
+    lower.includes('playcanvas.com') ||
+    lower.includes('supersplat') ||
+    lower.includes('scaniverse.com') ||
+    lower.includes('poly.cam') ||
+    lower.includes('luma.ai') ||
+    lower.includes('matterport.com') ||
+    lower.includes('/embed') ||
+    lower.endsWith('.html') ||
+    lower.endsWith('.htm')
+  ) {
+    return true;
+  }
+  if (
+    (lower.startsWith('http://') || lower.startsWith('https://')) &&
+    !lower.endsWith('.ply') &&
+    !lower.endsWith('.splat') &&
+    !lower.endsWith('.ksplat') &&
+    !lower.endsWith('.spz')
+  ) {
+    return true;
+  }
+  return false;
 }
 
 type ViewerState = 'checking' | 'loading' | 'ready' | 'error' | 'unsupported';
@@ -26,6 +55,7 @@ export default function GaussianSplatViewer({
   className = '',
   propertyTitle,
 }: GaussianSplatViewerProps) {
+  const isEmbed = isEmbedViewer(modelUrl, format);
   const containerRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<any>(null);
   const [viewerState, setViewerState] = useState<ViewerState>('checking');
@@ -50,6 +80,7 @@ export default function GaussianSplatViewer({
 
   // Inicializar el viewer
   const initViewer = useCallback(async () => {
+    if (isEmbed) return;
     if (!containerRef.current || !modelUrl) return;
 
     // Verificar capacidades
@@ -249,6 +280,41 @@ export default function GaussianSplatViewer({
       container.removeEventListener('touchmove', preventScroll);
     };
   }, []);
+
+  // Si es un enlace interactivo de SuperSplat / PlayCanvas / Visor Web
+  if (isEmbed) {
+    return (
+      <div
+        className={`relative w-full bg-luxury-black rounded-sm overflow-hidden group/viewer ${className}`}
+        style={{ aspectRatio: isFullscreen ? undefined : '16/9' }}
+      >
+        <iframe
+          src={modelUrl}
+          title={`Recorrido 3D interactivo - ${propertyTitle || 'Propiedad'}`}
+          className="w-full h-full border-0"
+          allow="accelerometer; autoplay; camera; gyroscope; vr; xr; xr-spatial-tracking; fullscreen"
+          allowFullScreen
+          loading="lazy"
+        />
+
+        {/* Botón flotante para abrir el visor en pestaña nueva */}
+        <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
+          <a
+            href={modelUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-black/80 hover:bg-black text-white text-[11px] sm:text-xs px-3 py-1.5 rounded-full border border-white/20 backdrop-blur-md flex items-center gap-1.5 transition-colors shadow-lg"
+            title="Abrir en ventana completa"
+          >
+            <span>SuperSplat 3D</span>
+            <svg className="w-3.5 h-3.5 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   // Estado: verificando capacidades
   if (viewerState === 'unsupported') {

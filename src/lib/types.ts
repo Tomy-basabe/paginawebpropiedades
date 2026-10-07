@@ -34,8 +34,8 @@ export interface Property {
   hasVideoTour?: boolean;
   // Gaussian Splatting 3D — recorrido inmersivo
   model3D?: {
-    url: string; // URL del modelo .ply / .splat / .ksplat
-    format?: 'ply' | 'splat' | 'ksplat';
+    url: string; // URL del modelo .ply / .splat / .ksplat o link SuperSplat
+    format?: 'ply' | 'splat' | 'ksplat' | 'embed';
     initialCameraPosition?: [number, number, number];
     initialCameraTarget?: [number, number, number];
   };
@@ -50,8 +50,8 @@ export interface Property {
 export interface PropertyRoom3D {
   id: string;
   name: string; // ej: "Living Comedor", "Master Suite", "Cocina", "Terraza"
-  url: string; // URL del modelo .ply / .splat / .ksplat
-  format?: 'ply' | 'splat' | 'ksplat';
+  url: string; // URL del modelo .ply / .splat / .ksplat o link SuperSplat
+  format?: 'ply' | 'splat' | 'ksplat' | 'embed';
   initialCameraPosition?: [number, number, number];
   initialCameraTarget?: [number, number, number];
 }
