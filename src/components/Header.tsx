@@ -53,27 +53,27 @@ export default function Header({ onOpenValuation }: HeaderProps) {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-luxury-black/95 backdrop-blur-md py-3 border-b border-white/10 shadow-lg text-white"
-          : "bg-luxury-black/80 backdrop-blur-sm py-4 border-b border-white/5 text-white"
+          ? "bg-neutral-950/90 backdrop-blur-xl py-3 border-b border-white/[0.08] shadow-md text-white"
+          : "bg-neutral-950/75 backdrop-blur-md py-4 border-b border-white/[0.05] text-white"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo y Marca Personal Tipográfica de Alta Gama */}
+          {/* Logo y Marca Personal Tipográfica */}
           <BrandLogo variant="light" size="md" />
 
-          {/* Desktop Nav con Microinteracciones Subrayadas Fluidas */}
-          <nav className="hidden lg:flex items-center gap-8">
+          {/* Desktop Nav con tipografía refinada */}
+          <nav className="hidden lg:flex items-center gap-7">
             {navLinks.map((link) => {
               const active = isActive(link.href);
               return (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`text-sm tracking-wide py-1 nav-link-hover ${
+                  className={`text-[13px] tracking-wide py-1 transition-colors duration-200 relative ${
                     active
-                      ? "active text-gold-400 font-semibold"
-                      : "text-neutral-300 hover:text-white"
+                      ? "text-gold-300 font-medium after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1.5px] after:bg-gold-400"
+                      : "text-neutral-300 hover:text-white font-normal"
                   }`}
                 >
                   {link.name}
@@ -88,17 +88,17 @@ export default function Header({ onOpenValuation }: HeaderProps) {
               href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera hacerle una consulta`)}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-[#25D366] hover:text-white transition-all duration-200 flex items-center gap-1.5 px-3 py-2 rounded-sm border border-[#25D366]/40 hover:border-[#25D366] hover:bg-[#25D366] btn-tactile group/wa"
+              className="text-xs text-neutral-200 hover:text-white bg-white/[0.06] hover:bg-white/[0.12] border border-white/[0.1] hover:border-emerald-500/40 transition-all duration-200 flex items-center gap-2 px-3.5 py-2 rounded-[3px] btn-tactile group"
               title="Chat directo por WhatsApp"
             >
-              <WhatsAppIcon className="w-3.5 h-3.5 group-hover/wa:scale-110 transition-transform" />
-              <span className="font-semibold text-neutral-200 group-hover/wa:text-white">WhatsApp</span>
+              <WhatsAppIcon className="w-3.5 h-3.5 text-[#25D366] group-hover:scale-110 transition-transform" />
+              <span className="font-medium tracking-wide">WhatsApp</span>
             </a>
 
             {onOpenValuation ? (
               <button
                 onClick={onOpenValuation}
-                className="bg-gold-500 hover:bg-gold-400 text-luxury-black font-semibold text-xs tracking-wider uppercase px-4 py-2.5 rounded-sm shadow-sm hover:shadow-lg hover:shadow-gold-500/20 flex items-center gap-2 btn-tactile cursor-pointer"
+                className="bg-gold-500 hover:bg-gold-400 text-neutral-950 font-semibold text-xs tracking-[0.08em] uppercase px-4 py-2 rounded-[3px] shadow-xs hover:shadow-sm transition-all flex items-center gap-2 btn-tactile cursor-pointer"
               >
                 <FileCheck className="w-3.5 h-3.5" />
                 <span>Tasación Sin Cargo</span>
@@ -106,7 +106,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
             ) : (
               <Link
                 href="/contacto?asunto=tasacion"
-                className="bg-gold-500 hover:bg-gold-400 text-luxury-black font-semibold text-xs tracking-wider uppercase px-4 py-2.5 rounded-sm shadow-sm hover:shadow-lg hover:shadow-gold-500/20 flex items-center gap-2 btn-tactile"
+                className="bg-gold-500 hover:bg-gold-400 text-neutral-950 font-semibold text-xs tracking-[0.08em] uppercase px-4 py-2 rounded-[3px] shadow-xs hover:shadow-sm transition-all flex items-center gap-2 btn-tactile"
               >
                 <FileCheck className="w-3.5 h-3.5" />
                 <span>Tasación Sin Cargo</span>
@@ -115,23 +115,23 @@ export default function Header({ onOpenValuation }: HeaderProps) {
           </div>
 
           {/* Mobile Actions: WhatsApp rápido + Menú */}
-          <div className="flex items-center gap-1 lg:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             <a
               href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera hacerle una consulta`)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-11 h-11 min-w-[44px] min-h-[44px] text-[#25D366] hover:text-white hover:bg-white/10 active:scale-95 rounded-full transition-all flex items-center justify-center"
+              className="w-10 h-10 min-w-[40px] min-h-[40px] text-[#25D366] bg-white/[0.06] border border-white/[0.08] active:scale-95 rounded-[3px] transition-all flex items-center justify-center"
               title="WhatsApp Directo"
               aria-label="WhatsApp"
             >
-              <WhatsAppIcon className="w-5 h-5 drop-shadow-sm" />
+              <WhatsAppIcon className="w-4 h-4 drop-shadow-xs" />
             </a>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="w-11 h-11 min-w-[44px] min-h-[44px] text-neutral-300 hover:text-white active:scale-95 rounded-full transition-all flex items-center justify-center"
+              className="w-10 h-10 min-w-[40px] min-h-[40px] text-neutral-200 hover:text-white bg-white/[0.06] border border-white/[0.08] active:scale-95 rounded-[3px] transition-all flex items-center justify-center"
               aria-label="Abrir menú"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -139,30 +139,30 @@ export default function Header({ onOpenValuation }: HeaderProps) {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-luxury-dark/95 border-b border-white/10 px-4 pt-3 pb-6 space-y-3 backdrop-blur-xl">
+        <div className="lg:hidden bg-neutral-950/95 border-b border-white/[0.08] px-5 pt-3 pb-6 space-y-3 backdrop-blur-2xl">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               href={link.href}
               onClick={() => setMobileMenuOpen(false)}
-              className={`block py-2 text-sm ${
+              className={`block py-2 text-sm tracking-wide ${
                 isActive(link.href)
-                  ? "text-gold-400 font-semibold"
+                  ? "text-gold-300 font-medium border-l-2 border-gold-400 pl-2.5"
                   : "text-neutral-300 hover:text-white"
               }`}
             >
               {link.name}
             </Link>
           ))}
-          <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
+          <div className="pt-4 border-t border-white/[0.08] flex flex-col gap-3">
             <a
               href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera hacerle una consulta`)}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold text-xs tracking-wider uppercase py-3 rounded-sm transition-all flex items-center justify-center gap-2 shadow-md"
+              className="w-full text-center bg-white/[0.08] hover:bg-white/[0.12] border border-white/[0.1] text-white font-medium text-xs tracking-wider uppercase py-3 rounded-[3px] transition-all flex items-center justify-center gap-2"
             >
-              <WhatsAppIcon className="w-4 h-4" />
+              <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
               <span>Chatear por WhatsApp</span>
             </a>
             {onOpenValuation ? (
@@ -171,7 +171,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
                   setMobileMenuOpen(false);
                   onOpenValuation();
                 }}
-                className="w-full text-center bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs tracking-wider uppercase py-3 rounded-sm transition-all"
+                className="w-full text-center bg-gold-500 hover:bg-gold-400 text-neutral-950 font-semibold text-xs tracking-wider uppercase py-3 rounded-[3px] transition-all"
               >
                 Tasación Sin Cargo
               </button>
@@ -179,7 +179,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
               <Link
                 href="/contacto?asunto=tasacion"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs tracking-wider uppercase py-3 rounded-sm transition-all"
+                className="w-full text-center bg-gold-500 hover:bg-gold-400 text-neutral-950 font-semibold text-xs tracking-wider uppercase py-3 rounded-[3px] transition-all"
               >
                 Tasación Sin Cargo
               </Link>

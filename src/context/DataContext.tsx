@@ -237,26 +237,17 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
     // Persistencia en Supabase
     try {
-      const { error } = await supabase.from("properties").upsert({
-        id,
-        title: propertyObj.title,
-        operation: propertyObj.operation,
-        type: propertyObj.type,
-        status: propertyObj.status,
-        price: propertyObj.price,
-        currency: propertyObj.currency,
-        location: propertyObj.location,
-        features: propertyObj.features,
-        images: propertyObj.images,
-        description: propertyObj.description,
-        is_featured: propertyObj.isFeatured,
-        is_opportunity: propertyObj.isOpportunity,
-        data: propertyObj,
-        updated_at: new Date().toISOString(),
+      const res = await fetch("/api/admin/properties", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "save", property: propertyObj }),
       });
-      if (error) console.error("Error guardando propiedad en Supabase:", error);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.warn("Aviso de seguridad al guardar propiedad:", err.error);
+      }
     } catch (err) {
-      console.error("Fallo al conectar con Supabase para addProperty:", err);
+      console.error("Fallo al conectar con servidor para addProperty:", err);
     }
 
     return id;
@@ -279,26 +270,17 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const p = fullUpdatedProperty as Property;
-      const { error } = await supabase.from("properties").upsert({
-        id,
-        title: p.title,
-        operation: p.operation,
-        type: p.type,
-        status: p.status,
-        price: p.price,
-        currency: p.currency,
-        location: p.location,
-        features: p.features,
-        images: p.images,
-        description: p.description,
-        is_featured: p.isFeatured,
-        is_opportunity: p.isOpportunity,
-        data: p,
-        updated_at: new Date().toISOString(),
+      const res = await fetch("/api/admin/properties", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "save", property: p }),
       });
-      if (error) console.error("Error actualizando propiedad en Supabase:", error);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.warn("Aviso de seguridad al actualizar propiedad:", err.error);
+      }
     } catch (err) {
-      console.error("Fallo al conectar con Supabase para updateProperty:", err);
+      console.error("Fallo al conectar con servidor para updateProperty:", err);
     }
   };
 
@@ -306,10 +288,17 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     setProperties((prev) => prev.filter((item) => item.id !== id));
 
     try {
-      const { error } = await supabase.from("properties").delete().eq("id", id);
-      if (error) console.error("Error eliminando propiedad en Supabase:", error);
+      const res = await fetch("/api/admin/properties", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "delete", id }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.warn("Aviso de seguridad al eliminar propiedad:", err.error);
+      }
     } catch (err) {
-      console.error("Fallo al conectar con Supabase para deleteProperty:", err);
+      console.error("Fallo al conectar con servidor para deleteProperty:", err);
     }
   };
 

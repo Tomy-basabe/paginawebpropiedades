@@ -209,28 +209,28 @@ function PropiedadesContent() {
               setSearchQuery("");
             }
           }}
-          className={`shrink-0 text-xs px-3.5 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-medium ${
+          className={`shrink-0 text-xs px-3.5 py-1.5 rounded-[3px] border transition-all flex items-center gap-1.5 font-medium ${
             only3DTour
-              ? "bg-gold-500 text-luxury-black border-gold-500 shadow-sm font-semibold"
-              : "bg-gold-50/70 text-gold-800 border-gold-300 hover:bg-gold-100"
+              ? "bg-gold-500 text-neutral-950 border-gold-500 shadow-xs font-semibold"
+              : "bg-white text-stone-700 border-stone-300 hover:border-gold-400"
           }`}
         >
-          <Box className="w-3 h-3 text-current" />
-          <span>Recorrido 3D</span>
+          <Box className="w-3.5 h-3.5 text-current" />
+          <span>Tour 3D</span>
         </button>
 
         {/* Chip prioritario de Video Tours */}
         <button
           type="button"
           onClick={() => setOnlyVideoTour(!onlyVideoTour)}
-          className={`shrink-0 text-xs px-3.5 py-1.5 rounded-full border transition-all flex items-center gap-1.5 font-medium ${
+          className={`shrink-0 text-xs px-3.5 py-1.5 rounded-[3px] border transition-all flex items-center gap-1.5 font-medium ${
             onlyVideoTour
-              ? "bg-red-600 text-white border-red-600 shadow-sm"
-              : "bg-red-50/70 text-red-700 border-red-200 hover:bg-red-100"
+              ? "bg-neutral-900 text-white border-neutral-900 shadow-xs"
+              : "bg-white text-stone-700 border-stone-300 hover:border-stone-400"
           }`}
         >
           <Play className="w-3 h-3 fill-current" />
-          <span>🎬 Con Video Tour</span>
+          <span>Video Tour</span>
         </button>
 
         {[
@@ -239,9 +239,9 @@ function PropiedadesContent() {
           { label: "En Alquiler", op: "alquiler", tp: "todos", st: "todos" },
           { label: "En Pozo", op: "pozo", tp: "todos", st: "todos" },
           { label: "Casas", op: "todos", tp: "casa", st: "todos" },
-          { label: "Deptos", op: "todos", tp: "departamento", st: "todos" },
+          { label: "Departamentos", op: "todos", tp: "departamento", st: "todos" },
           { label: "Loteos", op: "todos", tp: "loteo", st: "todos" },
-          { label: "⭐ Oportunidades", op: "todos", tp: "todos", st: "oportunidad" },
+          { label: "Oportunidades", op: "todos", tp: "todos", st: "oportunidad", isSpecial: true },
         ].map((chip) => {
           let isSelected = false;
           if (chip.op === "todos" && chip.tp === "todos" && chip.st === "todos") {
@@ -271,13 +271,14 @@ function PropiedadesContent() {
                   setStatusFilter(statusFilter === chip.st ? "todos" : chip.st);
                 }
               }}
-              className={`shrink-0 text-xs px-3.5 py-1.5 rounded-full border transition-all ${
+              className={`shrink-0 text-xs px-3.5 py-1.5 rounded-[3px] border transition-all flex items-center gap-1.5 ${
                 isSelected
-                  ? "bg-neutral-900 text-white border-neutral-900 font-semibold shadow-sm"
-                  : "bg-white text-neutral-600 border-neutral-300 hover:border-neutral-400"
+                  ? "bg-neutral-900 text-white border-neutral-900 font-semibold shadow-xs"
+                  : "bg-white text-stone-700 border-stone-300 hover:border-stone-400"
               }`}
             >
-              {chip.label}
+              {chip.isSpecial && <Sparkles className="w-3 h-3 text-gold-500" />}
+              <span>{chip.label}</span>
             </button>
           );
         })}

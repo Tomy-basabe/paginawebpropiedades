@@ -55,7 +55,7 @@ export interface AdminUser {
 const DEFAULT_ADMIN_USER: AdminUser = {
   id: "admin-root",
   username: "admin",
-  password: "admin",
+  password: "••••••••",
   name: "Administrador",
   role: "admin",
   createdAt: new Date().toISOString(),
@@ -427,7 +427,7 @@ export default function AdminSecretPage() {
     }
   };
 
-  // Carga inicial y persistencia de usuarios
+  // Verificación de sesión segura con el servidor al cargar
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -438,35 +438,44 @@ export default function AdminSecretPage() {
             setUsers(parsed);
           } else {
             setUsers([DEFAULT_ADMIN_USER]);
-            localStorage.setItem("aurea_admin_users", JSON.stringify([DEFAULT_ADMIN_USER]));
           }
         } else {
           setUsers([DEFAULT_ADMIN_USER]);
-          localStorage.setItem("aurea_admin_users", JSON.stringify([DEFAULT_ADMIN_USER]));
         }
 
-        const isAuth = sessionStorage.getItem("admin_authenticated") === "true";
-        if (isAuth) {
-          setIsAuthenticated(true);
-          const activeUserRaw = sessionStorage.getItem("admin_current_user");
-          if (activeUserRaw) {
-            try {
-              setCurrentUser(JSON.parse(activeUserRaw));
-            } catch {
-              setCurrentUser(DEFAULT_ADMIN_USER);
+        fetch("/api/admin/me")
+          .then((res) => {
+            if (res.ok) return res.json();
+            throw new Error("No autenticado");
+          })
+          .then((data) => {
+            if (data?.authenticated && data?.user) {
+              setIsAuthenticated(true);
+              setCurrentUser({
+                id: "admin-root",
+                username: data.user.username,
+                password: "••••••••",
+                name: data.user.name,
+                role: data.user.role,
+                createdAt: new Date().toISOString(),
+              });
+              setProfileForm(agentProfile);
+            } else {
+              setIsAuthenticated(false);
+              setCurrentUser(null);
             }
-          } else {
-            setCurrentUser(DEFAULT_ADMIN_USER);
-          }
-          setProfileForm(agentProfile);
-        }
+          })
+          .catch(() => {
+            setIsAuthenticated(false);
+            setCurrentUser(null);
+          });
       } catch (err) {
-        console.error("Error al cargar usuarios:", err);
+        console.error("Error al cargar estado de autenticación:", err);
       }
     }
   }, [agentProfile]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError("");
 
@@ -478,37 +487,43 @@ export default function AdminSecretPage() {
       return;
     }
 
-    const currentUsersList = users.length > 0 ? users : [DEFAULT_ADMIN_USER];
-    const foundUser = currentUsersList.find((user) => user.username.toLowerCase() === u);
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: u, password: p }),
+      });
 
-    // Si es el usuario admin y su clave actual sigue siendo la de fábrica ("admin"), también permitimos "99propiedades" o "aurea2026"
-    const isValidPassword =
-      foundUser &&
-      (foundUser.password === p ||
-        (foundUser.username.toLowerCase() === "admin" &&
-          foundUser.password === "admin" &&
-          (p === "99propiedades" || p === "aurea2026")));
+      const data = await res.json();
 
-    if (foundUser && isValidPassword) {
-      setIsAuthenticated(true);
-      setCurrentUser(foundUser);
-      setLoginError("");
-      setLoginPassword("");
-      if (typeof window !== "undefined") {
-        sessionStorage.setItem("admin_authenticated", "true");
-        sessionStorage.setItem("admin_current_user", JSON.stringify(foundUser));
+      if (res.ok && data.success) {
+        setIsAuthenticated(true);
+        const loggedUser: AdminUser = {
+          id: "admin-root",
+          username: data.user.username,
+          password: "••••••••",
+          name: data.user.name,
+          role: data.user.role,
+          createdAt: new Date().toISOString(),
+        };
+        setCurrentUser(loggedUser);
+        setLoginError("");
+        setLoginPassword("");
+        setProfileForm(agentProfile);
+        showFeedback(`Bienvenido al panel, ${data.user.name}.`, "success");
+      } else {
+        setLoginError(data.error || "Usuario o contraseña incorrectos.");
       }
-      setProfileForm(agentProfile);
-      showFeedback(`Bienvenido al panel, ${foundUser.name}.`, "success");
-    } else {
-      setLoginError("Usuario o contraseña incorrectos.");
+    } catch {
+      setLoginError("Error de conexión con el servidor.");
     }
   };
 
-  const handleLogout = () => {
-    if (typeof window !== "undefined") {
-      sessionStorage.removeItem("admin_authenticated");
-      sessionStorage.removeItem("admin_current_user");
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+    } catch {
+      // ignore
     }
     setIsAuthenticated(false);
     setCurrentUser(null);
@@ -548,17 +563,13 @@ export default function AdminSecretPage() {
 
     const updatedUser: AdminUser = {
       ...currentUser,
-      password: newPasswordInput,
+      password: "••••••••",
     };
 
     const updatedUsers = users.map((u) => (u.id === currentUser.id ? updatedUser : u));
 
     setUsers(updatedUsers);
     setCurrentUser(updatedUser);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
-      sessionStorage.setItem("admin_current_user", JSON.stringify(updatedUser));
-    }
 
     setCurrentPasswordInput("");
     setNewPasswordInput("");
@@ -594,7 +605,7 @@ export default function AdminSecretPage() {
     const newUser: AdminUser = {
       id: `user-${Date.now()}`,
       username: cleanUsername,
-      password: newUserPassword.trim(),
+      password: "••••••••",
       name: newUserName.trim(),
       role: newUserRole,
       createdAt: new Date().toISOString(),
@@ -602,9 +613,6 @@ export default function AdminSecretPage() {
 
     const updatedUsers = [...users, newUser];
     setUsers(updatedUsers);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
-    }
 
     setNewUserName("");
     setNewUserUsername("");

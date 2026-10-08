@@ -61,24 +61,24 @@ export default function MortgageCalculator() {
   );
 
   return (
-    <div className="bg-white rounded-sm border border-neutral-200 shadow-md p-6 sm:p-8 md:p-10">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-8 border-b border-neutral-200">
+    <div className="bg-white rounded-[4px] border border-stone-200/90 shadow-xs p-6 sm:p-8 md:p-10">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-7 border-b border-stone-200">
         <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold-600 bg-gold-50 px-2.5 py-1 rounded-sm mb-2">
+          <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-gold-700 bg-gold-50/80 px-2.5 py-1 rounded-[2px] mb-2">
             <Calculator className="w-3.5 h-3.5" />
             <span>Simulador Financiero Hipotecario</span>
           </div>
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900">
-            Calculá tu Cuota & Capacidad de Compra
+          <h2 className="font-serif text-2xl sm:text-3xl font-normal text-neutral-900 tracking-tight">
+            Proyección de cuota & capacidad de compra
           </h2>
-          <p className="text-xs sm:text-sm text-neutral-500 mt-1">
+          <p className="text-xs sm:text-sm text-neutral-500 mt-1 font-light max-w-2xl">
             Herramienta interactiva para proyectar cuotas mensuales bajo líneas de crédito UVA de la banca argentina actual.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 bg-emerald-50 text-emerald-800 border border-emerald-200 px-3.5 py-2 rounded-sm text-xs">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>Tasas bancarias vigentes 2026</span>
+        <div className="flex items-center gap-2 bg-stone-100 text-stone-700 border border-stone-200 px-3 py-1.5 rounded-[2px] text-xs">
+          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+          <span className="font-medium text-[11px] tracking-wide">Tasas bancarias vigentes 2026</span>
         </div>
       </div>
 
@@ -211,18 +211,18 @@ export default function MortgageCalculator() {
         </div>
 
         {/* Panel Derecho: Métricas de Resultados */}
-        <div className="lg:col-span-5 bg-stone-50 border border-neutral-200 rounded-sm p-6 flex flex-col justify-between">
+        <div className="lg:col-span-5 bg-[#FAF8F5] border border-stone-200/90 rounded-[3px] p-6 flex flex-col justify-between">
           <div className="space-y-6">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-neutral-500">
               Proyección de Cuota & Requisitos
             </h3>
 
             {/* Cuota Principal */}
-            <div className="bg-white p-5 rounded-sm border border-neutral-200 shadow-sm">
-              <span className="text-xs text-neutral-500 block mb-1">
+            <div className="bg-white p-5 rounded-[3px] border border-stone-200/90 shadow-2xs">
+              <span className="text-xs text-neutral-500 block mb-1 font-medium">
                 Cuota Mensual Inicial Estimada
               </span>
-              <div className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900 text-gold-600">
+              <div className="font-serif text-3xl sm:text-4xl font-semibold text-neutral-900">
                 USD {Math.round(calculations.monthlyPayment).toLocaleString("es-AR")}
               </div>
               <span className="text-[11px] text-neutral-400 mt-1 block">
@@ -232,30 +232,30 @@ export default function MortgageCalculator() {
 
             {/* Desglose */}
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between py-2 border-b border-neutral-200">
+              <div className="flex justify-between py-2 border-b border-stone-200/80">
                 <span className="text-neutral-500">Monto total a financiar:</span>
                 <span className="font-semibold text-neutral-800">
                   USD {Math.round(calculations.loanAmount).toLocaleString("es-AR")}
                 </span>
               </div>
 
-              <div className="flex justify-between py-2 border-b border-neutral-200">
+              <div className="flex justify-between py-2 border-b border-stone-200/80">
                 <span className="text-neutral-500">Ingresos netos requeridos (hogar):</span>
-                <span className="font-semibold text-emerald-700">
+                <span className="font-semibold text-neutral-900">
                   ~USD {Math.round(calculations.minRequiredIncome).toLocaleString("es-AR")}
                 </span>
               </div>
 
-              <div className="flex justify-between py-2 border-b border-neutral-200">
+              <div className="flex justify-between py-2 border-b border-stone-200/80">
                 <span className="text-neutral-500">Plazo pactado:</span>
-                <span className="font-semibold text-neutral-800">
+                <span className="font-medium text-neutral-800">
                   {termYears} años ({termYears * 12} cuotas)
                 </span>
               </div>
 
               <div className="flex justify-between py-2">
                 <span className="text-neutral-500">Afectación de ingresos:</span>
-                <span className="font-semibold text-neutral-800">
+                <span className="font-medium text-neutral-800">
                   Hasta 25% del salario demostrado
                 </span>
               </div>
@@ -263,17 +263,17 @@ export default function MortgageCalculator() {
           </div>
 
           {/* CTA de Asesoría Financiera con el Agente */}
-          <div className="pt-6 mt-6 border-t border-neutral-200">
+          <div className="pt-6 mt-6 border-t border-stone-200/80">
             <a
               href={getWhatsAppUrl(agentProfile.whatsappNumber, whatsappMessage)}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold text-xs py-3.5 px-4 rounded-sm transition-all duration-200 flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg hover:shadow-emerald-500/20 btn-tactile"
+              className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-medium text-xs py-3.5 px-4 rounded-[3px] transition-all duration-200 flex items-center justify-center gap-2.5 shadow-xs btn-tactile"
             >
-              <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
-              <span>Evaluar esta Calificación con {agentProfile.name}</span>
+              <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
+              <span>Evaluar Calificación con {agentProfile.name}</span>
             </a>
-            <p className="text-[10px] text-neutral-400 text-center mt-2">
+            <p className="text-[10px] text-neutral-400 text-center mt-2.5 font-light">
               Valores informativos y orientativos. Cada solicitud bancaria se encuentra sujeta a aprobación crediticia.
             </p>
           </div>

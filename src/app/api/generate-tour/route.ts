@@ -1,81 +1,113 @@
-import { NextResponse } from "next/server";
-// En un caso real, inicializarías Supabase Server Client aquí
+import { NextRequest, NextResponse } from "next/server";
+import { verifySessionToken } from "@/lib/auth";
 
-export async function POST(req: Request) {
+// Validación de URL para evitar ataques SSRF
+function isValidVideoUrl(urlStr: string): boolean {
   try {
-    const { propertyId, videoUrl } = await req.json();
+    const parsed = new URL(urlStr);
+    // Solo permitir protocolo https
+    if (parsed.protocol !== "https:") return false;
 
-    if (!propertyId || !videoUrl) {
-      return NextResponse.json({ error: "propertyId y videoUrl son requeridos" }, { status: 400 });
+    // Bloquear localhost, direcciones privadas o metadatos de nube
+    const host = parsed.hostname.toLowerCase();
+    if (
+      host === "localhost" ||
+      host === "127.0.0.1" ||
+      host === "0.0.0.0" ||
+      host.startsWith("192.168.") ||
+      host.startsWith("10.") ||
+      host.endsWith(".internal") ||
+      host === "169.254.169.254" // AWS/Cloud metadata
+    ) {
+      return false;
     }
 
-    // Asegúrate de definir LUMA_API_KEY en tu .env.local
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    // 1. Verificar autenticación de administrador
+    const sessionCookie = req.cookies.get("aurea_admin_session")?.value;
+    if (!sessionCookie) {
+      return NextResponse.json(
+        { error: "Acceso no autorizado. Inicie sesión para generar recorridos." },
+        { status: 401 }
+      );
+    }
+    const session = await verifySessionToken(sessionCookie);
+    if (!session) {
+      return NextResponse.json(
+        { error: "Sesión inválida o expirada." },
+        { status: 401 }
+      );
+    }
+
+    // 2. Extraer y validar body
+    const body = await req.json().catch(() => ({}));
+    const { propertyId, videoUrl } = body;
+
+    if (!propertyId || typeof propertyId !== "string" || !videoUrl || typeof videoUrl !== "string") {
+      return NextResponse.json(
+        { error: "propertyId y videoUrl válidos son requeridos." },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidVideoUrl(videoUrl)) {
+      return NextResponse.json(
+        { error: "La URL del video debe ser una dirección HTTPS pública y válida." },
+        { status: 400 }
+      );
+    }
+
     const LUMA_API_KEY = process.env.LUMA_API_KEY || "simulacion";
 
-    // Simulación para propósitos de UI sin una key real:
+    // Modo simulación seguro
     if (LUMA_API_KEY === "simulacion") {
-      // Simular tiempo de procesamiento
-      await new Promise(resolve => setTimeout(resolve, 2500));
-      
-      return NextResponse.json({ 
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      return NextResponse.json({
         success: true,
-        message: "Recorrido 3D arquitectónico generado con éxito",
-        artifactId: `luma-prop-${propertyId}`,
-        artifactUrl: "/models/demo-fast.splat"
+        message: "Recorrido 3D arquitectónico generado con éxito (Modo Simulación)",
+        artifactId: `luma-prop-${propertyId.replace(/[^a-zA-Z0-9_-]/g, "")}`,
+        artifactUrl: "/models/demo-fast.splat",
       });
     }
 
-    // --- CÓDIGO REAL ---
-    // 1. Iniciar la captura enviando el video a Luma AI
+    // Petición externa a Luma Labs AI
     const captureResponse = await fetch("https://api.lumalabs.ai/api/v2/capture", {
       method: "POST",
       headers: {
-        "Authorization": `luma-api-key=${LUMA_API_KEY}`,
+        Authorization: `luma-api-key=${LUMA_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         title: `Propiedad: ${propertyId}`,
         video_url: videoUrl,
-        // Opcionalmente definir un webhook_url para que Luma notifique cuando termine
-        // webhook_url: `https://tudominio.com/api/webhooks/luma?propertyId=${propertyId}`
       }),
     });
 
     if (!captureResponse.ok) {
-      throw new Error(`Error en Luma API: ${captureResponse.statusText}`);
+      throw new Error(`Error en el servicio de generación 3D: ${captureResponse.statusText}`);
     }
 
     const captureData = await captureResponse.json();
-    const slug = captureData.slug; // ID de captura en Luma
-
-    // 2. Aquí normalmente implementarías polling o simplemente devolverías el slug al frontend
-    // para que el frontend haga un polling hacia otra ruta de tu API que consulte el estado.
-    // 
-    // Si decides hacer polling básico en el servidor (cuidado con los timeouts en Vercel):
-    
-    /*
-    let status = captureData.status;
-    while (status !== "finished" && status !== "failed") {
-      await new Promise(resolve => setTimeout(resolve, 5000)); // Esperar 5 seg
-      const statusReq = await fetch(`https://api.lumalabs.ai/api/v2/capture/${slug}`, {
-        headers: { "Authorization": `luma-api-key=${LUMA_API_KEY}` }
-      });
-      const statusData = await statusReq.json();
-      status = statusData.status;
-    }
-    */
-
-    // 3. Guardar el slug o url del modelo en Supabase
-    // await supabase.from('properties').update({ 3d_tour_url: `https://lumalabs.ai/capture/${slug}` }).eq('id', propertyId);
+    const slug = captureData.slug;
 
     return NextResponse.json({
       success: true,
       artifactId: slug,
-      artifactUrl: `https://lumalabs.ai/capture/${slug}`
+      artifactUrl: `https://lumalabs.ai/capture/${slug}`,
     });
-
   } catch (error) {
     console.error("Error generando tour 3D:", error);
-    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error interno al procesar el recorrido 3D." },
+      { status: 500 }
+    );
   }
 }

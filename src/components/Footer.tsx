@@ -175,14 +175,14 @@ export default function Footer() {
         </div>
 
         {/* Línea divisoria y aviso legal */}
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-neutral-400">
+        <div className="border-t border-white/[0.08] pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-neutral-400">
           <p>
-            © {new Date().getFullYear()} ÁUREA Real Estate. Dirección comercial y corretaje por {agentProfile.name} ({agentProfile.licenseNumber}). Todos los derechos reservados.
+            © {new Date().getFullYear()} 99 Propiedades. Comercialización & Corretaje Inmobiliario por {agentProfile.name} ({agentProfile.licenseNumber}). Todos los derechos reservados.
           </p>
           <div className="flex items-center gap-6">
             <span>Operaciones sujetas a verificación registral y notarial</span>
-            <Link href="/sobre-mi" className="hover:text-neutral-400">
-              Marco Regulatorio
+            <Link href="/sobre-mi" className="hover:text-gold-400 transition-colors">
+              Marco Notarial & Profesional
             </Link>
           </div>
         </div>

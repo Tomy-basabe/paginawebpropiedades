@@ -41,23 +41,23 @@ export default function BankRatesTable() {
   return (
     <div className="space-y-6">
       {/* Encabezado */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-5">
         <div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold-600 bg-gold-50 px-2.5 py-1 rounded-sm mb-2">
+          <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-gold-700 bg-gold-50/80 px-2.5 py-1 rounded-[2px] mb-2">
             <Percent className="w-3.5 h-3.5" />
             <span>Monitoreo Financiero Semanal</span>
           </div>
-          <h3 className="font-serif text-2xl font-bold text-neutral-900">
+          <h3 className="font-serif text-2xl sm:text-3xl font-normal text-neutral-900 tracking-tight">
             Comparador de Tasas Hipotecarias UVA
           </h3>
-          <p className="text-xs sm:text-sm text-neutral-500">
+          <p className="text-xs sm:text-sm text-neutral-500 font-light mt-0.5">
             Relevamiento independiente de las condiciones crediticias de las principales entidades bancarias.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-neutral-500">
-          <Calendar className="w-4 h-4 text-gold-500" />
-          <span>Actualizado al ciclo corriente</span>
+        <div className="flex items-center gap-2 text-xs text-neutral-500 bg-stone-100 border border-stone-200 px-3 py-1.5 rounded-[2px] w-fit">
+          <Calendar className="w-3.5 h-3.5 text-gold-600" />
+          <span className="text-[11px] font-medium tracking-wide">Actualizado ciclo corriente 2026</span>
         </div>
       </div>
 
@@ -198,35 +198,35 @@ export default function BankRatesTable() {
       </div>
 
       {/* Guía informativa de requisitos esenciales para crédito hipotecario */}
-      <div className="bg-stone-50 border border-neutral-200 p-6 rounded-sm space-y-4">
-        <h4 className="font-serif text-base font-bold text-neutral-900 flex items-center gap-2">
+      <div className="bg-[#FAF8F5] border border-stone-200/90 p-6 sm:p-7 rounded-[4px] space-y-4">
+        <h4 className="font-serif text-base font-semibold text-neutral-900 flex items-center gap-2">
           <ShieldCheck className="w-5 h-5 text-gold-600" />
           <span>Requisitos Clave para Calificar a un Crédito Hipotecario</span>
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-neutral-600">
-          <div className="bg-white p-3.5 border border-neutral-200 rounded-sm">
+          <div className="bg-white p-4 border border-stone-200/80 rounded-[3px] shadow-2xs">
             <span className="font-semibold text-neutral-900 block mb-1">
               1. Relación Cuota-Ingreso (DTI)
             </span>
-            <p>
+            <p className="leading-relaxed font-light text-neutral-600">
               La cuota mensual del crédito no puede exceder entre el 20% y el 25% de los ingresos netos declarados del grupo familiar conviviente.
             </p>
           </div>
 
-          <div className="bg-white p-3.5 border border-neutral-200 rounded-sm">
+          <div className="bg-white p-4 border border-stone-200/80 rounded-[3px] shadow-2xs">
             <span className="font-semibold text-neutral-900 block mb-1">
               2. Situación Crediticia Impecable
             </span>
-            <p>
+            <p className="leading-relaxed font-light text-neutral-600">
               Estar calificado en Situación 1 (Normal) en la central de deudores del Banco Central (BCRA) sin antecedentes negativos o juicios comerciales.
             </p>
           </div>
 
-          <div className="bg-white p-3.5 border border-neutral-200 rounded-sm">
+          <div className="bg-white p-4 border border-stone-200/80 rounded-[3px] shadow-2xs">
             <span className="font-semibold text-neutral-900 block mb-1">
               3. Título Perfecto & Tasación Aprobada
             </span>
-            <p>
+            <p className="leading-relaxed font-light text-neutral-600">
               El inmueble seleccionado debe poseer escritura pública sin gravámenes y ser tasado por perito del banco con aprobación técnica favorable.
             </p>
           </div>

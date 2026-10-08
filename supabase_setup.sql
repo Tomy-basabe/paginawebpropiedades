@@ -1,3 +1,7 @@
+-- ==============================================================================
+-- BLINDAJE DE SEGURIDAD SUPABASE - ESQUEMA Y POLÍTICAS RLS (Row Level Security)
+-- ==============================================================================
+
 -- 1. TABLA: properties (Propiedades inmobiliarias)
 CREATE TABLE IF NOT EXISTS public.properties (
     id TEXT PRIMARY KEY,
@@ -59,20 +63,55 @@ CREATE TABLE IF NOT EXISTS public.agent_profile (
     updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now())
 );
 
--- Habilitar RLS y acceso
+-- ==============================================================================
+-- ACTIVACIÓN Y POLÍTICAS DE RLS SEGURAS (Defensa contra borrado y defacing anónimo)
+-- ==============================================================================
+
 ALTER TABLE public.properties ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.featured_banners ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bank_rates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.agent_profile ENABLE ROW LEVEL SECURITY;
 
+-- Limpieza de políticas inseguras anteriores que permitían borrado y edición pública
 DROP POLICY IF EXISTS "Acceso total properties" ON public.properties;
-CREATE POLICY "Acceso total properties" ON public.properties FOR ALL USING (true) WITH CHECK (true);
-
 DROP POLICY IF EXISTS "Acceso total banners" ON public.featured_banners;
-CREATE POLICY "Acceso total banners" ON public.featured_banners FOR ALL USING (true) WITH CHECK (true);
-
 DROP POLICY IF EXISTS "Acceso total bank_rates" ON public.bank_rates;
-CREATE POLICY "Acceso total bank_rates" ON public.bank_rates FOR ALL USING (true) WITH CHECK (true);
-
 DROP POLICY IF EXISTS "Acceso total profile" ON public.agent_profile;
-CREATE POLICY "Acceso total profile" ON public.agent_profile FOR ALL USING (true) WITH CHECK (true);
+DROP POLICY IF EXISTS "Lectura publica properties" ON public.properties;
+DROP POLICY IF EXISTS "Lectura publica banners" ON public.featured_banners;
+DROP POLICY IF EXISTS "Lectura publica bank_rates" ON public.bank_rates;
+DROP POLICY IF EXISTS "Lectura publica profile" ON public.agent_profile;
+
+-- A) LECTURA PÚBLICA (Permitida para visitantes y catálogo)
+CREATE POLICY "Lectura publica properties" ON public.properties
+    FOR SELECT USING (true);
+
+CREATE POLICY "Lectura publica banners" ON public.featured_banners
+    FOR SELECT USING (true);
+
+CREATE POLICY "Lectura publica bank_rates" ON public.bank_rates
+    FOR SELECT USING (true);
+
+CREATE POLICY "Lectura publica profile" ON public.agent_profile
+    FOR SELECT USING (true);
+
+-- B) ESCRITURA Y MODIFICACIÓN PROTEGIDA
+-- Solo usuarios autenticados o con rol autorizado pueden insertar, modificar o eliminar registros
+CREATE POLICY "Modificacion autorizada properties" ON public.properties
+    FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+CREATE POLICY "Modificacion autorizada banners" ON public.featured_banners
+    FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+CREATE POLICY "Modificacion autorizada bank_rates" ON public.bank_rates
+    FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+CREATE POLICY "Modificacion autorizada profile" ON public.agent_profile
+    FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- ==============================================================================
+-- POLÍTICAS DE STORAGE SEGURO (Evitar sobreescritura de imágenes/videos ajenos)
+-- ==============================================================================
+-- Para los buckets 'property-images' y 'property-videos':
+-- 1. SELECT público para que las fotos carguen en la web.
+-- 2. INSERT/DELETE reservado a usuarios autorizados.

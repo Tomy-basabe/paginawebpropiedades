@@ -27,15 +27,15 @@ export default function FinanciamientoPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
       {/* Encabezado */}
-      <div className="border-b border-neutral-200 pb-8">
-        <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold-600 bg-gold-50 px-2.5 py-1 rounded-sm mb-2">
+      <div className="border-b border-stone-200 pb-8">
+        <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-gold-700 bg-gold-50/80 px-2.5 py-1 rounded-[2px] mb-2">
           <Percent className="w-3.5 h-3.5" />
           <span>Estructuración Financiera & Crédito</span>
         </div>
-        <h1 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900">
+        <h1 className="font-serif text-3xl sm:text-4xl font-normal text-neutral-900 tracking-tight">
           Créditos Hipotecarios & Asesoramiento Financiero
         </h1>
-        <p className="text-xs sm:text-sm text-neutral-500 mt-1 max-w-3xl leading-relaxed">
+        <p className="text-xs sm:text-sm text-neutral-500 mt-1 max-w-3xl leading-relaxed font-light">
           Comprender las variables del financiamiento es el factor determinante para maximizar su capacidad de compra. Ponemos a su disposición nuestro simulador en tiempo real, la comparativa de tasas bancarias vigentes y el acompañamiento profesional para tramitar su crédito.
         </p>
       </div>
@@ -51,13 +51,13 @@ export default function FinanciamientoPage() {
       </section>
 
       {/* 3. Guía Paso a Paso para Comprar con Crédito */}
-      <section id="requisitos" className="bg-white border border-neutral-200 p-8 rounded-sm space-y-8">
+      <section id="requisitos" className="bg-white border border-stone-200/90 p-8 rounded-[4px] space-y-8 shadow-2xs">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-gold-600">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-gold-700">
             Guía Práctica para el Comprador
           </span>
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900 mt-1">
-            El Proceso de Compra con Hipoteca en 4 Etapas
+          <h2 className="font-serif text-2xl sm:text-3xl font-normal text-neutral-900 mt-1 tracking-tight">
+            El proceso de compra con hipoteca en 4 etapas
           </h2>
         </div>
 

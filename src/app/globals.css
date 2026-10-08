@@ -43,6 +43,11 @@ body {
 
 h1, h2, h3, .font-serif {
   font-family: var(--font-playfair);
+  letter-spacing: -0.015em;
+}
+
+h1 {
+  font-weight: 400;
 }
 
 ::selection {

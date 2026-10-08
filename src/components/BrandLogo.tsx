@@ -36,36 +36,35 @@ export default function BrandLogo({
 
   const content = (
     <div className="flex items-center gap-3 group select-none">
-      {/* Monograma Editorial de Lujo "99" */}
+      {/* Monograma Editorial de Estudio "99" */}
       <div
-        className={`relative ${sizeClasses.box} rounded-sm flex items-center justify-center font-serif font-bold transition-all duration-300 ${
+        className={`relative ${sizeClasses.box} rounded-[3px] flex items-center justify-center font-serif font-semibold tracking-tight transition-all duration-300 ${
           isLight
-            ? "bg-gradient-to-br from-neutral-900 to-luxury-black text-gold-400 border border-gold-400/40 shadow-sm group-hover:border-gold-400 group-hover:shadow-[0_0_15px_rgba(181,142,85,0.25)]"
-            : "bg-white text-neutral-900 border border-neutral-300 shadow-sm group-hover:border-gold-500 group-hover:shadow-md"
+            ? "bg-neutral-950 text-gold-400 border border-gold-400/40 shadow-xs group-hover:border-gold-400 group-hover:text-gold-300"
+            : "bg-neutral-900 text-gold-400 border border-neutral-800 shadow-xs group-hover:border-gold-500"
         }`}
       >
-        <span className="tracking-tighter">99</span>
-        {/* Detalle en esquina tipo sello de arquitectura */}
-        <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-gold-400 rounded-full opacity-80" />
+        <span className="font-serif leading-none tracking-tighter">99</span>
+        <span className="absolute bottom-1 right-1 w-1 h-1 bg-gold-400/80 rounded-full" />
       </div>
 
-      {/* Tipografía de Marca */}
-      <div className="flex flex-col">
+      {/* Identidad Tipográfica de Marca */}
+      <div className="flex flex-col justify-center">
         <span
-          className={`font-serif font-bold tracking-wider leading-none transition-colors duration-200 ${sizeClasses.title} ${
+          className={`font-serif font-semibold tracking-[0.12em] leading-tight transition-colors duration-200 ${sizeClasses.title} ${
             isLight
               ? "text-white group-hover:text-gold-300"
-              : "text-neutral-900 group-hover:text-gold-700"
+              : "text-neutral-900 group-hover:text-gold-800"
           }`}
         >
           99 PROPIEDADES
         </span>
         <span
-          className={`font-sans uppercase font-medium mt-1 leading-none ${sizeClasses.subtitle} ${
-            isLight ? "text-neutral-400" : "text-neutral-500"
+          className={`font-sans uppercase font-medium tracking-[0.22em] text-[8px] sm:text-[9px] mt-0.5 leading-none transition-colors duration-200 ${
+            isLight ? "text-neutral-400 group-hover:text-neutral-300" : "text-neutral-500 group-hover:text-neutral-700"
           }`}
         >
-          Estudio Inmobiliario
+          Desarrollos & Real Estate
         </span>
       </div>
     </div>
@@ -73,7 +72,7 @@ export default function BrandLogo({
 
   if (withLink) {
     return (
-      <Link href="/" className="inline-block transition-transform duration-200 group-hover:scale-[1.01]">
+      <Link href="/" className="inline-block transition-transform duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold-400">
         {content}
       </Link>
     );

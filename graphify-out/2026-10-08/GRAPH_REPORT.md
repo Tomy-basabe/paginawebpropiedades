@@ -1,7 +1,7 @@
 # Graph Report - Venta Inmobiliaria  (2026-10-08)
 
 ## Corpus Check
-- 58 files · ~151,403 words
+- 58 files · ~151,496 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 7 file(s) not represented in the graph (top: (none) 2, .splat 2, .example 1)
 

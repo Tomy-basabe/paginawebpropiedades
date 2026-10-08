@@ -41,15 +41,15 @@ export default function SobreMiPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
       {/* Encabezado */}
-      <div className="border-b border-neutral-200 pb-8">
-        <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-gold-600 bg-gold-50 px-2.5 py-1 rounded-sm mb-2">
+      <div className="border-b border-stone-200 pb-8">
+        <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-gold-700 bg-gold-50/80 px-2.5 py-1 rounded-[2px] mb-2">
           <Award className="w-3.5 h-3.5" />
           <span>Perfil Institucional & Trayectoria</span>
         </div>
-        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-neutral-900">
+        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-neutral-900 tracking-tight">
           Sobre {agentProfile.name}
         </h1>
-        <p className="text-xs sm:text-sm text-neutral-500 mt-2 max-w-2xl">
+        <p className="text-xs sm:text-sm text-neutral-500 mt-2 max-w-2xl font-light">
           {agentProfile.roleTitle} • Matrícula {agentProfile.licenseNumber}
         </p>
       </div>
@@ -58,7 +58,7 @@ export default function SobreMiPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Columna Izquierda: Retrato y Datos Directos */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="relative h-[520px] w-full rounded-sm overflow-hidden shadow-2xl border border-neutral-200">
+          <div className="relative h-[520px] w-full rounded-[4px] overflow-hidden shadow-md border border-stone-200">
             <Image
               src={agentProfile.photoUrl}
               alt={agentProfile.name}
@@ -68,22 +68,22 @@ export default function SobreMiPage() {
             />
           </div>
 
-          <div className="bg-white p-6 rounded-sm border border-neutral-200 space-y-4 text-xs">
-            <h3 className="font-serif text-sm font-bold text-neutral-900 uppercase tracking-wider">
+          <div className="bg-white p-6 rounded-[4px] border border-stone-200/90 space-y-4 text-xs shadow-2xs">
+            <h3 className="font-serif text-sm font-semibold text-neutral-900 uppercase tracking-wider">
               Datos de Despacho Profesional
             </h3>
             <div className="space-y-2.5 text-neutral-600">
               <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-gold-500 shrink-0 mt-0.5" />
-                <span>{agentProfile.officeAddress}</span>
+                <MapPin className="w-4 h-4 text-gold-600 shrink-0 mt-0.5" />
+                <span className="font-light">{agentProfile.officeAddress}</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-gold-500 shrink-0" />
-                <span>{agentProfile.phone}</span>
+                <Phone className="w-4 h-4 text-gold-600 shrink-0" />
+                <span className="font-light">{agentProfile.phone}</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-gold-500 shrink-0" />
-                <a href={`mailto:${agentProfile.email}`} className="hover:text-gold-600 transition-colors">
+                <Mail className="w-4 h-4 text-gold-600 shrink-0" />
+                <a href={`mailto:${agentProfile.email}`} className="hover:text-gold-700 transition-colors font-light">
                   {agentProfile.email}
                 </a>
               </div>
@@ -94,9 +94,9 @@ export default function SobreMiPage() {
                 href={`https://wa.me/${agentProfile.whatsappNumber}?text=Hola%20${encodeURIComponent(agentProfile.name)},%20quisiera%20coordinar%20una%20reunion`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold text-xs py-3.5 rounded-sm transition-all duration-200 flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg hover:shadow-emerald-500/25 btn-tactile"
+                className="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-medium text-xs py-3.5 rounded-[3px] transition-all duration-200 flex items-center justify-center gap-2.5 shadow-xs btn-tactile"
               >
-                <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
+                <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
                 <span>Coordinar Reunión por WhatsApp</span>
               </a>
             </div>

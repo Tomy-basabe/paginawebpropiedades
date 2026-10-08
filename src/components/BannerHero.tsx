@@ -32,46 +32,45 @@ export default function BannerHero() {
   };
 
   return (
-    <div className="relative w-full overflow-hidden bg-neutral-950 py-12 md:py-16 border-y border-gold-500/20">
-      {/* Background con imagen y overlay de lujo */}
+    <div className="relative w-full overflow-hidden bg-neutral-950 py-12 md:py-16 rounded-[4px] border border-white/[0.1] shadow-xl">
+      {/* Background con imagen y overlay arquitectónico */}
       <div className="absolute inset-0 z-0">
         <Image
           src={current.imageUrl}
           alt={current.title}
           fill
           priority
-          className="object-cover opacity-30 transition-all duration-1000 scale-105"
+          className="object-cover opacity-25 transition-all duration-1000 scale-100"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-luxury-black via-luxury-black/85 to-transparent" />
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/40 to-black/90" />
+        <div className="absolute inset-0 bg-gradient-to-r from-neutral-950 via-neutral-950/85 to-transparent" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-12">
         <div className="max-w-2xl">
           {/* Badge de Oportunidad Destacada */}
-          <div className="inline-flex items-center gap-2 bg-gold-500/20 border border-gold-400/40 text-gold-300 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase mb-4 backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5 text-gold-400 animate-pulse" />
+          <div className="inline-flex items-center gap-2 bg-white/[0.06] border border-gold-400/30 text-gold-300 px-3 py-1 rounded-[2px] text-[11px] font-medium tracking-[0.15em] uppercase mb-4 backdrop-blur-md">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
             <span>{current.badge}</span>
           </div>
 
           {/* Subtítulo & Título Editorial */}
-          <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-neutral-400 font-medium mb-2">
+          <p className="text-xs uppercase tracking-[0.2em] text-neutral-400 font-medium mb-2">
             {current.subtitle}
           </p>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight mb-4">
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-normal text-white tracking-tight leading-tight mb-4">
             {current.title}
           </h2>
 
           {/* Descripción */}
-          <p className="text-sm sm:text-base text-neutral-300 leading-relaxed mb-8">
+          <p className="text-sm text-neutral-300 leading-relaxed font-light mb-8 max-w-xl">
             {current.description}
           </p>
 
-          {/* Botón CTA de Acción Comercial */}
+          {/* Botones de Acción */}
           <div className="flex flex-wrap items-center gap-4">
             <Link
               href={current.ctaLink || "/propiedades"}
-              className="group bg-gold-500 hover:bg-gold-400 text-luxury-black font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-sm transition-all duration-200 shadow-lg shadow-gold-500/10 hover:shadow-xl hover:shadow-gold-500/30 flex items-center gap-2 btn-tactile"
+              className="bg-gold-500 hover:bg-gold-400 text-neutral-950 font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-[3px] transition-all duration-200 shadow-sm flex items-center gap-2 btn-tactile group"
             >
               <span>{current.ctaText || "Descubrir Oportunidad"}</span>
               <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -79,7 +78,7 @@ export default function BannerHero() {
 
             <Link
               href="/contacto?asunto=desarrollo"
-              className="text-white hover:text-gold-300 text-xs font-medium tracking-wide border-b border-white/30 hover:border-gold-300 pb-1 transition-all duration-200 hover:translate-x-0.5"
+              className="text-neutral-300 hover:text-white text-xs font-medium tracking-wider uppercase border-b border-white/20 hover:border-gold-300 pb-1 transition-all duration-200"
             >
               Solicitar Dossier de Inversión
             </Link>
@@ -88,28 +87,20 @@ export default function BannerHero() {
 
         {/* Controles de Slide si hay más de 1 banner activo */}
         {activeBanners.length > 1 && (
-          <div className="absolute bottom-4 right-4 sm:right-8 flex items-center gap-2 z-20">
+          <div className="absolute bottom-6 right-6 sm:right-10 flex items-center gap-3 z-20">
+            <div className="text-[11px] font-mono text-neutral-400 tracking-widest mr-2">
+              0{currentIndex + 1} / 0{activeBanners.length}
+            </div>
             <button
               onClick={handlePrev}
-              className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm border border-white/20 transition-colors"
+              className="w-8 h-8 rounded-[2px] bg-white/[0.08] hover:bg-white/[0.15] text-white backdrop-blur-sm border border-white/[0.1] transition-colors flex items-center justify-center cursor-pointer"
               aria-label="Anterior oportunidad"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <div className="flex gap-1.5 px-2">
-              {activeBanners.map((_, idx) => (
-                <span
-                  key={idx}
-                  onClick={() => setCurrentIndex(idx)}
-                  className={`block h-1.5 rounded-full transition-all cursor-pointer ${
-                    currentIndex === idx ? "w-6 bg-gold-400" : "w-1.5 bg-white/30"
-                  }`}
-                />
-              ))}
-            </div>
             <button
               onClick={handleNext}
-              className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm border border-white/20 transition-colors"
+              className="w-8 h-8 rounded-[2px] bg-white/[0.08] hover:bg-white/[0.15] text-white backdrop-blur-sm border border-white/[0.1] transition-colors flex items-center justify-center cursor-pointer"
               aria-label="Siguiente oportunidad"
             >
               <ChevronRight className="w-4 h-4" />

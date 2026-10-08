@@ -50,10 +50,10 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
   );
 
   return (
-    <div className="group bg-white rounded-sm border border-neutral-200/90 hover:border-gold-400/80 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1.5 flex flex-col overflow-hidden">
-      {/* Contenedor de Imagen */}
+    <div className="group bg-white rounded-[4px] border border-stone-200/90 hover:border-gold-400/80 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col overflow-hidden">
+      {/* Contenedor de Imagen Arquitectónica */}
       <div 
-        className="relative h-64 w-full bg-neutral-900 cursor-pointer overflow-hidden"
+        className="relative aspect-[16/10] w-full bg-neutral-950 cursor-pointer overflow-hidden"
         onClick={() => onSelectProperty && onSelectProperty(property)}
       >
         <Image
@@ -62,54 +62,45 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
           fill
           unoptimized={property.images[0]?.startsWith("data:")}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-108"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
 
-        {/* Gradiente sutil inferior para legibilidad */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent transition-opacity duration-300 group-hover:from-black/85" />
+        {/* Gradiente sutil inferior */}
+        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/50 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
 
-        {/* Badges superiores */}
-        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
-          <span className="bg-luxury-black/90 backdrop-blur-md text-white text-[11px] font-medium uppercase tracking-wider px-2.5 py-1 rounded-sm border border-white/10 shadow-sm transition-transform duration-200 group-hover:scale-[1.02]">
+        {/* Badges superiores - Esquina Izquierda: Estado & Tipo */}
+        <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+          <span className="bg-neutral-950/85 backdrop-blur-md text-white text-[10px] font-medium uppercase tracking-[0.12em] px-2.5 py-1 rounded-[2px] border border-white/10 shadow-xs">
             {operationLabels[property.operation] || property.operation}
           </span>
-          <span className="bg-white/95 backdrop-blur-md text-neutral-800 text-[11px] font-medium tracking-wide px-2.5 py-1 rounded-sm shadow-sm">
-            {typeLabels[property.type] || property.type}
-          </span>
           {property.isOpportunity && (
-            <span className="bg-gold-500 text-luxury-black text-[11px] font-bold tracking-wide px-2.5 py-1 rounded-sm flex items-center gap-1 shadow-sm transition-transform duration-200 group-hover:scale-105">
-              <Sparkles className="w-3 h-3" />
-              {property.opportunityBadge || "Oportunidad"}
-            </span>
-          )}
-          {(property.hasVideoTour || property.videoUrl) && (
-            <span className="bg-red-600/95 backdrop-blur-md text-white text-[11px] font-bold tracking-wide px-2.5 py-1 rounded-sm flex items-center gap-1.5 shadow-md">
-              <Play className="w-3 h-3 fill-white" />
-              <span>Video Tour</span>
-            </span>
-          )}
-          {(property.has3DTour || property.model3D?.url) && (
-            <span className="bg-gradient-to-r from-amber-500 to-gold-400 text-luxury-black text-[11px] font-bold tracking-wide px-2.5 py-1 rounded-sm flex items-center gap-1.5 shadow-md">
-              <Box className="w-3 h-3 text-luxury-black" />
-              <span>Recorrido 3D</span>
+            <span className="bg-gold-500 text-neutral-950 text-[10px] font-semibold tracking-wide px-2 py-1 rounded-[2px] flex items-center gap-1 shadow-xs">
+              <Sparkles className="w-2.5 h-2.5" />
+              <span>{property.opportunityBadge || "Destacada"}</span>
             </span>
           )}
         </div>
 
-        {/* Botón play flotante centrado si tiene video tour */}
-        {(property.hasVideoTour || property.videoUrl) && (
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
-            <span className="w-12 h-12 rounded-full bg-red-600/90 text-white flex items-center justify-center shadow-xl backdrop-blur-sm transform scale-90 group-hover:scale-100 transition-transform duration-300">
-              <Play className="w-5 h-5 fill-white ml-0.5" />
+        {/* Badges superiores - Esquina Derecha: Medios Inmersivos (3D / Video) */}
+        <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
+          {(property.has3DTour || property.model3D?.url) && (
+            <span className="bg-neutral-950/85 backdrop-blur-md border border-gold-400/40 text-gold-300 text-[10px] font-medium px-2 py-1 rounded-[2px] flex items-center gap-1 shadow-xs">
+              <Box className="w-3 h-3 text-gold-400" />
+              <span>Tour 3D</span>
             </span>
-          </div>
-        )}
+          )}
+          {(property.hasVideoTour || property.videoUrl) && (
+            <span className="bg-neutral-950/85 backdrop-blur-md border border-white/10 text-white text-[10px] font-medium px-2 py-1 rounded-[2px] flex items-center gap-1 shadow-xs">
+              <Play className="w-2.5 h-2.5 fill-current text-neutral-200" />
+              <span>Video</span>
+            </span>
+          )}
+        </div>
 
-        {/* Ubicación en overlay inferior */}
-        <div className="absolute bottom-3 left-3 right-3 text-white z-10 flex items-center gap-1.5 text-xs drop-shadow-md transition-transform duration-200 group-hover:translate-x-0.5">
-          <MapPin className="w-3.5 h-3.5 text-gold-400 shrink-0" />
-          <span className="truncate font-medium">
-            {property.location.neighborhood}, {property.location.city}
+        {/* Tipo de propiedad discreto en la base de la imagen */}
+        <div className="absolute bottom-2.5 left-3 z-10">
+          <span className="text-[11px] font-medium text-neutral-200 drop-shadow-sm uppercase tracking-wider">
+            {typeLabels[property.type] || property.type}
           </span>
         </div>
       </div>
@@ -117,9 +108,26 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
       {/* Cuerpo de la Tarjeta */}
       <div className="p-5 flex-1 flex flex-col justify-between">
         <div>
-          {/* Precio y Estado */}
-          <div className="flex items-baseline justify-between mb-2">
-            <div className="font-serif text-2xl font-bold tracking-tight text-neutral-900 group-hover:text-gold-700 transition-colors duration-200">
+          {/* Ubicación editorial */}
+          <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 uppercase tracking-wider font-medium mb-1">
+            <MapPin className="w-3.5 h-3.5 text-gold-600 shrink-0" />
+            <span className="truncate">
+              {property.location.neighborhood}, {property.location.city}
+            </span>
+          </div>
+
+          {/* Título de la propiedad */}
+          <h3 
+            onClick={() => onSelectProperty && onSelectProperty(property)}
+            className="text-[15px] font-semibold text-neutral-900 hover:text-gold-700 transition-colors duration-200 line-clamp-1 cursor-pointer mb-2"
+            title={property.title}
+          >
+            {property.title}
+          </h3>
+
+          {/* Precio y Expensas */}
+          <div className="flex items-baseline justify-between mb-3">
+            <div className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 group-hover:text-gold-700 transition-colors duration-200">
               {formatPrice(property.price, property.currency)}
             </div>
             {property.features.expenses && property.features.expenses > 0 && (
@@ -129,55 +137,46 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
             )}
           </div>
 
-          {/* Título de la propiedad */}
-          <h3 
-            onClick={() => onSelectProperty && onSelectProperty(property)}
-            className="text-base font-semibold text-neutral-800 hover:text-gold-600 transition-colors duration-200 line-clamp-2 min-h-[2.5rem] cursor-pointer mb-2 active:opacity-75"
-            title={property.title}
-          >
-            {property.title}
-          </h3>
-
-          {/* Breve resumen / highlight */}
-          <p className="text-xs text-neutral-500 line-clamp-2 leading-relaxed mb-4">
+          {/* Breve resumen editorial */}
+          <p className="text-xs text-neutral-500 line-clamp-2 leading-relaxed mb-4 min-h-[2rem]">
             {property.highlightSummary || property.description}
           </p>
 
           {/* Ficha técnica compacta */}
-          <div className="grid grid-cols-3 gap-2 py-3 border-y border-neutral-100 text-neutral-700 text-xs">
+          <div className="grid grid-cols-3 gap-2 py-3 border-y border-stone-100 text-neutral-600 text-xs">
             {property.features.bedrooms > 0 ? (
-              <div className="flex items-center gap-1.5 transition-colors hover:text-neutral-900" title="Dormitorios">
-                <Bed className="w-4 h-4 text-neutral-400 group-hover:text-gold-600 transition-colors" />
-                <span>{property.features.bedrooms} dorm.</span>
+              <div className="flex items-center gap-1.5" title="Dormitorios">
+                <Bed className="w-3.5 h-3.5 text-neutral-400" />
+                <span className="font-medium text-neutral-700">{property.features.bedrooms} dorm.</span>
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 transition-colors hover:text-neutral-900" title="Lote exclusivo">
-                <Maximize2 className="w-4 h-4 text-neutral-400 group-hover:text-gold-600 transition-colors" />
-                <span>Loteo</span>
+              <div className="flex items-center gap-1.5" title="Lote exclusivo">
+                <Maximize2 className="w-3.5 h-3.5 text-neutral-400" />
+                <span className="font-medium text-neutral-700">Lote</span>
               </div>
             )}
 
             {property.features.bathrooms > 0 && (
-              <div className="flex items-center gap-1.5 transition-colors hover:text-neutral-900" title="Baños">
-                <Bath className="w-4 h-4 text-neutral-400 group-hover:text-gold-600 transition-colors" />
-                <span>{property.features.bathrooms} baños</span>
+              <div className="flex items-center gap-1.5" title="Baños">
+                <Bath className="w-3.5 h-3.5 text-neutral-400" />
+                <span className="font-medium text-neutral-700">{property.features.bathrooms} baños</span>
               </div>
             )}
 
-            <div className="flex items-center gap-1.5 justify-end transition-colors hover:text-neutral-900" title="Superficie total">
-              <Maximize2 className="w-4 h-4 text-neutral-400 group-hover:text-gold-600 transition-colors" />
-              <span>{property.features.totalArea} m² tot.</span>
+            <div className="flex items-center gap-1.5 justify-end" title="Superficie total">
+              <Maximize2 className="w-3.5 h-3.5 text-neutral-400" />
+              <span className="font-medium text-neutral-700">{property.features.totalArea} m²</span>
             </div>
           </div>
         </div>
 
-        {/* Botones de Acción con Microinteracciones Táctiles */}
+        {/* Botones de Acción */}
         <div className="pt-4 flex items-center gap-2">
           <button
             onClick={() => onSelectProperty && onSelectProperty(property)}
-            className="group/btn flex-1 min-h-[44px] bg-neutral-900 hover:bg-neutral-800 active:scale-[0.98] text-white text-xs font-semibold py-2.5 px-3 rounded-lg sm:rounded-sm transition-all duration-200 flex items-center justify-center gap-1.5 btn-tactile shadow-sm hover:shadow-md"
+            className="group/btn flex-1 min-h-[40px] bg-neutral-900 hover:bg-neutral-800 active:scale-[0.98] text-white text-xs font-medium py-2.5 px-3 rounded-[3px] transition-all duration-200 flex items-center justify-center gap-1.5 btn-tactile shadow-2xs hover:shadow-xs"
           >
-            <span>Ver Ficha Técnica</span>
+            <span>Ver Propiedad</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-gold-400 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
           </button>
 
@@ -185,11 +184,11 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
             href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera consultar por la propiedad "${property.title}" (Ref: ${property.id})`)}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-[44px] h-[44px] min-w-[44px] min-h-[44px] border border-[#25D366]/40 hover:border-[#25D366] active:scale-[0.95] bg-emerald-50/80 hover:bg-[#25D366] text-[#128C7E] hover:text-white rounded-lg sm:rounded-sm transition-all duration-200 flex items-center justify-center btn-tactile shadow-sm hover:shadow-md hover:shadow-emerald-500/20"
+            className="w-[40px] h-[40px] min-w-[40px] min-h-[40px] border border-stone-200 hover:border-emerald-500/50 active:scale-[0.95] bg-stone-50 hover:bg-emerald-50 text-neutral-700 hover:text-emerald-700 rounded-[3px] transition-all duration-200 flex items-center justify-center btn-tactile shadow-2xs"
             title={`Consultar por WhatsApp con ${agentProfile.name}`}
             aria-label="Consultar por WhatsApp"
           >
-            <WhatsAppIcon className="w-4 h-4" />
+            <WhatsAppIcon className="w-4 h-4 text-[#25D366]" />
           </a>
         </div>
       </div>
