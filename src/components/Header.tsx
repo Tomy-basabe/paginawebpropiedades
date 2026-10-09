@@ -69,7 +69,7 @@ export default function Header({ onOpenValuation }: HeaderProps) {
         <div className="flex items-center justify-between">
           {/* Logo arquitectónico de 99 Propiedades */}
           <Link href="/" className="flex items-center gap-3 group focus:outline-none">
-            <BrandLogo size="md" variant="dark" />
+            <BrandLogo size="md" variant="light" withLink={false} />
           </Link>
 
           {/* Desktop Nav */}
