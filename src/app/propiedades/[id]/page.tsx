@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useData } from '@/context/DataContext';
 import { Property } from '@/lib/types';
 import {
@@ -11,30 +12,66 @@ import {
   Bed,
   Bath,
   Maximize2,
-  Car,
-  Calendar,
   Check,
   Phone,
   Share2,
   Sparkles,
   Play,
   Eye,
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal,
+  Copy,
+  Calculator
 } from 'lucide-react';
 import WhatsAppIcon from '@/components/WhatsAppIcon';
 import { getWhatsAppUrl } from '@/lib/whatsapp';
+import { formatPropertyRef, formatCurrencyPrice } from '@/lib/formatters';
 
 export default function PropertyDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { properties, agentProfile } = useData();
+  const { properties, agentProfile, bankRates } = useData();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [activeMediaTab, setActiveMediaTab] = useState<'video' | 'photos'>('photos');
+  const [showOptions, setShowOptions] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const optionsRef = useRef<HTMLDivElement>(null);
 
   const propertyId = params?.id as string;
 
   const property = useMemo(() => {
     return properties.find((p) => p.id === propertyId || p.slug === propertyId);
   }, [properties, propertyId]);
+
+  const [activeMediaTab, setActiveMediaTab] = useState<'video' | 'photos'>('photos');
+
+  useEffect(() => {
+    if (property?.videoUrl) {
+      setActiveMediaTab('video');
+    } else {
+      setActiveMediaTab('photos');
+    }
+  }, [property?.videoUrl]);
+
+  // Cerrar menú de 3 puntos al clickear afuera
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (optionsRef.current && !optionsRef.current.contains(e.target as Node)) {
+        setShowOptions(false);
+      }
+    }
+    if (showOptions) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showOptions]);
+
+  // Mini calculadora
+  const [downPaymentPercent, setDownPaymentPercent] = useState(25);
+  const [loanYears, setLoanYears] = useState(30);
+  const [selectedBankId, setSelectedBankId] = useState(bankRates[0]?.id || "custom");
 
   if (!property) {
     return (
@@ -50,7 +87,7 @@ export default function PropertyDetailPage() {
         </p>
         <button
           onClick={() => router.push('/propiedades')}
-          className="bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold px-5 py-2.5 rounded-sm transition-colors btn-tactile cursor-pointer"
+          className="bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold px-5 py-2.5 rounded-[3px] transition-all btn-tactile cursor-pointer"
         >
           Volver al Catálogo
         </button>
@@ -58,34 +95,70 @@ export default function PropertyDetailPage() {
     );
   }
 
+  const refCode = formatPropertyRef(property.id);
   const hasVideo = !!property.videoUrl;
   const effectiveTab = activeMediaTab === 'video' && !hasVideo ? 'photos' : activeMediaTab;
 
-  const formatPrice = (price: number) =>
-    `${property.currency === 'ARS' ? '$' : 'USD'} ${price.toLocaleString('es-AR')}`;
+  const formatPrice = (price: number) => {
+    return formatCurrencyPrice(price, property.currency);
+  };
 
-  const whatsappMessage = `Hola ${agentProfile.name}, me interesa la propiedad "${property.title}" (Ref: ${property.id}). ¿Podrías darme más información?`;
+  const selectedBank = bankRates.find((b) => b.id === selectedBankId);
+  const annualInterestRate = selectedBank ? selectedBank.rateUva : 5.5;
+  const loanAmount = property.price * (1 - downPaymentPercent / 100);
+  const monthlyRate = annualInterestRate / 100 / 12;
+  const totalMonths = loanYears * 12;
+  const estimatedMonthlyPayment =
+    monthlyRate > 0
+      ? (loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, totalMonths))) /
+        (Math.pow(1 + monthlyRate, totalMonths) - 1)
+      : loanAmount / totalMonths;
+
+  const minRequiredIncome = estimatedMonthlyPayment / 0.25;
+
+  const whatsappMessage = `Hola ${agentProfile.name}, me interesa la propiedad "${property.title}" (Ref: ${refCode}). ¿Podrías brindarme más detalles y coordinar una visita?`;
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => {
+        setCopied(false);
+        setShowOptions(false);
+      }, 1500);
+    } catch {
+      // Ignorar fallback
+    }
+  };
 
   const handleShare = async () => {
+    setShowOptions(false);
     if (navigator.share) {
       try {
         await navigator.share({
           title: property.title,
-          text: property.highlightSummary,
+          text: `${property.title} - ${refCode}`,
           url: window.location.href,
         });
       } catch {
         // Ignorar
       }
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Enlace copiado al portapapeles');
+      handleCopyLink();
     }
   };
 
+  const handleNextPhoto = () => {
+    setActiveImageIndex((prev) => (prev + 1) % property.images.length);
+  };
+
+  const handlePrevPhoto = () => {
+    setActiveImageIndex((prev) => (prev - 1 + property.images.length) % property.images.length);
+  };
+
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in pb-24 md:pb-8">
-      {/* Barra superior de navegación */}
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in pb-28 md:pb-12">
+      {/* Barra superior de navegación y acciones */}
       <div className="flex items-center justify-between gap-4 border-b border-neutral-200 pb-4">
         <button
           onClick={() => router.back()}
@@ -94,23 +167,69 @@ export default function PropertyDetailPage() {
           <ArrowLeft className="w-4 h-4" />
           <span>Volver al Catálogo</span>
         </button>
-        <button
-          onClick={handleShare}
-          className="inline-flex items-center gap-1.5 text-xs text-neutral-600 hover:text-neutral-900 px-3 py-1.5 rounded-sm border border-neutral-200 hover:border-neutral-300 transition-colors btn-tactile cursor-pointer"
-        >
-          <Share2 className="w-3.5 h-3.5" />
-          <span>Compartir</span>
-        </button>
+
+        <div className="flex items-center gap-2">
+          {/* Botón de 3 Puntos animado */}
+          <div className="relative" ref={optionsRef}>
+            <button
+              type="button"
+              onClick={() => setShowOptions(!showOptions)}
+              className="p-2 min-h-[38px] min-w-[38px] flex items-center justify-center text-neutral-600 hover:text-neutral-900 rounded-full hover:bg-neutral-100 active:scale-90 transition-all cursor-pointer"
+              title="Más opciones"
+              aria-label="Más opciones"
+            >
+              <MoreHorizontal className={`w-4 h-4 transition-transform duration-200 ${showOptions ? "rotate-90 text-gold-600" : ""}`} />
+            </button>
+
+            {showOptions && (
+              <div className="absolute right-0 top-10 w-48 bg-white/95 backdrop-blur-md border border-neutral-200 shadow-xl rounded-[4px] py-1.5 z-40 animate-scale-in">
+                <button
+                  type="button"
+                  onClick={handleCopyLink}
+                  className="w-full text-left px-3.5 py-2 text-xs text-neutral-700 hover:bg-gold-50 hover:text-gold-700 flex items-center gap-2 transition-colors cursor-pointer"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="text-emerald-700 font-semibold">¡Copiado!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5 text-neutral-500" />
+                      <span>Copiar Enlace</span>
+                    </>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="w-full text-left px-3.5 py-2 text-xs text-neutral-700 hover:bg-gold-50 hover:text-gold-700 flex items-center gap-2 transition-colors cursor-pointer"
+                >
+                  <Share2 className="w-3.5 h-3.5 text-neutral-500" />
+                  <span>Compartir</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          <button
+            onClick={handleShare}
+            className="inline-flex items-center gap-1.5 text-xs text-neutral-700 hover:text-neutral-950 px-3.5 py-1.5 rounded-[3px] border border-neutral-200 hover:border-neutral-300 transition-all btn-tactile cursor-pointer"
+          >
+            <Share2 className="w-3.5 h-3.5" />
+            <span>Compartir</span>
+          </button>
+        </div>
       </div>
 
-      {/* Breadcrumb */}
+      {/* Breadcrumb refinado */}
       <div className="text-xs text-neutral-400 flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-1.5">
-          <span className="hover:text-neutral-600 cursor-pointer" onClick={() => router.push('/')}>Inicio</span>
+          <Link href="/" className="hover:text-neutral-700 transition-colors">Inicio</Link>
           <span>/</span>
-          <span className="hover:text-neutral-600 cursor-pointer" onClick={() => router.push('/propiedades')}>Propiedades</span>
+          <Link href="/propiedades" className="hover:text-neutral-700 transition-colors">Propiedades</Link>
           <span>/</span>
-          <span className="text-neutral-600 font-medium truncate max-w-[200px]">
+          <span className="text-neutral-700 font-medium truncate max-w-[240px]">
             {property.title}
           </span>
         </div>
@@ -123,70 +242,99 @@ export default function PropertyDetailPage() {
             <button
               type="button"
               onClick={() => setActiveMediaTab('video')}
-              className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile cursor-pointer ${
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-[3px] transition-all btn-tactile cursor-pointer ${
                 effectiveTab === 'video'
                   ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
                   : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
               }`}
             >
               <Play className="w-3.5 h-3.5 fill-current" />
-              <span>Video Tour</span>
+              <span>Video Tour Inmersivo</span>
             </button>
             <button
               type="button"
               onClick={() => setActiveMediaTab('photos')}
-              className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile cursor-pointer ${
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-[3px] transition-all btn-tactile cursor-pointer ${
                 effectiveTab === 'photos'
                   ? 'bg-neutral-900 text-white shadow-md'
                   : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
               }`}
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>Fotografías (${property.images.length})</span>
+              <span>Fotografías ({property.images.length})</span>
             </button>
           </div>
         )}
 
         {effectiveTab === 'video' && property.videoUrl ? (
-          <div className="relative w-full rounded-sm overflow-hidden bg-black border border-neutral-800 shadow-2xl" style={{ aspectRatio: '16/9' }}>
+          /* Reproductor Cinemático de Video */
+          <div className="relative h-80 sm:h-[420px] md:h-[520px] w-full rounded-[4px] overflow-hidden bg-neutral-950 flex items-center justify-center border border-neutral-800 shadow-2xl">
             <video
               src={property.videoUrl}
               controls
+              autoPlay
               playsInline
+              preload="metadata"
+              poster={property.images && property.images.length > 0 ? property.images[0] : undefined}
               className="w-full h-full object-contain"
             >
               Tu navegador no soporta reproducción de video.
             </video>
-            <div className="absolute top-3 left-3 bg-red-600/90 text-white text-[11px] font-bold px-2.5 py-1 rounded-sm shadow flex items-center gap-1.5 backdrop-blur-sm pointer-events-none">
-              <Play className="w-3 h-3 fill-white" />
-              <span>Video Tour 99 Propiedades</span>
+            <div className="absolute top-4 left-4 bg-red-600/95 text-white text-[11px] font-bold px-3 py-1.5 rounded-[3px] shadow-lg flex items-center gap-2 backdrop-blur-md pointer-events-none">
+              <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+              <span>VIDEO TOUR 4K • 99 PROPIEDADES</span>
             </div>
           </div>
         ) : (
-          <div className="space-y-3" id="galeria">
-            <div className="relative w-full rounded-sm overflow-hidden bg-neutral-900 shadow-2xl" style={{ aspectRatio: '16/9' }}>
+          /* Galería de Fotografías con Navegación Fluida */
+          <div className="space-y-3">
+            <div className="relative h-80 sm:h-[420px] md:h-[500px] w-full rounded-[4px] overflow-hidden bg-neutral-950 group">
               <Image
                 src={property.images[activeImageIndex] || property.images[0]}
                 alt={property.title}
                 fill
                 priority
                 unoptimized={(property.images[activeImageIndex] || property.images[0])?.startsWith('data:')}
-                className="object-cover transition-opacity duration-300"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-102"
               />
-              <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-sm">
-                Foto ${activeImageIndex + 1} de ${property.images.length}
+
+              {property.images.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handlePrevPhoto}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 active:scale-90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all cursor-pointer z-10"
+                    aria-label="Foto anterior"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleNextPhoto}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 active:scale-90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all cursor-pointer z-10"
+                    aria-label="Foto siguiente"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
+              )}
+
+              <div className="absolute bottom-3 right-3 bg-neutral-950/80 backdrop-blur-md text-white text-xs px-3.5 py-1.5 rounded-[3px] border border-white/10 font-mono">
+                {String(activeImageIndex + 1).padStart(2, '0')} / {String(property.images.length).padStart(2, '0')}
               </div>
             </div>
+
             {property.images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-2">
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
                 {property.images.map((img, idx) => (
                   <button
                     key={idx}
                     onClick={() => setActiveImageIndex(idx)}
-                    className={`relative w-20 h-16 shrink-0 rounded-sm overflow-hidden border-2 transition-all cursor-pointer ${
+                    className={`relative w-24 h-18 shrink-0 rounded-[3px] overflow-hidden border-2 transition-all duration-200 cursor-pointer ${
                       activeImageIndex === idx
-                        ? 'border-gold-500 scale-95'
-                        : 'border-transparent opacity-70 hover:opacity-100'
+                        ? 'border-gold-500 scale-98 shadow-md'
+                        : 'border-transparent opacity-65 hover:opacity-100 hover:border-neutral-300'
                     }`}
                   >
                     <Image
@@ -204,49 +352,55 @@ export default function PropertyDetailPage() {
         )}
       </div>
 
-      {/* Info de la propiedad */}
+      {/* Info Principal de la propiedad */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-neutral-200">
         <div>
-          <div className="flex items-center gap-2 flex-wrap mb-2">
-            <span className="text-xs font-mono font-medium text-neutral-400">REF #${property.id}</span>
+          <div className="flex items-center gap-2.5 flex-wrap mb-2.5">
+            {/* Código de catálogo limpio */}
+            <span className="text-xs font-mono font-bold tracking-wider text-neutral-800 bg-stone-100 border border-stone-200 px-2.5 py-1 rounded-[3px]">
+              {refCode}
+            </span>
             <span className="text-neutral-300">•</span>
-            <span className="text-xs font-medium uppercase tracking-wider text-gold-600 bg-gold-50 px-2 py-0.5 rounded-sm">
-              ${property.operation}
+            <span className="text-xs font-semibold uppercase tracking-wider text-gold-700 bg-gold-50 border border-gold-200 px-2.5 py-1 rounded-[3px]">
+              {property.operation}
             </span>
             {property.isOpportunity && (
-              <span className="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-sm flex items-center gap-1">
-                <Sparkles className="w-3 h-3" />
-                ${property.opportunityBadge || 'Oportunidad'}
+              <span className="text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-[3px] flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-amber-600" />
+                {property.opportunityBadge || 'Oportunidad'}
               </span>
             )}
           </div>
-          <div className="flex items-center gap-1.5 text-neutral-400 text-sm mb-2">
-            <MapPin className="w-4 h-4 text-gold-500" />
+
+          <div className="flex items-center gap-1.5 text-neutral-500 text-sm mb-2 font-medium">
+            <MapPin className="w-4 h-4 text-gold-600 shrink-0" />
             <span>
-              ${property.location.address}, ${property.location.neighborhood}, ${property.location.city}
+              {property.location.address}, {property.location.neighborhood}, {property.location.city}
             </span>
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900">
-            ${property.title}
+
+          <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight">
+            {property.title}
           </h1>
         </div>
-        <div className="text-left md:text-right">
-          <span className="block text-xs uppercase tracking-wider text-neutral-400">
+
+        <div className="text-left md:text-right shrink-0">
+          <span className="block text-xs uppercase tracking-wider text-neutral-400 font-medium">
             Valor de Publicación
           </span>
-          <span className="font-serif text-3xl font-bold text-gold-600">
-            ${formatPrice(property.price)}
+          <span className="font-serif text-3xl md:text-4xl font-bold text-neutral-900">
+            {formatPrice(property.price)}
           </span>
           {property.features.expenses && property.features.expenses > 0 && (
             <span className="block text-xs text-neutral-400 mt-1">
-              Expensas: ~$${property.features.expenses} USD / mes
+              Expensas: ~${property.features.expenses} USD / mes
             </span>
           )}
         </div>
       </div>
 
-      {/* Métricas */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 py-4">
+      {/* Métricas Técnicas */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 py-2">
         {[
           { label: 'Sup. Total', value: `${property.features.totalArea} m²` },
           { label: 'Sup. Cubierta', value: `${property.features.coveredArea} m²` },
@@ -255,12 +409,12 @@ export default function PropertyDetailPage() {
           { label: 'Cocheras', value: String(property.features.parkingSpaces) },
           { label: 'Año / Estado', value: String(property.features.yearBuilt || 'A estrenar') },
         ].map((metric) => (
-          <div key={metric.label} className="p-3.5 bg-stone-50 border border-neutral-200/80 rounded-sm text-center">
-            <span className="block text-[11px] text-neutral-400 uppercase tracking-wider mb-1">
-              ${metric.label}
+          <div key={metric.label} className="p-3.5 bg-stone-50 border border-neutral-200 rounded-[3px] text-center hover:border-gold-300 transition-colors">
+            <span className="block text-[11px] text-neutral-400 uppercase tracking-wider mb-1 font-medium">
+              {metric.label}
             </span>
             <span className="text-base font-semibold text-neutral-800">
-              ${metric.value}
+              {metric.value}
             </span>
           </div>
         ))}
@@ -271,8 +425,8 @@ export default function PropertyDetailPage() {
         <h2 className="font-serif text-xl font-bold text-neutral-900">
           Memoria Descriptiva
         </h2>
-        <p className="text-sm leading-relaxed text-neutral-700 whitespace-pre-line">
-          ${property.description}
+        <p className="text-sm leading-relaxed text-neutral-700 whitespace-pre-line font-light">
+          {property.description}
         </p>
       </div>
 
@@ -286,18 +440,105 @@ export default function PropertyDetailPage() {
             {property.amenities.map((amenity, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-2 p-2.5 bg-white border border-neutral-200/80 rounded-sm text-xs text-neutral-800"
+                className="flex items-center gap-2 p-3 bg-stone-50/80 border border-neutral-200/90 rounded-[3px] text-xs text-neutral-800"
               >
                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>${amenity}</span>
+                <span className="font-medium">{amenity}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Contacto */}
-      <div className="bg-luxury-black text-white p-6 rounded-sm flex flex-col md:flex-row items-center justify-between gap-6 border border-white/10" id="contacto">
+      {/* Simulador Hipotecario UVA Integrado */}
+      <div className="bg-stone-50 border border-neutral-200 p-6 rounded-[4px] space-y-4">
+        <div className="flex items-center gap-2.5">
+          <Calculator className="w-5 h-5 text-gold-600" />
+          <div>
+            <h3 className="font-serif text-lg font-bold text-neutral-900">
+              Simulación de Cuota Hipotecaria Estimada
+            </h3>
+            <p className="text-xs text-neutral-500 font-light">
+              Calculá tu cuota mensual estimada bajo líneas de crédito UVA y bancarias.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+          <div>
+            <label className="block text-xs font-semibold text-neutral-700 mb-1">
+              Anticipo ({downPaymentPercent}% = USD {(property.price * (downPaymentPercent / 100)).toLocaleString("es-AR")})
+            </label>
+            <input
+              type="range"
+              min="15"
+              max="60"
+              step="5"
+              value={downPaymentPercent}
+              onChange={(e) => setDownPaymentPercent(Number(e.target.value))}
+              className="w-full accent-gold-600 cursor-pointer"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-neutral-700 mb-1">
+              Plazo ({loanYears} años)
+            </label>
+            <select
+              value={loanYears}
+              onChange={(e) => setLoanYears(Number(e.target.value))}
+              className="w-full text-xs p-2.5 bg-white border border-neutral-300 rounded-[3px] focus:outline-none focus:border-gold-500 cursor-pointer"
+            >
+              <option value={10}>10 Años (120 cuotas)</option>
+              <option value={15}>15 Años (180 cuotas)</option>
+              <option value={20}>20 Años (240 cuotas)</option>
+              <option value={25}>25 Años (300 cuotas)</option>
+              <option value={30}>30 Años (360 cuotas)</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-neutral-700 mb-1">
+              Banco / Tasa de Referencia
+            </label>
+            <select
+              value={selectedBankId}
+              onChange={(e) => setSelectedBankId(e.target.value)}
+              className="w-full text-xs p-2.5 bg-white border border-neutral-300 rounded-[3px] focus:outline-none focus:border-gold-500 cursor-pointer"
+            >
+              {bankRates.map((bank) => (
+                <option key={bank.id} value={bank.id}>
+                  {bank.bankName} (Tasa: {bank.rateUva}% + UVA)
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 bg-white border border-neutral-200 rounded-[3px] mt-4 shadow-2xs">
+          <div>
+            <span className="block text-[11px] text-neutral-400 uppercase font-medium">Cuota Mensual</span>
+            <span className="font-serif text-xl font-bold text-neutral-900">
+              USD {Math.round(estimatedMonthlyPayment).toLocaleString("es-AR")}
+            </span>
+          </div>
+          <div>
+            <span className="block text-[11px] text-neutral-400 uppercase font-medium">Monto Financiado</span>
+            <span className="text-base font-semibold text-neutral-800">
+              USD {Math.round(loanAmount).toLocaleString("es-AR")}
+            </span>
+          </div>
+          <div>
+            <span className="block text-[11px] text-neutral-400 uppercase font-medium">Ingreso Mínimo Req.</span>
+            <span className="text-base font-semibold text-emerald-700">
+              ~USD {Math.round(minRequiredIncome).toLocaleString("es-AR")}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Contacto Directo */}
+      <div className="bg-neutral-950 text-white p-6 rounded-[4px] flex flex-col md:flex-row items-center justify-between gap-6 border border-white/10 shadow-xl" id="contacto">
         <div className="flex items-center gap-4">
           <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-gold-400 shrink-0">
             <Image
@@ -308,14 +549,14 @@ export default function PropertyDetailPage() {
             />
           </div>
           <div>
-            <span className="text-xs uppercase tracking-wider text-gold-400 font-medium">
+            <span className="text-xs uppercase tracking-wider text-gold-400 font-semibold">
               Atención Personalizada
             </span>
             <h3 className="font-serif text-lg font-bold text-white">
-              ${agentProfile.name}
+              {agentProfile.name}
             </h3>
             <p className="text-xs text-neutral-400">
-              ${agentProfile.roleTitle} • ${agentProfile.licenseNumber}
+              {agentProfile.roleTitle} • {agentProfile.licenseNumber}
             </p>
           </div>
         </div>
@@ -324,14 +565,14 @@ export default function PropertyDetailPage() {
             href={getWhatsAppUrl(agentProfile.whatsappNumber, whatsappMessage)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 md:flex-initial bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold px-5 py-3 rounded-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 btn-tactile cursor-pointer"
+            className="flex-1 md:flex-initial bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white text-xs font-semibold px-5 py-3 rounded-[3px] transition-all shadow-md hover:shadow-emerald-500/20 flex items-center justify-center gap-2 btn-tactile cursor-pointer"
           >
             <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
-            <span>Coordinar Visita</span>
+            <span>Coordinar Visita por WhatsApp</span>
           </a>
           <a
             href={`tel:${agentProfile.phone}`}
-            className="flex-1 md:flex-initial bg-white/10 hover:bg-white/20 text-white text-xs font-medium px-4 py-3 rounded-sm transition-colors flex items-center justify-center gap-2 border border-white/20 btn-tactile cursor-pointer"
+            className="flex-1 md:flex-initial bg-white/10 hover:bg-white/20 active:scale-95 text-white text-xs font-medium px-4 py-3 rounded-[3px] transition-all flex items-center justify-center gap-2 border border-white/20 btn-tactile cursor-pointer"
           >
             <Phone className="w-4 h-4" />
             <span>Llamar</span>
@@ -342,14 +583,14 @@ export default function PropertyDetailPage() {
       {/* Barra inferior mobile */}
       <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 p-3 px-4 safe-area-bottom-bar flex items-center justify-between gap-3 md:hidden z-30 shadow-[0_-10px_20px_rgba(0,0,0,0.1)]">
         <div>
-          <span className="block text-[10px] text-neutral-400 uppercase font-medium">Valor</span>
-          <span className="font-serif text-lg font-bold text-gold-600">${formatPrice(property.price)}</span>
+          <span className="block text-[10px] text-neutral-400 uppercase font-medium">Valor Inmueble</span>
+          <span className="font-serif text-lg font-bold text-neutral-900">{formatPrice(property.price)}</span>
         </div>
         <a
           href={getWhatsAppUrl(agentProfile.whatsappNumber, whatsappMessage)}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white text-xs font-semibold py-3 px-4 rounded-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition-all min-h-[44px] touch-target"
+          className="flex-1 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white text-xs font-semibold py-3 px-4 rounded-[3px] flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 transition-all min-h-[44px] touch-target"
         >
           <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
           <span>Consultar</span>

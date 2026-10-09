@@ -3,15 +3,15 @@ import { Property, BankRate, FeaturedBanner, AgentProfile } from './types';
 export const INITIAL_AGENT_PROFILE: AgentProfile = {
   name: "Juan Pablo Pino",
   roleTitle: "Martillero, Corredor Público e Inmobiliario",
-  licenseNumber: "Mat. Profesional N° 7824 - 99 Propiedades",
-  bio: "Con 10 años de trayectoria y posicionamiento como líder local en ventas, Juan Pablo Pino (34 años) lidera 99 Propiedades brindando una atención personalizada, comprometida y un acompañamiento integral. Especialista en la comercialización de viviendas, loteos y desarrollos, administración integral de alquileres y asesoramiento experto en gestión de créditos hipotecarios bancarios.",
-  shortBio: "99 Propiedades: 10 años de trayectoria y liderazgo local en ventas con Juan Pablo Pino. Martillero, Corredor Público e Inmobiliario.",
+  licenseNumber: "Mat. Profesional N° 7824 - 99 Propiedades Santa Cruz",
+  bio: "Con 10 años de trayectoria y posicionamiento como referente líder en ventas en la provincia de Santa Cruz, Juan Pablo Pino (34 años) lidera 99 Propiedades brindando asesoramiento integral, tasaciones profesionales y comercialización de inmuebles en Río Gallegos, El Calafate y toda la Patagonia. Especialista en venta de casas, terrenos, loteos y administración de alquileres.",
+  shortBio: "99 Propiedades: 10 años de liderazgo en ventas inmobiliarias en Santa Cruz con Juan Pablo Pino. Martillero y Corredor Inmobiliario en Río Gallegos y Patagonia.",
   photoUrl: "/images/juan-pablo-pino.jpg",
   phone: "+54 9 11 4890-7722",
   whatsappNumber: "5491148907722",
   whatsappDisplay: "+54 9 11 4890-7722",
   email: "juanpablo@99propiedades.com",
-  officeAddress: "99 Propiedades - Casa Central",
+  officeAddress: "Río Gallegos, Provincia de Santa Cruz, Patagonia Argentina",
   social: {
     instagram: "https://instagram.com/juanpablopino.99propiedades",
     linkedin: "https://linkedin.com/in/juanpablopino-inmobiliaria",
@@ -25,20 +25,20 @@ export const INITIAL_AGENT_PROFILE: AgentProfile = {
   },
   pillars: [
     {
-      title: "Tasación Siempre Sin Cargo",
-      description: "Valuación profesional, técnica y comparativa de mercado de tu propiedad, 100% gratuita y sin compromiso de venta."
+      title: "Tasación Siempre Sin Cargo en Santa Cruz",
+      description: "Valuación profesional, técnica y comparativa de mercado de tu propiedad en Santa Cruz, 100% gratuita y sin compromiso."
     },
     {
-      title: "Gestión de Créditos Hipotecarios",
-      description: "Servicio clave: Asesoramiento y acompañamiento completo durante todo el proceso crediticio, comparativa de tasas UVA y condiciones."
+      title: "Gestión de Créditos Hipotecarios UVA",
+      description: "Asesoramiento integral en bancos de Santa Cruz para la compra de tu casa o terreno con condiciones preferenciales."
     },
     {
-      title: "Alquileres & Administraciones",
-      description: "Gestión y administración integral de propiedades en alquiler con exhaustiva calificación de garantías y cobranza segura."
+      title: "Alquileres & Administración en Santa Cruz",
+      description: "Gestión y administración integral de propiedades en alquiler en Río Gallegos y alrededores con garantía y cobranza puntual."
     },
     {
-      title: "Video Tours Prioritarios",
-      description: "Priorizamos el video sobre la foto: recorridos inmersivos para experimentar las dimensiones y detalles reales de cada propiedad."
+      title: "Video Tours Inmersivos de Alta Calidad",
+      description: "Priorizamos el video sobre la foto: recorridos inmersivos para apreciar cada detalle antes de visitar la propiedad."
     }
   ]
 };
@@ -46,10 +46,10 @@ export const INITIAL_AGENT_PROFILE: AgentProfile = {
 export const INITIAL_FEATURED_BANNERS: FeaturedBanner[] = [
   {
     id: "banner-1",
-    title: "Residencias Terrazas del Golf",
-    subtitle: "Desarrollo Exclusivo en Preventa - Nordelta",
+    title: "Residencias Mirador del Glaciar",
+    subtitle: "Desarrollo Exclusivo en Preventa - El Calafate, Santa Cruz",
     badge: "Oportunidad de Inversión",
-    description: "Unidades de 2, 3 y 4 ambientes con vistas panorámicas a la laguna. Anticipo 30% en USD y saldo en 36 cuotas en moneda dura o CAC.",
+    description: "Unidades residenciales y turísticas con vistas panorámicas al Lago Argentino. Anticipo en USD y financiación a medida en Santa Cruz.",
     imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80",
     ctaText: "Ver Masterplan y Precios",
     ctaLink: "/propiedades?type=desarrollo",
@@ -58,10 +58,10 @@ export const INITIAL_FEATURED_BANNERS: FeaturedBanner[] = [
   },
   {
     id: "banner-2",
-    title: "Chacras del Pinar",
-    subtitle: "Loteos Campestres de 1.800 a 3.500 m²",
+    title: "Loteos y Chacras Patagónicas",
+    subtitle: "Terrenos de 1.000 a 5.000 m² - Río Gallegos, Santa Cruz",
     badge: "Lanzamiento Exclusivo",
-    description: "Entorno natural protegido a solo 45 minutos de Capital. Acceso asfaltado, red de fibra óptica subterránea y club house ecológico.",
+    description: "Lotes residenciales con servicios proyectados, entorno natural y excelente proyección de revalorización en Santa Cruz.",
     imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80",
     ctaText: "Consultar Lotes Disponibles",
     ctaLink: "/propiedades?type=loteo",

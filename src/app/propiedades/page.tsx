@@ -6,6 +6,7 @@ import { useData } from "@/context/DataContext";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyDetailModal from "@/components/PropertyDetailModal";
 import { Property, PropertyType, OperationType } from "@/lib/types";
+import { formatPropertyRef } from "@/lib/formatters";
 import { 
   Search, 
   SlidersHorizontal, 
@@ -82,7 +83,8 @@ function PropiedadesContent() {
           item.location.city.toLowerCase().includes(query) ||
           item.location.address.toLowerCase().includes(query) ||
           item.description.toLowerCase().includes(query) ||
-          item.id.toLowerCase().includes(query);
+          item.id.toLowerCase().includes(query) ||
+          formatPropertyRef(item.id).toLowerCase().includes(query);
 
         if (!matchesText) return false;
       }
