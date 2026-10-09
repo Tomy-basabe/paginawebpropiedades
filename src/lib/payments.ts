@@ -79,7 +79,39 @@ export function checkAppPaymentLock(
     paymentMap.set(p.id, p);
   }
 
-  // 1. Revisar si hay meses anteriores del año en curso sin pagar
+  const currentMonthName = MONTH_NAMES_ES[currentMonth - 1];
+  const dueDateStr = `10 de ${currentMonthName} de ${currentYear}`;
+
+  // 1. Revisar el mes corriente
+  const currentId = `${currentYear}-${String(currentMonth).padStart(2, "0")}`;
+  const currentEntry = paymentMap.get(currentId);
+  const isCurrentPaid = currentEntry ? Boolean(currentEntry.isPaid) : false;
+
+  // Si el mes en curso está pagado, el servicio está AL DÍA y desbloqueado
+  if (isCurrentPaid) {
+    return {
+      isBlocked: false,
+      pendingMonthName: currentMonthName,
+      pendingYear: currentYear,
+      dueDateStr,
+      isApproachingDue: false,
+      daysUntilDue: 0,
+    };
+  }
+
+  // 2. Si el mes en curso no está pagado y ya es día 10 o posterior: BLOQUEADO por el mes corriente
+  if (currentDay >= 10) {
+    return {
+      isBlocked: true,
+      pendingMonthName: currentMonthName,
+      pendingYear: currentYear,
+      dueDateStr,
+      isApproachingDue: false,
+      daysUntilDue: 0,
+    };
+  }
+
+  // 3. Si hoy es antes del 10 del mes corriente, revisar si hay meses anteriores del año en curso sin pagar
   for (let m = 1; m < currentMonth; m++) {
     const id = `${currentYear}-${String(m).padStart(2, "0")}`;
     const entry = paymentMap.get(id);
@@ -95,46 +127,14 @@ export function checkAppPaymentLock(
     }
   }
 
-  // 2. Revisar el mes corriente
-  const currentId = `${currentYear}-${String(currentMonth).padStart(2, "0")}`;
-  const currentEntry = paymentMap.get(currentId);
-  const isCurrentPaid = currentEntry ? Boolean(currentEntry.isPaid) : false;
-
-  const currentMonthName = MONTH_NAMES_ES[currentMonth - 1];
-  const dueDateStr = `10 de ${currentMonthName} de ${currentYear}`;
-
-  if (!isCurrentPaid) {
-    if (currentDay >= 10) {
-      // Vencido y sin pagar -> BLOQUEADO
-      return {
-        isBlocked: true,
-        pendingMonthName: currentMonthName,
-        pendingYear: currentYear,
-        dueDateStr,
-        isApproachingDue: false,
-        daysUntilDue: 0,
-      };
-    } else {
-      // Falta pagar pero aún está en plazo (antes del 10)
-      return {
-        isBlocked: false,
-        pendingMonthName: currentMonthName,
-        pendingYear: currentYear,
-        dueDateStr,
-        isApproachingDue: true,
-        daysUntilDue: 10 - currentDay,
-      };
-    }
-  }
-
-  // Al día
+  // 4. Si no hay meses anteriores impagos y aún no llegó el día 10: falta pagar el mes actual pero aún está en plazo
   return {
     isBlocked: false,
     pendingMonthName: currentMonthName,
     pendingYear: currentYear,
     dueDateStr,
-    isApproachingDue: false,
-    daysUntilDue: 0,
+    isApproachingDue: true,
+    daysUntilDue: Math.max(0, 10 - currentDay),
   };
 }
 

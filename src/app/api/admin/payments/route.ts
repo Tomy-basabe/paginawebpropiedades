@@ -97,7 +97,7 @@ export async function GET(req: NextRequest) {
           id: row.id,
           year: row.year,
           month: row.month,
-          month_name: row.month_name || "",
+          monthName: row.month_name || "",
           isPaid: Boolean(row.is_paid),
           paidAt: row.paid_at,
           paidBy: row.paid_by,

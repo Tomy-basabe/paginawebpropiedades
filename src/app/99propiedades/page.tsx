@@ -328,7 +328,7 @@ export default function AdminSecretPage() {
       monthName,
       isPaid: newIsPaid,
       paidAt: newIsPaid ? new Date().toISOString() : undefined,
-      paidBy: newIsPaid ? (currentUser?.name || "admin") : undefined,
+      paidBy: newIsPaid ? (currentUser?.name || "Administrador") : undefined,
     };
 
     const newPayments = appPayments.filter((p) => p.id !== id);
@@ -337,19 +337,81 @@ export default function AdminSecretPage() {
     saveLocalStoredPayments(newPayments);
 
     if (newIsPaid) {
-      showFeedback(`Pago del mes de ${monthName} ${year} registrado con éxito. Sistema desbloqueado para modificaciones.`, "success");
+      showFeedback(`Pago del mes de ${monthName} ${year} registrado y sincronizado en la nube.`, "success");
     } else {
       showFeedback(`El mes de ${monthName} ${year} ha sido marcado como pendiente.`, "info");
     }
 
     try {
-      await fetch("/api/admin/payments", {
+      const res = await fetch("/api/admin/payments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "toggle", payment: updatedPayment }),
       });
+      const data = await res.json();
+      if (data?.payments && Array.isArray(data.payments)) {
+        setAppPayments(data.payments);
+        saveLocalStoredPayments(data.payments);
+      }
     } catch (err) {
       console.warn("Aviso al guardar pago en API:", err);
+    }
+  };
+
+  // Función para certificar y poner el sistema al día (resuelve todos los meses pendientes hasta el mes en curso)
+  const handleCertifyAllPending = async () => {
+    if (currentUser?.role !== "admin" || currentUser?.username !== "admin") {
+      showFeedback("Acceso denegado: Solo el usuario administrador puede certificar pagos.", "error");
+      return;
+    }
+
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+    const targetYear = paymentLockStatus.pendingYear || currentYear;
+    const maxMonth = targetYear === currentYear ? currentMonth : 12;
+
+    const updatedPayments = [...appPayments];
+    const nowIso = new Date().toISOString();
+    const adminName = currentUser?.name || "Administrador";
+
+    for (let m = 1; m <= maxMonth; m++) {
+      const id = `${targetYear}-${String(m).padStart(2, "0")}`;
+      const existingIdx = updatedPayments.findIndex((p) => p.id === id);
+      const paymentItem: AppMonthlyPayment = {
+        id,
+        year: targetYear,
+        month: m,
+        monthName: MONTH_NAMES_ES[m - 1],
+        isPaid: true,
+        paidAt: nowIso,
+        paidBy: adminName,
+      };
+
+      if (existingIdx >= 0) {
+        updatedPayments[existingIdx] = paymentItem;
+      } else {
+        updatedPayments.push(paymentItem);
+      }
+    }
+
+    setAppPayments(updatedPayments);
+    saveLocalStoredPayments(updatedPayments);
+    showFeedback("✅ Pagos acreditados con éxito. Sistema y facultades 100% desbloqueadas y al día.", "success");
+
+    try {
+      const res = await fetch("/api/admin/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "sync", payments: updatedPayments }),
+      });
+      const data = await res.json();
+      if (data?.payments && Array.isArray(data.payments)) {
+        setAppPayments(data.payments);
+        saveLocalStoredPayments(data.payments);
+      }
+    } catch (err) {
+      console.warn("Aviso al sincronizar pagos en API:", err);
     }
   };
 
@@ -1637,10 +1699,7 @@ export default function AdminSecretPage() {
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
                 <button
                   type="button"
-                  onClick={() => {
-                    const pendingMonthNum = MONTH_NAMES_ES.indexOf(paymentLockStatus.pendingMonthName) + 1;
-                    handleTogglePayment(paymentLockStatus.pendingYear, pendingMonthNum, true);
-                  }}
+                  onClick={handleCertifyAllPending}
                   className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider rounded-md shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                 >
                   <Check className="w-4 h-4 stroke-[3]" />
@@ -4427,19 +4486,72 @@ export default function AdminSecretPage() {
                 </button>
               </div>
 
-              <div className="text-xs text-neutral-600">
-                {(() => {
-                  const yearList = buildYearPayments(selectedPaymentYear, appPayments);
-                  const paidCount = yearList.filter((m) => m.isPaid).length;
-                  return (
-                    <span>
-                      Pagos registrados en {selectedPaymentYear}:{" "}
-                      <strong className="text-neutral-900 font-bold">
-                        {paidCount} de 12 meses ({Math.round((paidCount / 12) * 100)}%)
-                      </strong>
-                    </span>
-                  );
-                })()}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                {currentUser?.role === "admin" && currentUser?.username === "admin" && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      const updatedPayments = [...appPayments];
+                      const nowIso = new Date().toISOString();
+                      const adminName = currentUser?.name || "Administrador";
+
+                      for (let m = 1; m <= 12; m++) {
+                        const id = `${selectedPaymentYear}-${String(m).padStart(2, "0")}`;
+                        const existingIdx = updatedPayments.findIndex((p) => p.id === id);
+                        const item: AppMonthlyPayment = {
+                          id,
+                          year: selectedPaymentYear,
+                          month: m,
+                          monthName: MONTH_NAMES_ES[m - 1],
+                          isPaid: true,
+                          paidAt: nowIso,
+                          paidBy: adminName,
+                        };
+                        if (existingIdx >= 0) {
+                          updatedPayments[existingIdx] = item;
+                        } else {
+                          updatedPayments.push(item);
+                        }
+                      }
+                      setAppPayments(updatedPayments);
+                      saveLocalStoredPayments(updatedPayments);
+                      showFeedback(`Todos los meses de ${selectedPaymentYear} certificados como pagados y guardados en la nube.`, "success");
+                      try {
+                        const res = await fetch("/api/admin/payments", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ action: "sync", payments: updatedPayments }),
+                        });
+                        const data = await res.json();
+                        if (data?.payments && Array.isArray(data.payments)) {
+                          setAppPayments(data.payments);
+                          saveLocalStoredPayments(data.payments);
+                        }
+                      } catch (err) {
+                        console.warn("Aviso al sincronizar año completo:", err);
+                      }
+                    }}
+                    className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer shadow-sm active:scale-95"
+                  >
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    <span>Certificar Todo {selectedPaymentYear}</span>
+                  </button>
+                )}
+
+                <div className="text-xs text-neutral-600">
+                  {(() => {
+                    const yearList = buildYearPayments(selectedPaymentYear, appPayments);
+                    const paidCount = yearList.filter((m) => m.isPaid).length;
+                    return (
+                      <span>
+                        Pagos registrados en {selectedPaymentYear}:{" "}
+                        <strong className="text-neutral-900 font-bold">
+                          {paidCount} de 12 meses ({Math.round((paidCount / 12) * 100)}%)
+                        </strong>
+                      </span>
+                    );
+                  })()}
+                </div>
               </div>
             </div>
 
