@@ -45,39 +45,15 @@ export const INITIAL_AGENT_PROFILE: AgentProfile = {
 
 export const INITIAL_FEATURED_BANNERS: FeaturedBanner[] = [
   {
-    id: "banner-1",
-    title: "Residencias Mirador del Glaciar",
-    subtitle: "Desarrollo Exclusivo en Preventa - El Calafate, Santa Cruz",
-    badge: "Oportunidad de Inversión",
-    description: "Unidades residenciales y turísticas con vistas panorámicas al Lago Argentino. Anticipo en USD y financiación a medida en Santa Cruz.",
+    id: "banner-1791075798900",
+    title: "Banner de Prueba",
+    subtitle: "Preventa Exclusiva",
+    badge: "Lanzamiento",
+    description: "Detalle comercial de la oportunidad o desarrollo en preventa.",
     imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80",
-    ctaText: "Ver Masterplan y Precios",
-    ctaLink: "/propiedades?type=desarrollo",
+    ctaText: "Ver Detalles",
+    ctaLink: "/propiedades",
     active: true,
-    propertyIdRef: "prop-4"
-  },
-  {
-    id: "banner-2",
-    title: "Loteos y Chacras Patagónicas",
-    subtitle: "Terrenos de 1.000 a 5.000 m² - Río Gallegos, Santa Cruz",
-    badge: "Lanzamiento Exclusivo",
-    description: "Lotes residenciales con servicios proyectados, entorno natural y excelente proyección de revalorización en Santa Cruz.",
-    imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=80",
-    ctaText: "Consultar Lotes Disponibles",
-    ctaLink: "/propiedades?type=loteo",
-    active: true,
-    propertyIdRef: "prop-5"
-  },
-  {
-    id: "banner-3",
-    title: "Experiencia Video Tour Inmersivo",
-    subtitle: "Recorridos Cinematográficos de Alta Definición",
-    badge: "Innovación 99 Propiedades",
-    description: "Priorizamos el video sobre la foto: recorré las propiedades en detalle antes de coordinar tu visita presencial.",
-    imageUrl: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1920&q=80",
-    ctaText: "Ver Propiedades con Video Tour",
-    ctaLink: "/propiedades?hasVideo=true",
-    active: true
   }
 ];
 

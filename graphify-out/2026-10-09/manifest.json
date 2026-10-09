@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "src/app/99propiedades/page.tsx": {
-    "mtime": 1791579036.8981097,
-    "seen": 1791579085.5250123,
-    "ast_hash": "b8dd0b93f2e414c611ab85bc1a1566ba",
+    "mtime": 1791579577.6974492,
+    "seen": 1791579614.8670654,
+    "ast_hash": "450363d194ed3da85c7fafee32aec4fc",
     "semantic_hash": ""
   },
   "src/app/api/admin/login/route.ts": {
@@ -351,6 +351,12 @@
     "mtime": 1791578164.9817605,
     "seen": 1791578496.9907506,
     "ast_hash": "cd72ade93619bf41c4dacecf91e0c7cc",
+    "semantic_hash": ""
+  },
+  "src/lib/smartFrames.ts": {
+    "mtime": 1791579515.1081214,
+    "seen": 1791579614.871725,
+    "ast_hash": "68682b1c6af1e8f81f55bcf1e2656011",
     "semantic_hash": ""
   }
 }

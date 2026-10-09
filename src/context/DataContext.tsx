@@ -76,26 +76,23 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed.properties) {
-          // Fusionar con datos iniciales para asegurar que nuevas propiedades estén presentes
-          const existingIds = new Set(parsed.properties.map((p: Property) => p.id));
-          const merged = parsed.properties.map((p: Property) => {
-            const init = INITIAL_PROPERTIES.find((ip) => ip.id === p.id);
-            let updated = { ...p };
-            if (init) {
-              // Si no tiene operation o coincide con un cambio de base, sincronizar
-              if (!updated.operation || (init.operation !== "venta" && updated.operation === "venta")) {
-                updated.operation = init.operation;
-              }
-            }
-            return updated;
-          });
-
-          // Agregar propiedades de INITIAL_PROPERTIES que no existan en el almacenamiento local
-          const missingInitProps = INITIAL_PROPERTIES.filter((ip) => !existingIds.has(ip.id));
-          setProperties([...merged, ...missingInitProps]);
+          // Filtrar cualquier propiedad que no tenga video
+          const videoOnlyProps = parsed.properties.filter(
+            (p: Property) => !!p.videoUrl && p.videoUrl.trim().length > 0
+          );
+          setProperties(videoOnlyProps);
         }
         if (parsed.bankRates) setBankRates(parsed.bankRates);
-        if (parsed.banners) setBanners(parsed.banners);
+        if (parsed.banners) {
+          // Filtrar para mantener únicamente el banner de prueba
+          const testBanners = parsed.banners.filter(
+            (b: FeaturedBanner) =>
+              b.id === "banner-1791075798900" ||
+              b.title?.toLowerCase().includes("prueba") ||
+              b.title?.toLowerCase().includes("prubea")
+          );
+          setBanners(testBanners.length > 0 ? testBanners : INITIAL_FEATURED_BANNERS);
+        }
         if (parsed.agentProfile) setAgentProfile(parsed.agentProfile);
       }
     } catch (e) {
