@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useData } from "@/context/DataContext";
@@ -50,6 +50,7 @@ import {
   Ban,
   AlertOctagon,
   Info,
+  MapPin,
 } from "lucide-react";
 import { AppMonthlyPayment } from "@/lib/types";
 import {
@@ -60,6 +61,11 @@ import {
   MONTH_NAMES_ES,
   PaymentLockStatus,
 } from "@/lib/payments";
+import {
+  getGoogleMapsEmbedUrl,
+  getGoogleMapsExternalLink,
+  parseAndGeocodeLocation,
+} from "@/lib/maps";
 
 type AdminModule = "propiedades" | "banners" | "tasas" | "perfil" | "usuarios" | "pagos";
 
@@ -418,6 +424,48 @@ export default function AdminSecretPage() {
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
   const [videoProgress, setVideoProgress] = useState(0);
   const [videoStatus, setVideoStatus] = useState("");
+
+  // Estados y lógica para autocompletado y vista previa de Google Maps
+  const [isGeocodingMap, setIsGeocodingMap] = useState(false);
+
+  const handleAutofillFromGoogleMaps = async (rawInput: string) => {
+    const val = rawInput.trim();
+    if (!val) {
+      showFeedback("Pega primero un enlace o dirección de Google Maps.", "info");
+      return;
+    }
+
+    setIsGeocodingMap(true);
+    try {
+      const parsed = await parseAndGeocodeLocation(val);
+      setPropForm((prev) => ({
+        ...prev,
+        location: {
+          address: parsed.address || prev.location?.address || "",
+          neighborhood: parsed.neighborhood || prev.location?.neighborhood || "",
+          city: parsed.city || prev.location?.city || "",
+          zone: parsed.zone || prev.location?.zone || "",
+          googleMapsUrl: parsed.googleMapsUrl || val,
+        },
+      }));
+      showFeedback("Datos de ubicación y mapa autocompletados con éxito.", "success");
+    } catch (err) {
+      console.error("Error al autocompletar mapa:", err);
+      showFeedback("No se pudieron extraer todos los datos automáticamente.", "error");
+    } finally {
+      setIsGeocodingMap(false);
+    }
+  };
+
+  const googleMapsPreviewUrl = useMemo(() => {
+    return getGoogleMapsEmbedUrl(propForm.location);
+  }, [
+    propForm.location?.googleMapsUrl,
+    propForm.location?.address,
+    propForm.location?.city,
+    propForm.location?.neighborhood,
+    propForm.location?.zone,
+  ]);
 
   const handleImageFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!ensureNotPaymentLocked("Subir imágenes")) {
@@ -1329,23 +1377,6 @@ export default function AdminSecretPage() {
         </div>
 
         <div className="flex items-center gap-3">
-          {isCloudConnected ? (
-            <span className="flex items-center gap-1.5 text-xs bg-emerald-50 text-emerald-700 border border-emerald-300 px-3 py-1.5 rounded-full font-medium shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Base de Datos Conectada</span>
-            </span>
-          ) : (
-            <button
-              onClick={() => {
-                refreshFromCloud();
-                showFeedback("Sincronizando datos con la nube...", "info");
-              }}
-              className="flex items-center gap-1.5 text-xs bg-amber-50 text-amber-700 border border-amber-300 px-3 py-1.5 rounded-full font-medium hover:bg-amber-100 transition-colors cursor-pointer"
-            >
-              <span className="w-2 h-2 rounded-full bg-amber-500" />
-              <span>Sincronizar Datos</span>
-            </button>
-          )}
 
           {currentUser && (
             <button
@@ -1756,6 +1787,92 @@ export default function AdminSecretPage() {
                     className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
                   />
                 </div>
+              </div>
+
+              {/* Integración y Autocompletado de Google Maps */}
+              <div className="bg-stone-50 border border-neutral-300 p-4 rounded-sm space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-gold-600 shrink-0" />
+                    <div>
+                      <span className="font-semibold text-neutral-900 text-xs block">
+                        Ubicación y Google Maps (Pegá dirección o link)
+                      </span>
+                      <p className="text-[11px] text-neutral-500">
+                        Pegá un enlace de Google Maps (maps.app.goo.gl, etc.), código iframe o la dirección. Al presionar <strong>Autocompletar</strong> se rellenarán automáticamente barrio, ciudad, dirección y zona.
+                      </p>
+                    </div>
+                  </div>
+                  {isGeocodingMap && (
+                    <span className="flex items-center gap-1.5 text-[11px] text-gold-700 bg-gold-100 px-2.5 py-1 rounded font-medium animate-pulse self-start sm:self-auto">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Autocompletando datos...</span>
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="text"
+                    value={propForm.location?.googleMapsUrl || ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setPropForm((prev) => ({
+                        ...prev,
+                        location: { ...prev.location!, googleMapsUrl: val },
+                      }));
+                    }}
+                    onPaste={(e) => {
+                      const pasted = e.clipboardData.getData("text");
+                      if (pasted) {
+                        handleAutofillFromGoogleMaps(pasted);
+                      }
+                    }}
+                    placeholder="Pegá link de Google Maps (maps.app.goo.gl...), iframe o dirección..."
+                    className="flex-1 p-2.5 bg-white border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none text-xs"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleAutofillFromGoogleMaps(propForm.location?.googleMapsUrl || "")}
+                    disabled={isGeocodingMap}
+                    className="px-4 py-2.5 bg-neutral-900 hover:bg-neutral-800 active:scale-95 text-white font-semibold rounded-sm transition-all text-xs flex items-center justify-center gap-1.5 cursor-pointer shrink-0 disabled:opacity-50"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+                    <span>Autocompletar Datos</span>
+                  </button>
+                </div>
+
+                {/* Vista previa en tiempo real del Mapa interactivo */}
+                {googleMapsPreviewUrl ? (
+                  <div className="space-y-1.5 pt-1">
+                    <div className="flex items-center justify-between text-[11px] text-neutral-500">
+                      <span className="font-medium text-emerald-700 flex items-center gap-1">
+                        <Check className="w-3.5 h-3.5" /> Mapa de Google Maps listo para mostrarse
+                      </span>
+                      <a
+                        href={getGoogleMapsExternalLink(propForm.location)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gold-700 hover:underline flex items-center gap-1 font-medium"
+                      >
+                        <ExternalLink className="w-3 h-3" /> Abrir en Google Maps
+                      </a>
+                    </div>
+                    <div className="w-full h-48 sm:h-56 rounded border border-neutral-300 overflow-hidden bg-stone-200">
+                      <iframe
+                        src={googleMapsPreviewUrl}
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title="Vista previa de Google Maps"
+                        className="w-full h-full"
+                      />
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
               {/* Ubicación y Métricas */}

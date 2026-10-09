@@ -16,6 +16,7 @@ export interface Property {
     neighborhood: string;
     address: string;
     zone: string;
+    googleMapsUrl?: string;
   };
   features: {
     bedrooms: number;

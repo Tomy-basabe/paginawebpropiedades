@@ -22,11 +22,13 @@ import {
   ChevronRight,
   MoreHorizontal,
   Copy,
-  Calculator
+  Calculator,
+  ExternalLink
 } from 'lucide-react';
 import WhatsAppIcon from '@/components/WhatsAppIcon';
 import { getWhatsAppUrl } from '@/lib/whatsapp';
 import { formatPropertyRef, formatCurrencyPrice } from '@/lib/formatters';
+import { getGoogleMapsEmbedUrl, getGoogleMapsExternalLink } from '@/lib/maps';
 
 export default function PropertyDetailPage() {
   const params = useParams();
@@ -482,6 +484,45 @@ export default function PropertyDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Ubicación y Mapa en Google Maps */}
+      <div className="bg-white border border-neutral-200 p-6 rounded-[4px] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-neutral-100 pb-3">
+          <div className="flex items-center gap-2.5">
+            <MapPin className="w-5 h-5 text-gold-600 shrink-0" />
+            <div>
+              <h3 className="font-serif text-lg font-bold text-neutral-900">
+                Ubicación en Google Maps
+              </h3>
+              <p className="text-xs text-neutral-500">
+                {[property.location.address, property.location.neighborhood, property.location.city, property.location.zone].filter(Boolean).join(", ")}
+              </p>
+            </div>
+          </div>
+          <a
+            href={getGoogleMapsExternalLink(property.location)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-neutral-800 hover:text-gold-600 px-3.5 py-2 bg-stone-100 hover:bg-stone-200 border border-neutral-200 rounded transition-colors self-start sm:self-auto cursor-pointer"
+          >
+            <ExternalLink className="w-3.5 h-3.5 text-gold-600" />
+            <span>Ver en Google Maps</span>
+          </a>
+        </div>
+        <div className="w-full h-72 sm:h-96 rounded overflow-hidden border border-neutral-200 relative bg-stone-100">
+          <iframe
+            src={getGoogleMapsEmbedUrl(property.location)}
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title={`Ubicación de ${property.title}`}
+            className="w-full h-full"
+          />
+        </div>
+      </div>
 
       {/* Simulador Hipotecario UVA Integrado */}
       <div className="bg-stone-50 border border-neutral-200 p-6 rounded-[4px] space-y-4">
