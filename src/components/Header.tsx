@@ -38,7 +38,6 @@ export default function Header({ onOpenValuation }: HeaderProps) {
   const navLinks = [
     { name: "Inicio", href: "/" },
     { name: "Propiedades", href: "/propiedades" },
-    { name: "Tours 3D", href: "/propiedades?tour3d=true" },
     { name: "Financiamiento & Tasas", href: "/financiamiento" },
     { name: "Sobre Mí", href: "/sobre-mi" },
     { name: "Contacto", href: "/contacto" },

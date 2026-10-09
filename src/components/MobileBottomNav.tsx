@@ -9,7 +9,7 @@ import {
   Search, 
   Percent, 
   FileCheck,
-  Box
+  Mail
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
@@ -25,7 +25,7 @@ export default function MobileBottomNav({ onOpenValuation }: MobileBottomNavProp
   const navItems = [
     { label: "Inicio", href: "/", icon: Home },
     { label: "Catálogo", href: "/propiedades", icon: Search },
-    { label: "Tours 3D", href: "/propiedades?tour3d=true", icon: Box, highlight: true },
+    { label: "Contacto", href: "/contacto", icon: Mail },
     { label: "Tasas", href: "/financiamiento", icon: Percent },
   ];
 
@@ -34,9 +34,7 @@ export default function MobileBottomNav({ onOpenValuation }: MobileBottomNavProp
       <div className="flex items-center justify-around max-w-md mx-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = item.href === "/propiedades?tour3d=true"
-            ? pathname === "/propiedades"
-            : pathname === item.href;
+          const isActive = pathname === item.href;
 
           return (
             <Link
@@ -49,10 +47,7 @@ export default function MobileBottomNav({ onOpenValuation }: MobileBottomNavProp
               }`}
             >
               <div className="relative">
-                <Icon className={`w-4.5 h-4.5 mb-0.5 ${item.highlight ? "text-gold-400" : ""}`} />
-                {item.highlight && (
-                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-gold-400" />
-                )}
+                <Icon className="w-4.5 h-4.5 mb-0.5" />
               </div>
               <span className="text-[10px] tracking-wide">{item.label}</span>
             </Link>

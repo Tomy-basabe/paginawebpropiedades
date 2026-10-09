@@ -93,39 +93,6 @@ export const INITIAL_PROPERTIES: Property[] = [
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-01.mp4",
     "hasVideoTour": true,
-    "model3D": {
-      "url": "/models/casa-completa.ply",
-      "format": "ply",
-      "initialCameraPosition": [0.78, 0.55, -1.14],
-      "initialCameraTarget": [0.78, 0.55, -2.5]
-    },
-    "rooms3D": [
-      {
-        "id": "room-01-living",
-        "name": "Living Comedor & Galería",
-        "url": "/models/casa-completa.ply",
-        "format": "ply",
-        "initialCameraPosition": [0.78, 0.55, -1.14],
-        "initialCameraTarget": [0.78, 0.55, -2.5]
-      },
-      {
-        "id": "room-01-suite",
-        "name": "Master Suite & Dormitorios",
-        "url": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-images/models/splat-1791406868162-48JC_WR.ply",
-        "format": "ply",
-        "initialCameraPosition": [0.78, 0.55, -1.14],
-        "initialCameraTarget": [0.78, 0.55, -2.5]
-      },
-      {
-        "id": "room-01-cocina",
-        "name": "Cocina & Desayunador",
-        "url": "/models/casa-completa.ply",
-        "format": "ply",
-        "initialCameraPosition": [0.78, 0.55, -1.14],
-        "initialCameraTarget": [0.78, 0.55, -2.5]
-      }
-    ],
-    "has3DTour": true,
     "location": {
       "city": "Tigre",
       "neighborhood": "Rincón de Milberg",
@@ -171,31 +138,6 @@ export const INITIAL_PROPERTIES: Property[] = [
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-02.mp4",
     "hasVideoTour": true,
-    "model3D": {
-      "url": "/models/casa-completa.ply",
-      "format": "ply",
-      "initialCameraPosition": [0.78, 0.55, -1.14],
-      "initialCameraTarget": [0.78, 0.55, -2.5]
-    },
-    "rooms3D": [
-      {
-        "id": "room-02-living",
-        "name": "Gran Salón Social & Vistas al Parque",
-        "url": "/models/casa-completa.ply",
-        "format": "ply",
-        "initialCameraPosition": [0.78, 0.55, -1.14],
-        "initialCameraTarget": [0.78, 0.55, -2.5]
-      },
-      {
-        "id": "room-02-galeria",
-        "name": "Galería Techada & Solarium",
-        "url": "/models/casa-completa.ply",
-        "format": "ply",
-        "initialCameraPosition": [0.78, 0.55, -1.14],
-        "initialCameraTarget": [0.78, 0.55, -2.5]
-      }
-    ],
-    "has3DTour": true,
     "location": {
       "city": "Benavídez",
       "neighborhood": "Barrio Cerrado La Bota",
@@ -240,13 +182,6 @@ export const INITIAL_PROPERTIES: Property[] = [
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-03.mp4",
     "hasVideoTour": true,
-    "model3D": {
-      "url": "/models/casa-completa.ply",
-      "format": "ply",
-      "initialCameraPosition": [0.78, 0.55, -1.14],
-      "initialCameraTarget": [0.78, 0.55, -2.5]
-    },
-    "has3DTour": true,
     "location": {
       "city": "Escobar",
       "neighborhood": "Puertos del Lago - Barrio Marinas",
@@ -291,13 +226,6 @@ export const INITIAL_PROPERTIES: Property[] = [
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-04.mp4",
     "hasVideoTour": true,
-    "model3D": {
-      "url": "/models/demo-fast.splat",
-      "format": "splat",
-      "initialCameraPosition": [-0.3, 0.55, 0.6],
-      "initialCameraTarget": [-0.3, 0.55, -0.8]
-    },
-    "has3DTour": true,
     "location": {
       "city": "CABA",
       "neighborhood": "Belgrano R",
@@ -342,13 +270,6 @@ export const INITIAL_PROPERTIES: Property[] = [
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-05.mp4",
     "hasVideoTour": true,
-    "model3D": {
-      "url": "/models/demo-room.splat",
-      "format": "splat",
-      "initialCameraPosition": [-0.3, 0.55, 0.6],
-      "initialCameraTarget": [-0.3, 0.55, -0.8]
-    },
-    "has3DTour": true,
     "location": {
       "city": "CABA",
       "neighborhood": "Núñez",

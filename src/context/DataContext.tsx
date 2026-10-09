@@ -76,7 +76,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed.properties) {
-          // Fusionar con datos iniciales para asegurar que model3D, rooms3D y nuevas propiedades estén presentes
+          // Fusionar con datos iniciales para asegurar que nuevas propiedades estén presentes
           const existingIds = new Set(parsed.properties.map((p: Property) => p.id));
           const merged = parsed.properties.map((p: Property) => {
             const init = INITIAL_PROPERTIES.find((ip) => ip.id === p.id);
@@ -85,38 +85,6 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
               // Si no tiene operation o coincide con un cambio de base, sincronizar
               if (!updated.operation || (init.operation !== "venta" && updated.operation === "venta")) {
                 updated.operation = init.operation;
-              }
-              if (init.model3D) {
-                // Solo reemplazar si no tiene modelo, está vacío o apunta a los archivos demo viejos de 800KB
-                const isObsoleteDemo =
-                  !p.model3D ||
-                  !p.model3D.url ||
-                  p.model3D.url.includes("demo-light") ||
-                  p.model3D.url.includes("demo-room") ||
-                  p.model3D.url.includes("demo-fast");
-
-                if (isObsoleteDemo) {
-                  updated.model3D = init.model3D;
-                  updated.has3DTour = init.has3DTour;
-                }
-              }
-              if (init.rooms3D) {
-                // Solo reemplazar si no tiene habitaciones o si todas apuntan a demos obsoletos
-                const hasValidUserRooms =
-                  p.rooms3D &&
-                  p.rooms3D.length > 0 &&
-                  p.rooms3D.some(
-                    (r) =>
-                      r.url &&
-                      !r.url.includes("demo-light") &&
-                      !r.url.includes("demo-room") &&
-                      !r.url.includes("demo-fast")
-                  );
-
-                if (!hasValidUserRooms) {
-                  updated.rooms3D = init.rooms3D;
-                  updated.has3DTour = true;
-                }
               }
             }
             return updated;
@@ -170,17 +138,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
             status: (row.status as any) || rawProp.status || "disponible",
             price: typeof row.price === "number" ? row.price : rawProp.price,
           };
-          const init = INITIAL_PROPERTIES.find((ip) => ip.id === prop.id);
-          let updated = { ...prop };
-          if (init?.model3D && (!prop.model3D || !prop.model3D.url || prop.model3D.url.startsWith("/models/") || prop.model3D.url.includes("demo-light") || prop.model3D.url.includes("demo-room"))) {
-            updated.model3D = init.model3D;
-            updated.has3DTour = init.has3DTour ?? true;
-          }
-          if (init?.rooms3D && (!prop.rooms3D || prop.rooms3D.length === 0)) {
-            updated.rooms3D = init.rooms3D;
-            updated.has3DTour = true;
-          }
-          return updated;
+          return prop;
         });
         setProperties(parsedProps);
       }

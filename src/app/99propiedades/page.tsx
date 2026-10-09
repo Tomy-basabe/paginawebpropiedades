@@ -6,9 +6,9 @@ import Link from "next/link";
 import { useData } from "@/context/DataContext";
 import BrandLogo from "@/components/BrandLogo";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
-import { uploadPropertyImage, uploadPropertyVideo, uploadPropertyModel3D } from "@/lib/supabase";
+import { uploadPropertyImage, uploadPropertyVideo } from "@/lib/supabase";
 import { cleanWhatsAppNumber, getWhatsAppUrl } from "@/lib/whatsapp";
-import { Property, PropertyRoom3D, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus } from "@/lib/types";
+import { Property, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus } from "@/lib/types";
 import { 
   SlidersHorizontal, 
   Building2, 
@@ -37,20 +37,68 @@ import {
   Users,
   KeyRound,
   Shield,
+  ShieldCheck,
+  CheckCheck,
   UserPlus,
-  Crosshair
 } from "lucide-react";
-import { SPLAT_VIEWER_CONFIG } from "@/lib/gaussian-splat/config";
-import CameraCalibrationModal from "@/components/3d/CameraCalibrationModal";
 
-export interface AdminUser {
+type AdminModule = "propiedades" | "banners" | "tasas" | "perfil" | "usuarios";
+
+interface AdminUser {
   id: string;
   username: string;
   password: string;
   name: string;
   role: "admin" | "asesor";
+  permissions: AdminModule[];
   createdAt: string;
 }
+
+interface AdminModuleConfig {
+  id: AdminModule;
+  label: string;
+  shortLabel: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+const ALL_ADMIN_MODULES: AdminModuleConfig[] = [
+  {
+    id: "propiedades",
+    label: "Propiedades",
+    shortLabel: "Propiedades",
+    description: "Gestión de catálogo, edición y alta de inmuebles",
+    icon: Building2,
+  },
+  {
+    id: "banners",
+    label: "Banners y Anuncios",
+    shortLabel: "Banners",
+    description: "Configuración de lanzamientos en portada",
+    icon: ImageIcon,
+  },
+  {
+    id: "tasas",
+    label: "Tasas Bancarias UVA",
+    shortLabel: "Tasas",
+    description: "Configuración del simulador crediticio hipotecario",
+    icon: Percent,
+  },
+  {
+    id: "perfil",
+    label: "Perfil y Contacto",
+    shortLabel: "Perfil",
+    description: "Datos del agente, WhatsApp y teléfonos",
+    icon: UserCheck,
+  },
+  {
+    id: "usuarios",
+    label: "Usuarios y Permisos",
+    shortLabel: "Usuarios",
+    description: "Administración de accesos y roles del equipo",
+    icon: Users,
+  },
+];
 
 const DEFAULT_ADMIN_USER: AdminUser = {
   id: "admin-root",
@@ -58,6 +106,7 @@ const DEFAULT_ADMIN_USER: AdminUser = {
   password: "••••••••",
   name: "Administrador",
   role: "admin",
+  permissions: ALL_ADMIN_MODULES.map((m) => m.id),
   createdAt: new Date().toISOString(),
 };
 
@@ -103,10 +152,71 @@ export default function AdminSecretPage() {
   const [newUserUsername, setNewUserUsername] = useState("");
   const [newUserPassword, setNewUserPassword] = useState("");
   const [newUserRole, setNewUserRole] = useState<"admin" | "asesor">("asesor");
+  const [newUserPermissions, setNewUserPermissions] = useState<AdminModule[]>(ALL_ADMIN_MODULES.map((m) => m.id));
 
   // Edición rápida de contraseña para otro usuario
   const [editingPasswordUserId, setEditingPasswordUserId] = useState<string | null>(null);
   const [tempUserPassword, setTempUserPassword] = useState("");
+
+  // Edición de permisos de usuario
+  const [editingPermissionsUserId, setEditingPermissionsUserId] = useState<string | null>(null);
+  const [tempUserPermissions, setTempUserPermissions] = useState<AdminModule[]>([]);
+
+  const handleToggleNewUserPermission = (modId: AdminModule) => {
+    setNewUserPermissions((prev) =>
+      prev.includes(modId) ? prev.filter((id) => id !== modId) : [...prev, modId]
+    );
+  };
+
+  const handleToggleAllNewUserPermissions = () => {
+    if (newUserPermissions.length === ALL_ADMIN_MODULES.length) {
+      setNewUserPermissions([]);
+    } else {
+      setNewUserPermissions(ALL_ADMIN_MODULES.map((m) => m.id));
+    }
+  };
+
+  const handleStartEditingPermissions = (user: AdminUser) => {
+    setEditingPermissionsUserId(user.id);
+    const initialMods: AdminModule[] =
+      user.permissions && user.permissions.length > 0
+        ? user.permissions
+        : user.role === "admin"
+        ? ALL_ADMIN_MODULES.map((m) => m.id)
+        : (["propiedades"] as AdminModule[]);
+    setTempUserPermissions(initialMods);
+  };
+
+  const handleToggleTempPermission = (modId: AdminModule) => {
+    setTempUserPermissions((prev) =>
+      prev.includes(modId) ? prev.filter((id) => id !== modId) : [...prev, modId]
+    );
+  };
+
+  const handleToggleAllTempPermissions = () => {
+    if (tempUserPermissions.length === ALL_ADMIN_MODULES.length) {
+      setTempUserPermissions([]);
+    } else {
+      setTempUserPermissions(ALL_ADMIN_MODULES.map((m) => m.id));
+    }
+  };
+
+  const handleSaveUserPermissions = (userId: string | null) => {
+    if (!userId) return;
+    if (tempUserPermissions.length === 0) {
+      showFeedback("Debes asignar al menos un módulo.", "error");
+      return;
+    }
+    const updatedUsers = users.map((u) =>
+      u.id === userId ? { ...u, permissions: tempUserPermissions } : u
+    );
+    setUsers(updatedUsers);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
+    }
+    setEditingPermissionsUserId(null);
+    showFeedback("Permisos actualizados con éxito.", "success");
+  };
 
   // Mensaje de feedback/notificación global
   const [feedbackMessage, setFeedbackMessage] = useState<{ text: string; type: "success" | "error" | "info" } | null>(null);
@@ -178,23 +288,6 @@ export default function AdminSecretPage() {
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
   const [videoProgress, setVideoProgress] = useState(0);
   const [videoStatus, setVideoStatus] = useState("");
-
-  // Estados para subida directa de modelo 3D Gaussian Splatting (.ply, .splat, .ksplat)
-  const [isUploadingModel, setIsUploadingModel] = useState(false);
-  const [modelUploadStatus, setModelUploadStatus] = useState("");
-  const [uploadingRoomId, setUploadingRoomId] = useState<string | null>(null);
-  const [showGuide3D, setShowGuide3D] = useState(false);
-
-  // Estado para calibración interactiva de cámara POV (WASD + QE)
-  const [calibratingTarget, setCalibratingTarget] = useState<{
-    propertyId?: string;
-    roomId?: string;
-    name: string;
-    url: string;
-    format?: "ply" | "splat" | "ksplat" | "embed";
-    initialCameraPosition?: [number, number, number];
-    initialCameraTarget?: [number, number, number];
-  } | null>(null);
 
   const handleImageFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -284,149 +377,6 @@ export default function AdminSecretPage() {
     }
   };
 
-  const handleAddRoom3D = () => {
-    const currentRooms = propForm.rooms3D || [];
-    const newRoom: PropertyRoom3D = {
-      id: `room-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-      name: currentRooms.length === 0 ? "Living Comedor" : `Habitación ${currentRooms.length + 1}`,
-      url: "",
-      format: "ply",
-      initialCameraPosition: [-0.3, 0.55, 0.6],
-      initialCameraTarget: [-0.3, 0.55, -0.8],
-    };
-    setPropForm((prev) => ({
-      ...prev,
-      has3DTour: true,
-      rooms3D: [...currentRooms, newRoom],
-    }));
-  };
-
-  const handleSaveCalibration = (
-    position: [number, number, number],
-    target: [number, number, number]
-  ) => {
-    if (!calibratingTarget) return;
-
-    // Caso 1: Calibrando habitación dentro del formulario activo
-    if (calibratingTarget.roomId) {
-      handleUpdateRoom3D(calibratingTarget.roomId, {
-        initialCameraPosition: position,
-        initialCameraTarget: target,
-      });
-
-      setPropForm((prev) => {
-        const rooms = (prev.rooms3D || []).map((r) =>
-          r.id === calibratingTarget.roomId
-            ? { ...r, initialCameraPosition: position, initialCameraTarget: target }
-            : r
-        );
-        const isFirst = rooms[0]?.id === calibratingTarget.roomId;
-        return {
-          ...prev,
-          rooms3D: rooms,
-          ...(isFirst && prev.model3D
-            ? {
-                model3D: {
-                  ...prev.model3D,
-                  initialCameraPosition: position,
-                  initialCameraTarget: target,
-                },
-              }
-            : {}),
-        };
-      });
-    }
-
-    // Caso 2: Calibrando directo desde la tabla de propiedades con propertyId
-    if (calibratingTarget.propertyId) {
-      const targetProp = properties.find((p) => p.id === calibratingTarget.propertyId);
-      if (targetProp) {
-        let updatedRooms = targetProp.rooms3D ? [...targetProp.rooms3D] : [];
-        if (calibratingTarget.roomId) {
-          updatedRooms = updatedRooms.map((r) =>
-            r.id === calibratingTarget.roomId
-              ? { ...r, initialCameraPosition: position, initialCameraTarget: target }
-              : r
-          );
-        } else if (updatedRooms.length > 0) {
-          updatedRooms[0] = {
-            ...updatedRooms[0],
-            initialCameraPosition: position,
-            initialCameraTarget: target,
-          };
-        }
-
-        const updatedModel3D = targetProp.model3D
-          ? {
-              ...targetProp.model3D,
-              initialCameraPosition: position,
-              initialCameraTarget: target,
-            }
-          : updatedRooms[0]
-          ? {
-              url: updatedRooms[0].url,
-              format: updatedRooms[0].format,
-              initialCameraPosition: position,
-              initialCameraTarget: target,
-            }
-          : undefined;
-
-        updateProperty(calibratingTarget.propertyId, {
-          rooms3D: updatedRooms,
-          model3D: updatedModel3D,
-        });
-      }
-    }
-
-    showFeedback(
-      `Punto de partida y altura guardados para "${calibratingTarget.name}".`,
-      "success"
-    );
-    setCalibratingTarget(null);
-  };
-
-  const handleUpdateRoom3D = (roomId: string, patch: Partial<PropertyRoom3D>) => {
-    const currentRooms = propForm.rooms3D || [];
-    const updated = currentRooms.map((r) => (r.id === roomId ? { ...r, ...patch } : r));
-    setPropForm((prev) => ({
-      ...prev,
-      rooms3D: updated,
-    }));
-  };
-
-  const handleDeleteRoom3D = (roomId: string) => {
-    const currentRooms = (propForm.rooms3D || []).filter((r) => r.id !== roomId);
-    setPropForm((prev) => ({
-      ...prev,
-      rooms3D: currentRooms,
-      has3DTour: currentRooms.length > 0 || !!prev.model3D?.url,
-    }));
-  };
-
-  const handleRoomFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, roomId: string) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploadingRoomId(roomId);
-    setModelUploadStatus("Iniciando subida de habitación 3D...");
-
-    try {
-      const result = await uploadPropertyModel3D(file, (status) => setModelUploadStatus(status));
-      handleUpdateRoom3D(roomId, {
-        url: result.url,
-        format: result.format,
-      });
-      setModelUploadStatus(`✅ Habitación lista: ${result.fileName} (${result.sizeMB} MB)`);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Error desconocido";
-      setModelUploadStatus(`❌ Error: ${msg}`);
-      alert(`No se pudo subir la habitación 3D: ${msg}`);
-    } finally {
-      setUploadingRoomId(null);
-      e.target.value = "";
-    }
-  };
-
   // Verificación de sesión segura con el servidor al cargar
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -435,13 +385,46 @@ export default function AdminSecretPage() {
         if (storedUsers) {
           const parsed = JSON.parse(storedUsers);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setUsers(parsed);
+            const normalized: AdminUser[] = parsed.map((u: Partial<AdminUser> & { permissions?: AdminModule[] }) => ({
+              id: u.id || `user-${Date.now()}`,
+              username: u.username || "usuario",
+              password: u.password || "••••••••",
+              name: u.name || "Usuario",
+              role: (u.role as "admin" | "asesor") || "asesor",
+              permissions:
+                Array.isArray(u.permissions) && u.permissions.length > 0
+                  ? u.permissions
+                  : u.role === "admin"
+                  ? ALL_ADMIN_MODULES.map((m) => m.id)
+                  : (["propiedades"] as AdminModule[]),
+              createdAt: u.createdAt || new Date().toISOString(),
+            }));
+            setUsers(normalized);
           } else {
             setUsers([DEFAULT_ADMIN_USER]);
           }
         } else {
           setUsers([DEFAULT_ADMIN_USER]);
         }
+
+        const checkLocalSession = () => {
+          const storedLocalSession = sessionStorage.getItem("aurea_active_session_user");
+          if (storedLocalSession) {
+            try {
+              const parsedLocal = JSON.parse(storedLocalSession);
+              if (parsedLocal && parsedLocal.username) {
+                setIsAuthenticated(true);
+                setCurrentUser(parsedLocal);
+                setProfileForm(agentProfile);
+                return;
+              }
+            } catch {
+              // ignore
+            }
+          }
+          setIsAuthenticated(false);
+          setCurrentUser(null);
+        };
 
         fetch("/api/admin/me")
           .then((res) => {
@@ -451,29 +434,45 @@ export default function AdminSecretPage() {
           .then((data) => {
             if (data?.authenticated && data?.user) {
               setIsAuthenticated(true);
-              setCurrentUser({
+              const rootUser: AdminUser = {
                 id: "admin-root",
                 username: data.user.username,
                 password: "••••••••",
                 name: data.user.name,
                 role: data.user.role,
+                permissions: ALL_ADMIN_MODULES.map((m) => m.id),
                 createdAt: new Date().toISOString(),
-              });
+              };
+              setCurrentUser(rootUser);
               setProfileForm(agentProfile);
             } else {
-              setIsAuthenticated(false);
-              setCurrentUser(null);
+              checkLocalSession();
             }
           })
           .catch(() => {
-            setIsAuthenticated(false);
-            setCurrentUser(null);
+            checkLocalSession();
           });
       } catch (err) {
         console.error("Error al cargar estado de autenticación:", err);
       }
     }
   }, [agentProfile]);
+
+  // Módulos permitidos según los permisos del usuario activo
+  const userAllowedModules: AdminModule[] = currentUser
+    ? currentUser.role === "admin"
+      ? ALL_ADMIN_MODULES.map((m) => m.id)
+      : currentUser.permissions && currentUser.permissions.length > 0
+      ? currentUser.permissions
+      : ["propiedades"]
+    : [];
+
+  // Redirección automática si la pestaña activa no está permitida para el usuario
+  useEffect(() => {
+    if (userAllowedModules.length > 0 && !userAllowedModules.includes(activeTab)) {
+      setActiveTab(userAllowedModules[0]);
+    }
+  }, [userAllowedModules, activeTab]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -504,17 +503,54 @@ export default function AdminSecretPage() {
           password: "••••••••",
           name: data.user.name,
           role: data.user.role,
+          permissions: ALL_ADMIN_MODULES.map((m) => m.id),
           createdAt: new Date().toISOString(),
         };
         setCurrentUser(loggedUser);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("aurea_active_session_user", JSON.stringify(loggedUser));
+        }
         setLoginError("");
         setLoginPassword("");
         setProfileForm(agentProfile);
         showFeedback(`Bienvenido al panel, ${data.user.name}.`, "success");
       } else {
+        // Fallback: verificar si es un usuario creado localmente
+        const matchedLocalUser = users.find(
+          (user) => user.username.toLowerCase() === u && user.password === p
+        );
+
+        if (matchedLocalUser) {
+          setIsAuthenticated(true);
+          setCurrentUser(matchedLocalUser);
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem("aurea_active_session_user", JSON.stringify(matchedLocalUser));
+          }
+          setLoginError("");
+          setLoginPassword("");
+          setProfileForm(agentProfile);
+          showFeedback(`Bienvenido al panel, ${matchedLocalUser.name}.`, "success");
+          return;
+        }
+
         setLoginError(data.error || "Usuario o contraseña incorrectos.");
       }
     } catch {
+      const matchedLocalUser = users.find(
+        (user) => user.username.toLowerCase() === u && user.password === p
+      );
+      if (matchedLocalUser) {
+        setIsAuthenticated(true);
+        setCurrentUser(matchedLocalUser);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("aurea_active_session_user", JSON.stringify(matchedLocalUser));
+        }
+        setLoginError("");
+        setLoginPassword("");
+        setProfileForm(agentProfile);
+        showFeedback(`Bienvenido al panel, ${matchedLocalUser.name}.`, "success");
+        return;
+      }
       setLoginError("Error de conexión con el servidor.");
     }
   };
@@ -524,6 +560,9 @@ export default function AdminSecretPage() {
       await fetch("/api/admin/logout", { method: "POST" });
     } catch {
       // ignore
+    }
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("aurea_active_session_user");
     }
     setIsAuthenticated(false);
     setCurrentUser(null);
@@ -570,6 +609,10 @@ export default function AdminSecretPage() {
 
     setUsers(updatedUsers);
     setCurrentUser(updatedUser);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
+      sessionStorage.setItem("aurea_active_session_user", JSON.stringify(updatedUser));
+    }
 
     setCurrentPasswordInput("");
     setNewPasswordInput("");
@@ -597,6 +640,11 @@ export default function AdminSecretPage() {
       return;
     }
 
+    if (newUserPermissions.length === 0) {
+      showFeedback("Debes seleccionar al menos un apartado para este usuario.", "error");
+      return;
+    }
+
     if (users.some((u) => u.username.toLowerCase() === cleanUsername)) {
       showFeedback(`El usuario "${cleanUsername}" ya existe. Elige otro.`, "error");
       return;
@@ -605,19 +653,24 @@ export default function AdminSecretPage() {
     const newUser: AdminUser = {
       id: `user-${Date.now()}`,
       username: cleanUsername,
-      password: "••••••••",
+      password: newUserPassword.trim(),
       name: newUserName.trim(),
       role: newUserRole,
+      permissions: [...newUserPermissions],
       createdAt: new Date().toISOString(),
     };
 
     const updatedUsers = [...users, newUser];
     setUsers(updatedUsers);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
+    }
 
     setNewUserName("");
     setNewUserUsername("");
     setNewUserPassword("");
     setNewUserRole("asesor");
+    setNewUserPermissions(ALL_ADMIN_MODULES.map((m) => m.id));
     showFeedback(`Usuario "${newUser.name}" creado con éxito.`, "success");
   };
 
@@ -663,25 +716,9 @@ export default function AdminSecretPage() {
   // ------------------ GESTIÓN DE PROPIEDADES ------------------
   const startEditProperty = (prop: Property) => {
     setEditingPropId(prop.id);
-    const initialRooms: PropertyRoom3D[] = prop.rooms3D && prop.rooms3D.length > 0
-      ? [...prop.rooms3D]
-      : prop.model3D?.url
-      ? [
-          {
-            id: `room-1`,
-            name: "Ambiente Principal",
-            url: prop.model3D.url,
-            format: prop.model3D.format || "ply",
-            initialCameraPosition: prop.model3D.initialCameraPosition || [-0.3, 0.55, 0.6],
-            initialCameraTarget: prop.model3D.initialCameraTarget || [-0.3, 0.55, -0.8],
-          },
-        ]
-      : [];
-
     setPropForm({
       ...prop,
       currency: prop.currency || "USD",
-      rooms3D: initialRooms,
     });
     setIsCreatingProp(false);
   };
@@ -718,8 +755,6 @@ export default function AdminSecretPage() {
       images: [
         "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
       ],
-      rooms3D: [],
-      has3DTour: false,
       isFeatured: true,
       isOpportunity: false,
       opportunityBadge: "",
@@ -731,9 +766,6 @@ export default function AdminSecretPage() {
       alert("Por favor completa al menos título y precio.");
       return;
     }
-
-    const validRooms = (propForm.rooms3D || []).filter((r) => r.url && r.url.trim().length > 0);
-    const has3D = validRooms.length > 0 || !!propForm.model3D?.url;
 
     const slugBase = (propForm.title || "")
       .toLowerCase()
@@ -774,16 +806,6 @@ export default function AdminSecretPage() {
       type: propForm.type || "departamento",
       status: propForm.status || "disponible",
       currency: propForm.currency || "USD",
-      rooms3D: validRooms,
-      has3DTour: has3D,
-      model3D: validRooms.length > 0
-        ? {
-            url: validRooms[0].url,
-            format: validRooms[0].format,
-            initialCameraPosition: validRooms[0].initialCameraPosition,
-            initialCameraTarget: validRooms[0].initialCameraTarget,
-          }
-        : propForm.model3D,
     };
 
     if (isCreatingProp) {
@@ -1021,67 +1043,77 @@ export default function AdminSecretPage() {
         </div>
       </div>
 
-      {/* Tabs de Navegación del CMS (Sin restablecer datos) */}
+      {/* Tabs de Navegación del CMS con control de permisos */}
       <div className="flex flex-wrap gap-2 border-b border-neutral-200 pb-2 text-xs">
-        <button
-          onClick={() => setActiveTab("propiedades")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer ${
-            activeTab === "propiedades"
-              ? "bg-neutral-900 text-white"
-              : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
-          }`}
-        >
-          <Building2 className="w-4 h-4" />
-          <span>Propiedades ({properties.length})</span>
-        </button>
+        {userAllowedModules.includes("propiedades") && (
+          <button
+            onClick={() => setActiveTab("propiedades")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer ${
+              activeTab === "propiedades"
+                ? "bg-neutral-900 text-white"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+            }`}
+          >
+            <Building2 className="w-4 h-4" />
+            <span>Propiedades ({properties.length})</span>
+          </button>
+        )}
 
-        <button
-          onClick={() => setActiveTab("banners")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer ${
-            activeTab === "banners"
-              ? "bg-neutral-900 text-white"
-              : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
-          }`}
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>Banners Destacados ({banners.length})</span>
-        </button>
+        {userAllowedModules.includes("banners") && (
+          <button
+            onClick={() => setActiveTab("banners")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer ${
+              activeTab === "banners"
+                ? "bg-neutral-900 text-white"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+            }`}
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>Banners Destacados ({banners.length})</span>
+          </button>
+        )}
 
-        <button
-          onClick={() => setActiveTab("tasas")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer ${
-            activeTab === "tasas"
-              ? "bg-neutral-900 text-white"
-              : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
-          }`}
-        >
-          <Percent className="w-4 h-4" />
-          <span>Tasas Bancarias ({bankRates.length})</span>
-        </button>
+        {userAllowedModules.includes("tasas") && (
+          <button
+            onClick={() => setActiveTab("tasas")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer ${
+              activeTab === "tasas"
+                ? "bg-neutral-900 text-white"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+            }`}
+          >
+            <Percent className="w-4 h-4" />
+            <span>Tasas Bancarias ({bankRates.length})</span>
+          </button>
+        )}
 
-        <button
-          onClick={() => setActiveTab("perfil")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer ${
-            activeTab === "perfil"
-              ? "bg-neutral-900 text-white"
-              : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
-          }`}
-        >
-          <UserCheck className="w-4 h-4" />
-          <span>Perfil & Marca Personal</span>
-        </button>
+        {userAllowedModules.includes("perfil") && (
+          <button
+            onClick={() => setActiveTab("perfil")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer ${
+              activeTab === "perfil"
+                ? "bg-neutral-900 text-white"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+            }`}
+          >
+            <UserCheck className="w-4 h-4" />
+            <span>Perfil & Marca Personal</span>
+          </button>
+        )}
 
-        <button
-          onClick={() => setActiveTab("usuarios")}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer ${
-            activeTab === "usuarios"
-              ? "bg-neutral-900 text-white"
-              : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
-          }`}
-        >
-          <Users className="w-4 h-4" />
-          <span>Usuarios & Seguridad ({users.length})</span>
-        </button>
+        {userAllowedModules.includes("usuarios") && (
+          <button
+            onClick={() => setActiveTab("usuarios")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer ${
+              activeTab === "usuarios"
+                ? "bg-neutral-900 text-white"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            <span>Usuarios & Seguridad ({users.length})</span>
+          </button>
+        )}
       </div>
 
       {/* CONTENIDO DEL TAB 1: PROPIEDADES */}
@@ -1580,249 +1612,6 @@ export default function AdminSecretPage() {
                 )}
               </div>
 
-              {/* Recorridos 3D (Gaussian Splatting) */}
-              <div className="p-4 bg-amber-50/50 border border-amber-200/80 rounded-sm space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200/60 pb-3">
-                  <div className="flex items-center gap-2">
-                    <Box className="w-5 h-5 text-amber-600" />
-                    <div>
-                      <label className="block font-bold text-neutral-900 text-sm">
-                        Recorridos 3D por Habitaciones (Gaussian Splatting)
-                      </label>
-                      <span className="text-xs text-neutral-600">
-                        Scaniverse (.ply) o enlaces publicados de SuperSplat (PlayCanvas)
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setShowGuide3D(!showGuide3D)}
-                      className="text-xs font-semibold px-3 py-1.5 rounded-sm border border-amber-300 bg-white hover:bg-amber-100/70 text-amber-900 transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
-                    >
-                      <span>📖 {showGuide3D ? "Ocultar Guía" : "Guía: Cómo Escanear"}</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleAddRoom3D}
-                      className="bg-gold-500 hover:bg-gold-600 text-luxury-black font-semibold text-xs px-3 py-1.5 rounded-sm transition-all shadow-sm inline-flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Agregar Habitación 3D</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* GUÍA INTERACTIVA PASO A PASO */}
-                {showGuide3D && (
-                  <div className="bg-white border border-amber-300 p-5 rounded-sm shadow-sm space-y-4 animate-fade-in text-xs">
-                    <div className="flex items-center justify-between border-b border-neutral-200 pb-2">
-                      <h4 className="font-bold text-neutral-900 text-sm flex items-center gap-2">
-                        <span>📱 Cómo escanear una casa con tu celular y publicarla en 3D</span>
-                      </h4>
-                      <a
-                        href="https://playcanvas.com/supersplat/editor"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-amber-800 hover:text-amber-950 font-semibold underline flex items-center gap-1 text-[11px]"
-                      >
-                        <span>Abrir SuperSplat Editor</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-neutral-700">
-                      <div className="p-3 bg-stone-50 border border-neutral-200 rounded-sm space-y-1">
-                        <span className="font-bold text-neutral-900 block text-xs">1. Captura</span>
-                        <p className="text-[11px] leading-relaxed">
-                          Descargá <strong>Scaniverse</strong> (gratis en iOS/Android). Elegí el modo <strong>"Splat"</strong>. Caminá lento en círculos grabando cada ángulo del ambiente.
-                        </p>
-                      </div>
-
-                      <div className="p-3 bg-stone-50 border border-neutral-200 rounded-sm space-y-1">
-                        <span className="font-bold text-neutral-900 block text-xs">2. Genera</span>
-                        <p className="text-[11px] leading-relaxed">
-                          Scaniverse procesa la escena dentro de tu teléfono y crea el modelo Gaussian Splatting en minutos.
-                        </p>
-                      </div>
-
-                      <div className="p-3 bg-stone-50 border border-neutral-200 rounded-sm space-y-1">
-                        <span className="font-bold text-neutral-900 block text-xs">3. Exporta</span>
-                        <p className="text-[11px] leading-relaxed">
-                          Exportá el archivo en formato <strong>.ply</strong> (formato estándar del splat).
-                        </p>
-                      </div>
-
-                      <div className="p-3 bg-stone-50 border border-neutral-200 rounded-sm space-y-1">
-                        <span className="font-bold text-neutral-900 block text-xs">4. SuperSplat</span>
-                        <p className="text-[11px] leading-relaxed">
-                          Entrá a <strong>SuperSplat</strong> (PlayCanvas en tu navegador), subí tu .ply, recortá lo sobrante y dale a Publicar.
-                        </p>
-                      </div>
-
-                      <div className="p-3 bg-amber-50/70 border border-amber-300 rounded-sm space-y-1">
-                        <span className="font-bold text-amber-900 block text-xs">5. Pega en el panel</span>
-                        <p className="text-[11px] leading-relaxed">
-                          Pegá el link de SuperSplat en <strong>"URL del Modelo 3D"</strong> o subí directamente el archivo <strong>.ply</strong>.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="p-2.5 bg-neutral-100 rounded-sm text-[11px] text-neutral-600 flex items-center justify-between">
-                      <span>💡 <strong>Consejo pro:</strong> El movimiento lento y los ángulos completos hacen el 80% de la calidad fotorrealista.</span>
-                      <button
-                        type="button"
-                        onClick={() => setShowGuide3D(false)}
-                        className="text-neutral-500 hover:text-neutral-800 underline ml-2"
-                      >
-                        Entendido, cerrar guía
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {propForm.rooms3D && propForm.rooms3D.length > 0 && (
-                  <div className="space-y-4">
-                    {propForm.rooms3D.map((room, idx) => (
-                      <div key={room.id} className="p-4 bg-white border border-amber-200 rounded-sm shadow-xs space-y-3">
-                        <div className="flex items-center justify-between border-b border-neutral-100 pb-2.5 gap-2">
-                          <div className="flex items-center gap-2 flex-1">
-                            <span className="w-6 h-6 rounded-full bg-amber-500 text-luxury-black text-xs font-bold flex items-center justify-center shrink-0">
-                              {idx + 1}
-                            </span>
-                            <input
-                              type="text"
-                              value={room.name}
-                              onChange={(e) => handleUpdateRoom3D(room.id, { name: e.target.value })}
-                              placeholder="Nombre del ambiente (ej: Living Comedor)"
-                              className="font-semibold text-neutral-900 text-xs sm:text-sm bg-transparent border-b border-dashed border-neutral-300 focus:border-gold-500 focus:outline-none flex-1 py-0.5"
-                            />
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteRoom3D(room.id)}
-                            className="text-rose-600 hover:text-rose-800 p-1.5 rounded hover:bg-rose-50 transition-colors shrink-0 flex items-center gap-1 text-[11px] cursor-pointer"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                            <span>Eliminar</span>
-                          </button>
-                        </div>
-
-                        <label
-                          className={`flex flex-col items-center justify-center w-full border-2 border-dashed rounded-sm p-4 text-center cursor-pointer transition-colors ${
-                            uploadingRoomId === room.id
-                              ? "border-amber-400 bg-amber-50 cursor-not-allowed"
-                              : "border-amber-200 hover:border-amber-400 bg-amber-50/20 hover:bg-amber-50/50 group"
-                          }`}
-                        >
-                          <input
-                            type="file"
-                            accept=".ply,.splat,.ksplat"
-                            onChange={(e) => handleRoomFileUpload(e, room.id)}
-                            disabled={uploadingRoomId === room.id}
-                            className="hidden"
-                          />
-                          {uploadingRoomId === room.id ? (
-                            <div className="w-full space-y-1.5">
-                              <Loader2 className="w-4 h-4 animate-spin text-amber-600 mx-auto" />
-                              <span className="text-xs font-semibold text-amber-700">{modelUploadStatus}</span>
-                            </div>
-                          ) : (
-                            <div className="space-y-1">
-                              <span className="font-semibold text-xs text-neutral-700 group-hover:text-amber-800">
-                                {room.url ? "Reemplazar archivo 3D" : "Subir archivo .ply / .splat / .ksplat"}
-                              </span>
-                            </div>
-                          )}
-                        </label>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-1">
-                          <div className="sm:col-span-8 space-y-1">
-                            <label className="block text-[10px] font-semibold uppercase tracking-wider text-neutral-500">
-                              URL del Modelo 3D o Enlace de SuperSplat
-                            </label>
-                            <input
-                              type="text"
-                              value={room.url}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                const isSuperSplat = val.includes("playcanvas.com") || val.includes("supersplat");
-                                handleUpdateRoom3D(room.id, {
-                                  url: val,
-                                  ...(isSuperSplat ? { format: "embed" } : {}),
-                                });
-                              }}
-                              placeholder="https://playcanvas.com/supersplat/editor o archivo .ply"
-                              className="w-full p-2 bg-stone-50 border border-neutral-300 rounded-sm text-xs font-mono focus:border-gold-500 focus:outline-none"
-                            />
-                          </div>
-                          <div className="sm:col-span-4 space-y-1">
-                            <label className="block text-[10px] font-semibold uppercase tracking-wider text-neutral-500">
-                              Formato / Tipo
-                            </label>
-                            <select
-                              value={room.format || (room.url?.includes("playcanvas") ? "embed" : "ply")}
-                              onChange={(e) =>
-                                handleUpdateRoom3D(room.id, {
-                                  format: e.target.value as "ply" | "splat" | "ksplat" | "embed",
-                                })
-                              }
-                              className="w-full p-2 bg-stone-50 border border-neutral-300 rounded-sm text-xs focus:border-gold-500 focus:outline-none"
-                            >
-                              <option value="ply">.PLY (Scaniverse / Estándar)</option>
-                              <option value="embed">Link SuperSplat / Visor Web</option>
-                              <option value="splat">.SPLAT (Optimizado)</option>
-                              <option value="ksplat">.KSPLAT (Comprimido)</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        {/* Configuración de punto de partida y altura de la cámara */}
-                        <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5 mt-1 border-t border-dashed border-amber-200">
-                          <div className="flex items-center gap-1.5 text-[11px] text-neutral-600">
-                            <Crosshair className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                            <span>
-                              {room.initialCameraPosition
-                                ? `Inicio: [X:${room.initialCameraPosition[0].toFixed(2)}, Y:${room.initialCameraPosition[1].toFixed(2)}, Z:${room.initialCameraPosition[2].toFixed(2)}]`
-                                : "Posición: Centro calibrado a 1.70m de altura"}
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            disabled={!room.url || room.format === "embed"}
-                            onClick={() =>
-                              setCalibratingTarget({
-                                roomId: room.id,
-                                name: room.name || `Habitación ${idx + 1}`,
-                                url: room.url,
-                                format: room.format,
-                                initialCameraPosition: room.initialCameraPosition || [-0.3, 0.55, 0.6],
-                                initialCameraTarget: room.initialCameraTarget || [-0.3, 0.55, -0.8],
-                              })
-                            }
-                            className={`px-3 py-1.5 rounded-sm font-semibold text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer ${
-                              !room.url || room.format === "embed"
-                                ? "bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200"
-                                : "bg-amber-500 hover:bg-amber-400 text-luxury-black hover:shadow-md active:scale-95"
-                            }`}
-                            title={
-                              room.format === "embed"
-                                ? "Los embeds de SuperSplat usan su propio visor web"
-                                : !room.url
-                                ? "Primero ingresá o subí el archivo 3D"
-                                : "Abre el visor para desplazarte con WASD y ajustar la altura con Q y E"
-                            }
-                          >
-                            <Crosshair className="w-3.5 h-3.5" />
-                            <span>Calibrar Punto Inicial & Altura (WASD + QE)</span>
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
               {/* Descripción */}
               <div>
                 <label className="block font-semibold text-neutral-700 mb-1">Descripción Detallada</label>
@@ -2032,11 +1821,6 @@ export default function AdminSecretPage() {
                             <div className="font-semibold text-neutral-900">{prop.title}</div>
                             <div className="flex items-center gap-2 mt-0.5">
                               <span className="text-[10px] text-neutral-400 font-mono">ID: {prop.id}</span>
-                              {prop.has3DTour && (
-                                <span className="text-[9px] bg-amber-50 text-amber-800 border border-amber-200 px-1.5 py-0.2 rounded font-medium">
-                                  3D Splat
-                                </span>
-                              )}
                               {prop.hasVideoTour && (
                                 <span className="text-[9px] bg-sky-50 text-sky-800 border border-sky-200 px-1.5 py-0.2 rounded font-medium">
                                   Video Tour
@@ -2147,33 +1931,6 @@ export default function AdminSecretPage() {
 
                       <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          {(prop.has3DTour || prop.model3D?.url || (prop.rooms3D && prop.rooms3D.length > 0)) && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const targetRoom = prop.rooms3D?.[0];
-                                const url = targetRoom?.url || prop.model3D?.url;
-                                const format = targetRoom?.format || prop.model3D?.format;
-                                if (!url || format === "embed") {
-                                  alert("Esta propiedad usa un enlace externo o no tiene un archivo 3D compatible para calibrar.");
-                                  return;
-                                }
-                                setCalibratingTarget({
-                                  propertyId: prop.id,
-                                  roomId: targetRoom?.id,
-                                  name: targetRoom?.name || prop.title,
-                                  url,
-                                  format,
-                                  initialCameraPosition: targetRoom?.initialCameraPosition || prop.model3D?.initialCameraPosition || [-0.3, 0.55, 0.6],
-                                  initialCameraTarget: targetRoom?.initialCameraTarget || prop.model3D?.initialCameraTarget || [-0.3, 0.55, -0.8],
-                                });
-                              }}
-                              className="p-1.5 text-amber-600 hover:text-amber-800 hover:bg-amber-50 rounded-sm cursor-pointer transition-colors"
-                              title="Calibrar Punto de Partida y Altura 3D (WASD + QE)"
-                            >
-                              <Crosshair className="w-4 h-4" />
-                            </button>
-                          )}
                           <button
                             onClick={() => startEditProperty(prop)}
                             className="p-1.5 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 rounded-sm cursor-pointer"
@@ -2831,7 +2588,7 @@ export default function AdminSecretPage() {
                   </label>
                   <input
                     type="password"
-                    placeholder="Ingresa tu contraseña actual..."
+                    placeholder="Tu contraseña actual..."
                     value={currentPasswordInput}
                     onChange={(e) => setCurrentPasswordInput(e.target.value)}
                     className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
@@ -2879,17 +2636,17 @@ export default function AdminSecretPage() {
               </form>
             </div>
 
-            {/* Card 2: Crear Nuevo Usuario */}
+            {/* Card 2: Crear Nuevo Usuario con selector de apartados/permisos */}
             <div className="bg-white p-6 border border-neutral-200 rounded-sm shadow-sm space-y-4">
               <div className="flex items-center gap-2 border-b border-neutral-200 pb-3">
                 <UserPlus className="w-5 h-5 text-emerald-600" />
                 <div>
                   <h3 className="font-semibold text-neutral-900 text-sm">Registrar Nuevo Usuario</h3>
-                  <p className="text-xs text-neutral-500">Crea accesos para otros colaboradores o administradores</p>
+                  <p className="text-xs text-neutral-500">Crea accesos y define apartados permitidos</p>
                 </div>
               </div>
 
-              <form onSubmit={handleCreateUser} className="space-y-3 text-xs">
+              <form onSubmit={handleCreateUser} className="space-y-3.5 text-xs">
                 <div>
                   <label className="block font-semibold text-neutral-700 mb-1">
                     Nombre Completo
@@ -2921,7 +2678,7 @@ export default function AdminSecretPage() {
 
                   <div>
                     <label className="block font-semibold text-neutral-700 mb-1">
-                      Rol de Permisos
+                      Rol Base
                     </label>
                     <select
                       value={newUserRole}
@@ -2929,7 +2686,7 @@ export default function AdminSecretPage() {
                       className="w-full p-2.5 bg-stone-50 border border-neutral-300 rounded-sm focus:border-gold-500 focus:outline-none"
                     >
                       <option value="asesor">Asesor Inmobiliario</option>
-                      <option value="admin">Administrador Total</option>
+                      <option value="admin">Administrador</option>
                     </select>
                   </div>
                 </div>
@@ -2948,6 +2705,132 @@ export default function AdminSecretPage() {
                   />
                 </div>
 
+                {/* SELECTOR DE APARTADOS / MÓDULOS PERMITIDOS */}
+                <div className="pt-2 border-t border-neutral-200 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <label className="block font-semibold text-neutral-800 text-xs">
+                      Apartados con Acceso Permitido
+                    </label>
+                    <span className="text-[11px] text-neutral-500 font-medium">
+                      {newUserPermissions.length} de {ALL_ADMIN_MODULES.length} seleccionados
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-neutral-500">
+                    Define a qué secciones del panel tendrá acceso este usuario.
+                  </p>
+
+                  {/* Opción 1 Principal: Todos los apartados (Acceso Total) */}
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={handleToggleAllNewUserPermissions}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleToggleAllNewUserPermissions();
+                      }
+                    }}
+                    className={`p-3 rounded-sm border transition-all cursor-pointer flex items-center justify-between ${
+                      newUserPermissions.length === ALL_ADMIN_MODULES.length
+                        ? "bg-neutral-900 border-neutral-900 text-white shadow-sm"
+                        : "bg-neutral-50 border-neutral-300 hover:border-neutral-400 text-neutral-800"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className={`w-5 h-5 rounded flex items-center justify-center transition-colors ${
+                          newUserPermissions.length === ALL_ADMIN_MODULES.length
+                            ? "bg-gold-500 text-neutral-950 font-bold"
+                            : "border border-neutral-400 bg-white"
+                        }`}
+                      >
+                        {newUserPermissions.length === ALL_ADMIN_MODULES.length && (
+                          <CheckCheck className="w-3.5 h-3.5" />
+                        )}
+                      </div>
+                      <div>
+                        <span className="font-semibold text-xs block leading-tight">
+                          Todos los apartados (Acceso Total)
+                        </span>
+                        <span
+                          className={`text-[11px] ${
+                            newUserPermissions.length === ALL_ADMIN_MODULES.length
+                              ? "text-neutral-300"
+                              : "text-neutral-500"
+                          }`}
+                        >
+                          Habilitar los 5 módulos simultáneamente
+                        </span>
+                      </div>
+                    </div>
+                    <span
+                      className={`text-[11px] font-mono px-2 py-0.5 rounded ${
+                        newUserPermissions.length === ALL_ADMIN_MODULES.length
+                          ? "bg-white/10 text-gold-300"
+                          : "bg-neutral-200 text-neutral-700"
+                      }`}
+                    >
+                      {newUserPermissions.length === ALL_ADMIN_MODULES.length ? "Todos Activos" : "Parcial"}
+                    </span>
+                  </div>
+
+                  {/* Cuadrícula de opciones individuales de apartados */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                    {ALL_ADMIN_MODULES.map((mod) => {
+                      const Icon = mod.icon;
+                      const isChecked = newUserPermissions.includes(mod.id);
+                      return (
+                        <div
+                          key={mod.id}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => handleToggleNewUserPermission(mod.id)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              handleToggleNewUserPermission(mod.id);
+                            }
+                          }}
+                          className={`p-2.5 rounded-sm border transition-all cursor-pointer flex items-start gap-2.5 text-left ${
+                            isChecked
+                              ? "bg-neutral-900 border-neutral-800 text-white shadow-sm"
+                              : "bg-stone-50 border-neutral-200 hover:border-neutral-300 text-neutral-800"
+                          }`}
+                        >
+                          <div
+                            className={`w-4 h-4 mt-0.5 rounded flex items-center justify-center shrink-0 transition-colors ${
+                              isChecked
+                                ? "bg-gold-500 text-neutral-950 font-bold"
+                                : "border border-neutral-400 bg-white"
+                            }`}
+                          >
+                            {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5">
+                              <Icon
+                                className={`w-3.5 h-3.5 shrink-0 ${
+                                  isChecked ? "text-gold-400" : "text-neutral-500"
+                                }`}
+                              />
+                              <span className="font-semibold text-xs leading-none truncate">
+                                {mod.label}
+                              </span>
+                            </div>
+                            <p
+                              className={`text-[10.5px] mt-1 leading-snug line-clamp-1 ${
+                                isChecked ? "text-neutral-300" : "text-neutral-500"
+                              }`}
+                            >
+                              {mod.description}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div className="pt-2">
                   <button
                     type="submit"
@@ -2961,7 +2844,7 @@ export default function AdminSecretPage() {
             </div>
           </div>
 
-          {/* Card 3: Lista de Usuarios Registrados */}
+          {/* Card 3: Lista de Usuarios Registrados con detalle de apartados permitidos */}
           <div className="bg-white border border-neutral-200 rounded-sm shadow-sm overflow-hidden space-y-4 p-6">
             <div className="flex items-center justify-between border-b border-neutral-200 pb-3">
               <div className="flex items-center gap-2">
@@ -2971,7 +2854,7 @@ export default function AdminSecretPage() {
                 </h3>
               </div>
               <span className="text-xs text-neutral-500">
-                Los usuarios pueden autenticarse con su propio usuario y contraseña.
+                Configura los apartados permitidos y contraseñas de cada usuario.
               </span>
             </div>
 
@@ -2982,6 +2865,7 @@ export default function AdminSecretPage() {
                     <th className="py-3 px-4">Usuario</th>
                     <th className="py-3 px-4">Nombre Completo</th>
                     <th className="py-3 px-4">Rol</th>
+                    <th className="py-3 px-4">Apartados Permitidos</th>
                     <th className="py-3 px-4">Fecha de Registro</th>
                     <th className="py-3 px-4 text-right">Acciones</th>
                   </tr>
@@ -2990,6 +2874,13 @@ export default function AdminSecretPage() {
                   {users.map((u) => {
                     const isSelf = currentUser?.id === u.id;
                     const isEditingPwd = editingPasswordUserId === u.id;
+                    const userMods =
+                      u.permissions && u.permissions.length > 0
+                        ? u.permissions
+                        : u.role === "admin"
+                        ? ALL_ADMIN_MODULES.map((m) => m.id)
+                        : (["propiedades"] as AdminModule[]);
+                    const hasAllModules = userMods.length === ALL_ADMIN_MODULES.length;
 
                     return (
                       <tr key={u.id} className="hover:bg-stone-50/70 transition-colors">
@@ -3015,11 +2906,44 @@ export default function AdminSecretPage() {
                             {u.role === "admin" ? "Administrador" : "Asesor"}
                           </span>
                         </td>
+                        <td className="py-3 px-4">
+                          {hasAllModules ? (
+                            <span className="inline-flex items-center gap-1 bg-neutral-900 text-gold-400 border border-neutral-800 px-2 py-0.5 rounded text-[11px] font-medium">
+                              <ShieldCheck className="w-3 h-3 text-gold-400" />
+                              <span>Acceso Total ({ALL_ADMIN_MODULES.length})</span>
+                            </span>
+                          ) : (
+                            <div className="flex flex-wrap gap-1">
+                              {userMods.map((modId) => {
+                                const modConfig = ALL_ADMIN_MODULES.find((m) => m.id === modId);
+                                if (!modConfig) return null;
+                                return (
+                                  <span
+                                    key={modId}
+                                    className="bg-stone-100 text-neutral-700 border border-neutral-200 px-1.5 py-0.5 rounded text-[10px] font-medium"
+                                  >
+                                    {modConfig.shortLabel}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </td>
                         <td className="py-3 px-4 text-neutral-500">
                           {u.createdAt ? new Date(u.createdAt).toLocaleDateString("es-AR") : "Inicial"}
                         </td>
                         <td className="py-3 px-4 text-right">
                           <div className="flex items-center justify-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleStartEditingPermissions(u)}
+                              className="text-neutral-700 hover:text-neutral-900 px-2 py-1 border border-neutral-200 rounded hover:bg-neutral-100 transition-colors flex items-center gap-1 cursor-pointer text-xs"
+                              title="Configurar apartados permitidos"
+                            >
+                              <Shield className="w-3 h-3 text-gold-600" />
+                              <span>Permisos</span>
+                            </button>
+
                             {isEditingPwd ? (
                               <div className="flex items-center gap-1.5 bg-neutral-100 p-1 rounded border border-neutral-300">
                                 <input
@@ -3055,7 +2979,7 @@ export default function AdminSecretPage() {
                                   setEditingPasswordUserId(u.id);
                                   setTempUserPassword("");
                                 }}
-                                className="text-neutral-600 hover:text-neutral-900 px-2 py-1 border border-neutral-200 rounded hover:bg-neutral-100 transition-colors flex items-center gap-1 cursor-pointer"
+                                className="text-neutral-600 hover:text-neutral-900 px-2 py-1 border border-neutral-200 rounded hover:bg-neutral-100 transition-colors flex items-center gap-1 cursor-pointer text-xs"
                                 title="Cambiar contraseña de este usuario"
                               >
                                 <KeyRound className="w-3 h-3 text-gold-600" />
@@ -3082,21 +3006,166 @@ export default function AdminSecretPage() {
               </table>
             </div>
           </div>
-        </div>
-      )}
 
-      {/* Modal interactivo de calibración 3D en primera persona (POV WASD + QE) */}
-      {calibratingTarget && (
-        <CameraCalibrationModal
-          isOpen={!!calibratingTarget}
-          onClose={() => setCalibratingTarget(null)}
-          roomName={calibratingTarget.name}
-          modelUrl={calibratingTarget.url}
-          format={calibratingTarget.format}
-          initialCameraPosition={calibratingTarget.initialCameraPosition || [-0.3, 0.55, 0.6]}
-          initialCameraTarget={calibratingTarget.initialCameraTarget || [-0.3, 0.55, -0.8]}
-          onSave={handleSaveCalibration}
-        />
+          {/* Modal interactivo para configurar permisos de un usuario existente */}
+          {editingPermissionsUserId && (
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-sm border border-neutral-200 shadow-2xl max-w-lg w-full p-6 space-y-4 animate-in fade-in zoom-in duration-150">
+                <div className="flex items-center justify-between border-b border-neutral-200 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-5 h-5 text-gold-600" />
+                    <div>
+                      <h3 className="font-semibold text-neutral-900 text-sm">
+                        Permisos de Acceso a Apartados
+                      </h3>
+                      <p className="text-xs text-neutral-500">
+                        Usuario: <strong className="text-neutral-800">@{users.find((u) => u.id === editingPermissionsUserId)?.username}</strong> ({users.find((u) => u.id === editingPermissionsUserId)?.name})
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setEditingPermissionsUserId(null)}
+                    className="text-neutral-400 hover:text-neutral-600 p-1 rounded cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  {/* Opción 1 Principal: Todos los apartados */}
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={handleToggleAllTempPermissions}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleToggleAllTempPermissions();
+                      }
+                    }}
+                    className={`p-3 rounded-sm border transition-all cursor-pointer flex items-center justify-between ${
+                      tempUserPermissions.length === ALL_ADMIN_MODULES.length
+                        ? "bg-neutral-900 border-neutral-900 text-white"
+                        : "bg-neutral-50 border-neutral-300 hover:border-neutral-400 text-neutral-800"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className={`w-5 h-5 rounded flex items-center justify-center transition-colors ${
+                          tempUserPermissions.length === ALL_ADMIN_MODULES.length
+                            ? "bg-gold-500 text-neutral-950 font-bold"
+                            : "border border-neutral-400 bg-white"
+                        }`}
+                      >
+                        {tempUserPermissions.length === ALL_ADMIN_MODULES.length && (
+                          <CheckCheck className="w-3.5 h-3.5" />
+                        )}
+                      </div>
+                      <div>
+                        <span className="font-semibold text-xs block">
+                          Todos los apartados (Acceso Total)
+                        </span>
+                        <span
+                          className={`text-[11px] ${
+                            tempUserPermissions.length === ALL_ADMIN_MODULES.length
+                              ? "text-neutral-300"
+                              : "text-neutral-500"
+                          }`}
+                        >
+                          Habilitar acceso irrestricto a los 5 módulos
+                        </span>
+                      </div>
+                    </div>
+                    <span
+                      className={`text-[11px] font-mono px-2 py-0.5 rounded ${
+                        tempUserPermissions.length === ALL_ADMIN_MODULES.length
+                          ? "bg-white/10 text-gold-300"
+                          : "bg-neutral-200 text-neutral-700"
+                      }`}
+                    >
+                      {tempUserPermissions.length} / {ALL_ADMIN_MODULES.length}
+                    </span>
+                  </div>
+
+                  {/* Apartados individuales */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {ALL_ADMIN_MODULES.map((mod) => {
+                      const Icon = mod.icon;
+                      const isChecked = tempUserPermissions.includes(mod.id);
+                      return (
+                        <div
+                          key={mod.id}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => handleToggleTempPermission(mod.id)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              handleToggleTempPermission(mod.id);
+                            }
+                          }}
+                          className={`p-2.5 rounded-sm border transition-all cursor-pointer flex items-start gap-2.5 text-left ${
+                            isChecked
+                              ? "bg-neutral-900 border-neutral-800 text-white"
+                              : "bg-stone-50 border-neutral-200 hover:border-neutral-300 text-neutral-800"
+                          }`}
+                        >
+                          <div
+                            className={`w-4 h-4 mt-0.5 rounded flex items-center justify-center shrink-0 transition-colors ${
+                              isChecked
+                                ? "bg-gold-500 text-neutral-950 font-bold"
+                                : "border border-neutral-400 bg-white"
+                            }`}
+                          >
+                            {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5">
+                              <Icon
+                                className={`w-3.5 h-3.5 shrink-0 ${
+                                  isChecked ? "text-gold-400" : "text-neutral-500"
+                                }`}
+                              />
+                              <span className="font-semibold text-xs leading-none truncate">
+                                {mod.label}
+                              </span>
+                            </div>
+                            <p
+                              className={`text-[10.5px] mt-1 leading-snug line-clamp-1 ${
+                                isChecked ? "text-neutral-300" : "text-neutral-500"
+                              }`}
+                            >
+                              {mod.description}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-neutral-200">
+                  <button
+                    type="button"
+                    onClick={() => setEditingPermissionsUserId(null)}
+                    className="px-4 py-2 border border-neutral-300 rounded-sm hover:bg-neutral-100 text-xs font-medium cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSaveUserPermissions(editingPermissionsUserId)}
+                    className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white rounded-sm text-xs font-semibold cursor-pointer flex items-center gap-1.5"
+                  >
+                    <Save className="w-3.5 h-3.5" />
+                    <span>Guardar Permisos</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

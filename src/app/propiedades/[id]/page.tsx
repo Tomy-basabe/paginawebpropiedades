@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useData } from '@/context/DataContext';
-import { Property, PropertyRoom3D } from '@/lib/types';
+import { Property } from '@/lib/types';
 import {
   ArrowLeft,
   MapPin,
@@ -20,36 +19,16 @@ import {
   Sparkles,
   Play,
   Eye,
-  Box,
 } from 'lucide-react';
 import WhatsAppIcon from '@/components/WhatsAppIcon';
 import { getWhatsAppUrl } from '@/lib/whatsapp';
-
-// Lazy load del visor 3D — solo se carga cuando se necesita
-const GaussianSplatViewer = dynamic(
-  () => import('@/components/3d/GaussianSplatViewer'),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        className="w-full bg-luxury-black rounded-sm flex items-center justify-center"
-        style={{ aspectRatio: '16/9' }}
-      >
-        <div className="text-center">
-          <div className="w-10 h-10 rounded-full border-2 border-transparent border-t-gold-500 animate-spin mx-auto mb-3" />
-          <p className="text-xs text-neutral-500">Cargando visor 3D...</p>
-        </div>
-      </div>
-    ),
-  }
-);
 
 export default function PropertyDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { properties, agentProfile } = useData();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [activeMediaTab, setActiveMediaTab] = useState<'3d' | 'video' | 'photos'>('3d');
+  const [activeMediaTab, setActiveMediaTab] = useState<'video' | 'photos'>('photos');
 
   const propertyId = params?.id as string;
 
@@ -71,7 +50,7 @@ export default function PropertyDetailPage() {
         </p>
         <button
           onClick={() => router.push('/propiedades')}
-          className="bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold px-5 py-2.5 rounded-sm transition-colors btn-tactile"
+          className="bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold px-5 py-2.5 rounded-sm transition-colors btn-tactile cursor-pointer"
         >
           Volver al Catálogo
         </button>
@@ -79,64 +58,57 @@ export default function PropertyDetailPage() {
     );
   }
 
-  // Normalizar lista de habitaciones 3D
-  const rooms3D: PropertyRoom3D[] = useMemo(() => {
-    if (!property) return [];
-    if (property.rooms3D && property.rooms3D.length > 0) return property.rooms3D;
-    if (property.model3D?.url) {
-      return [
-        {
-          id: 'room-default',
-          name: 'Ambiente Principal',
-          url: property.model3D.url,
-          format: property.model3D.format,
-          initialCameraPosition: property.model3D.initialCameraPosition,
-          initialCameraTarget: property.model3D.initialCameraTarget,
-        },
-      ];
-    }
-    return [];
-  }, [property]);
-
-  const [activeRoomId, setActiveRoomId] = useState<string>(rooms3D[0]?.id || '');
-
-  useEffect(() => {
-    if (rooms3D.length > 0) {
-      setActiveRoomId(rooms3D[0].id);
-    }
-  }, [rooms3D]);
-
-  const currentRoom = rooms3D.find((r) => r.id === activeRoomId) || rooms3D[0];
-  const has3D = rooms3D.length > 0;
   const hasVideo = !!property.videoUrl;
-
-  // Determinar tab inicial según contenido disponible
-  const effectiveTab = activeMediaTab === '3d' && !has3D
-    ? (hasVideo ? 'video' : 'photos')
-    : activeMediaTab === 'video' && !hasVideo
-    ? (has3D ? '3d' : 'photos')
-    : activeMediaTab;
+  const effectiveTab = activeMediaTab === 'video' && !hasVideo ? 'photos' : activeMediaTab;
 
   const formatPrice = (price: number) =>
     `${property.currency === 'ARS' ? '$' : 'USD'} ${price.toLocaleString('es-AR')}`;
 
-  const whatsappMessage = `Hola ${agentProfile.name}, quisiera coordinar una visita a la propiedad "${property.title}" (Ref #${property.id}) en ${property.location.neighborhood}. ¿Qué días y horarios tiene disponibles?`;
+  const whatsappMessage = `Hola ${agentProfile.name}, me interesa la propiedad "${property.title}" (Ref: ${property.id}). ¿Podrías darme más información?`;
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: property.title,
+          text: property.highlightSummary,
+          url: window.location.href,
+        });
+      } catch {
+        // Ignorar
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert('Enlace copiado al portapapeles');
+    }
+  };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 pb-28 sm:pb-10 space-y-8">
-      {/* Breadcrumb / Volver */}
-      <div className="flex items-center gap-3">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in pb-24 md:pb-8">
+      {/* Barra superior de navegación */}
+      <div className="flex items-center justify-between gap-4 border-b border-neutral-200 pb-4">
         <button
           onClick={() => router.back()}
-          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-neutral-500 hover:text-neutral-900 active:bg-neutral-200 rounded-sm hover:bg-neutral-100 transition-colors"
-          aria-label="Volver"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-600 hover:text-neutral-900 transition-colors btn-tactile cursor-pointer"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-4 h-4" />
+          <span>Volver al Catálogo</span>
         </button>
-        <div className="flex items-center gap-2 text-xs text-neutral-400">
-          <button onClick={() => router.push('/propiedades')} className="hover:text-gold-600 transition-colors">
-            Propiedades
-          </button>
+        <button
+          onClick={handleShare}
+          className="inline-flex items-center gap-1.5 text-xs text-neutral-600 hover:text-neutral-900 px-3 py-1.5 rounded-sm border border-neutral-200 hover:border-neutral-300 transition-colors btn-tactile cursor-pointer"
+        >
+          <Share2 className="w-3.5 h-3.5" />
+          <span>Compartir</span>
+        </button>
+      </div>
+
+      {/* Breadcrumb */}
+      <div className="text-xs text-neutral-400 flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center gap-1.5">
+          <span className="hover:text-neutral-600 cursor-pointer" onClick={() => router.push('/')}>Inicio</span>
+          <span>/</span>
+          <span className="hover:text-neutral-600 cursor-pointer" onClick={() => router.push('/propiedades')}>Propiedades</span>
           <span>/</span>
           <span className="text-neutral-600 font-medium truncate max-w-[200px]">
             {property.title}
@@ -146,113 +118,36 @@ export default function PropertyDetailPage() {
 
       {/* Sección multimedia principal */}
       <div className="space-y-3">
-        {/* Tabs multimedia — solo si hay más de un tipo de contenido */}
-        {(has3D || hasVideo) && (
+        {hasVideo && (
           <div className="flex items-center gap-2 border-b border-neutral-200 pb-2">
-            {has3D && (
-              <button
-                type="button"
-                onClick={() => setActiveMediaTab('3d')}
-                className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile ${
-                  effectiveTab === '3d'
-                    ? 'bg-gold-500 text-luxury-black shadow-md shadow-gold-500/20'
-                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                }`}
-              >
-                <Box className="w-3.5 h-3.5" />
-                <span>Recorrido 3D {rooms3D.length > 1 ? `(${rooms3D.length} Ambientes)` : ''}</span>
-              </button>
-            )}
-            {hasVideo && (
-              <button
-                type="button"
-                onClick={() => setActiveMediaTab('video')}
-                className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile ${
-                  effectiveTab === 'video'
-                    ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
-                    : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-                }`}
-              >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>Video Tour</span>
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setActiveMediaTab('video')}
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile cursor-pointer ${
+                effectiveTab === 'video'
+                  ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
+                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+              }`}
+            >
+              <Play className="w-3.5 h-3.5 fill-current" />
+              <span>Video Tour</span>
+            </button>
             <button
               type="button"
               onClick={() => setActiveMediaTab('photos')}
-              className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile ${
+              className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile cursor-pointer ${
                 effectiveTab === 'photos'
                   ? 'bg-neutral-900 text-white shadow-md'
                   : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
               }`}
             >
               <Eye className="w-3.5 h-3.5" />
-              <span>Fotografías ({property.images.length})</span>
+              <span>Fotografías (${property.images.length})</span>
             </button>
           </div>
         )}
 
-        {/* Contenido multimedia */}
-        {effectiveTab === '3d' && currentRoom?.url ? (
-          <div className="space-y-3">
-            {/* Selector de ambientes cuando hay múltiples habitaciones */}
-            {rooms3D.length > 1 && (
-              <div className="bg-stone-50 border border-neutral-200 rounded-sm p-3 space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-neutral-800 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
-                    <Box className="w-3.5 h-3.5 text-gold-600" />
-                    <span>Ambientes Escaneados en 3D ({rooms3D.length})</span>
-                  </span>
-                  <span className="text-[11px] text-neutral-500">
-                    Hacé clic en cualquier ambiente para recorrerlo
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                  {rooms3D.map((room, idx) => {
-                    const isSelected = room.id === currentRoom.id;
-                    return (
-                      <button
-                        key={room.id}
-                        type="button"
-                        onClick={() => setActiveRoomId(room.id)}
-                        className={`flex items-center gap-2 px-3.5 py-1.5 text-xs font-medium rounded-sm whitespace-nowrap transition-all border ${
-                          isSelected
-                            ? "bg-luxury-black text-gold-300 border-gold-500 font-semibold shadow-sm"
-                            : "bg-white text-neutral-700 hover:bg-neutral-100 border-neutral-300"
-                        }`}
-                      >
-                        <span className={`w-2 h-2 rounded-full ${isSelected ? "bg-gold-400 animate-pulse" : "bg-neutral-400"}`} />
-                        <span>{room.name || `Habitación ${idx + 1}`}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Visor 3D de la habitación activa */}
-            <div className="relative w-full rounded-sm overflow-hidden bg-luxury-black border border-neutral-800 shadow-2xl">
-              {rooms3D.length > 1 && (
-                <div className="absolute top-3 left-3 z-10 bg-black/80 backdrop-blur-md text-white text-[11px] sm:text-xs px-3 py-1.5 rounded-full border border-white/20 flex items-center gap-2 shadow-lg pointer-events-none">
-                  <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
-                  <span className="text-neutral-400">Ambiente actual:</span>
-                  <span className="font-semibold text-gold-300">{currentRoom.name}</span>
-                </div>
-              )}
-
-              <GaussianSplatViewer
-                key={currentRoom.id + currentRoom.url}
-                modelUrl={currentRoom.url}
-                format={currentRoom.format}
-                initialCameraPosition={currentRoom.initialCameraPosition}
-                initialCameraTarget={currentRoom.initialCameraTarget}
-                propertyTitle={`${property.title} - ${currentRoom.name}`}
-                className="shadow-2xl"
-              />
-            </div>
-          </div>
-        ) : effectiveTab === 'video' && property.videoUrl ? (
+        {effectiveTab === 'video' && property.videoUrl ? (
           <div className="relative w-full rounded-sm overflow-hidden bg-black border border-neutral-800 shadow-2xl" style={{ aspectRatio: '16/9' }}>
             <video
               src={property.videoUrl}
@@ -268,7 +163,6 @@ export default function PropertyDetailPage() {
             </div>
           </div>
         ) : (
-          /* Galería de fotos */
           <div className="space-y-3" id="galeria">
             <div className="relative w-full rounded-sm overflow-hidden bg-neutral-900 shadow-2xl" style={{ aspectRatio: '16/9' }}>
               <Image
@@ -280,7 +174,7 @@ export default function PropertyDetailPage() {
                 className="object-cover transition-opacity duration-300"
               />
               <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-sm">
-                Foto {activeImageIndex + 1} de {property.images.length}
+                Foto ${activeImageIndex + 1} de ${property.images.length}
               </div>
             </div>
             {property.images.length > 1 && (
@@ -289,7 +183,7 @@ export default function PropertyDetailPage() {
                   <button
                     key={idx}
                     onClick={() => setActiveImageIndex(idx)}
-                    className={`relative w-20 h-16 shrink-0 rounded-sm overflow-hidden border-2 transition-all ${
+                    className={`relative w-20 h-16 shrink-0 rounded-sm overflow-hidden border-2 transition-all cursor-pointer ${
                       activeImageIndex === idx
                         ? 'border-gold-500 scale-95'
                         : 'border-transparent opacity-70 hover:opacity-100'
@@ -314,32 +208,26 @@ export default function PropertyDetailPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-neutral-200">
         <div>
           <div className="flex items-center gap-2 flex-wrap mb-2">
-            <span className="text-xs font-mono font-medium text-neutral-400">REF #{property.id}</span>
+            <span className="text-xs font-mono font-medium text-neutral-400">REF #${property.id}</span>
             <span className="text-neutral-300">•</span>
             <span className="text-xs font-medium uppercase tracking-wider text-gold-600 bg-gold-50 px-2 py-0.5 rounded-sm">
-              {property.operation}
+              ${property.operation}
             </span>
             {property.isOpportunity && (
               <span className="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-sm flex items-center gap-1">
                 <Sparkles className="w-3 h-3" />
-                {property.opportunityBadge || 'Oportunidad'}
-              </span>
-            )}
-            {has3D && (
-              <span className="text-xs font-medium text-gold-700 bg-gold-50 px-2 py-0.5 rounded-sm flex items-center gap-1">
-                <Box className="w-3 h-3" />
-                Recorrido 3D
+                ${property.opportunityBadge || 'Oportunidad'}
               </span>
             )}
           </div>
           <div className="flex items-center gap-1.5 text-neutral-400 text-sm mb-2">
             <MapPin className="w-4 h-4 text-gold-500" />
             <span>
-              {property.location.address}, {property.location.neighborhood}, {property.location.city}
+              ${property.location.address}, ${property.location.neighborhood}, ${property.location.city}
             </span>
           </div>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900">
-            {property.title}
+            ${property.title}
           </h1>
         </div>
         <div className="text-left md:text-right">
@@ -347,11 +235,11 @@ export default function PropertyDetailPage() {
             Valor de Publicación
           </span>
           <span className="font-serif text-3xl font-bold text-gold-600">
-            {formatPrice(property.price)}
+            ${formatPrice(property.price)}
           </span>
           {property.features.expenses && property.features.expenses > 0 && (
             <span className="block text-xs text-neutral-400 mt-1">
-              Expensas: ~${property.features.expenses} USD / mes
+              Expensas: ~$${property.features.expenses} USD / mes
             </span>
           )}
         </div>
@@ -369,10 +257,10 @@ export default function PropertyDetailPage() {
         ].map((metric) => (
           <div key={metric.label} className="p-3.5 bg-stone-50 border border-neutral-200/80 rounded-sm text-center">
             <span className="block text-[11px] text-neutral-400 uppercase tracking-wider mb-1">
-              {metric.label}
+              ${metric.label}
             </span>
             <span className="text-base font-semibold text-neutral-800">
-              {metric.value}
+              ${metric.value}
             </span>
           </div>
         ))}
@@ -384,7 +272,7 @@ export default function PropertyDetailPage() {
           Memoria Descriptiva
         </h2>
         <p className="text-sm leading-relaxed text-neutral-700 whitespace-pre-line">
-          {property.description}
+          ${property.description}
         </p>
       </div>
 
@@ -401,7 +289,7 @@ export default function PropertyDetailPage() {
                 className="flex items-center gap-2 p-2.5 bg-white border border-neutral-200/80 rounded-sm text-xs text-neutral-800"
               >
                 <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>{amenity}</span>
+                <span>${amenity}</span>
               </div>
             ))}
           </div>
@@ -424,10 +312,10 @@ export default function PropertyDetailPage() {
               Atención Personalizada
             </span>
             <h3 className="font-serif text-lg font-bold text-white">
-              {agentProfile.name}
+              ${agentProfile.name}
             </h3>
             <p className="text-xs text-neutral-400">
-              {agentProfile.roleTitle} • {agentProfile.licenseNumber}
+              ${agentProfile.roleTitle} • ${agentProfile.licenseNumber}
             </p>
           </div>
         </div>
@@ -436,14 +324,14 @@ export default function PropertyDetailPage() {
             href={getWhatsAppUrl(agentProfile.whatsappNumber, whatsappMessage)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 md:flex-initial bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold px-5 py-3 rounded-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 btn-tactile"
+            className="flex-1 md:flex-initial bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-semibold px-5 py-3 rounded-sm transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 btn-tactile cursor-pointer"
           >
             <WhatsAppIcon className="w-4 h-4 drop-shadow-sm" />
             <span>Coordinar Visita</span>
           </a>
           <a
             href={`tel:${agentProfile.phone}`}
-            className="flex-1 md:flex-initial bg-white/10 hover:bg-white/20 text-white text-xs font-medium px-4 py-3 rounded-sm transition-colors flex items-center justify-center gap-2 border border-white/20 btn-tactile"
+            className="flex-1 md:flex-initial bg-white/10 hover:bg-white/20 text-white text-xs font-medium px-4 py-3 rounded-sm transition-colors flex items-center justify-center gap-2 border border-white/20 btn-tactile cursor-pointer"
           >
             <Phone className="w-4 h-4" />
             <span>Llamar</span>
@@ -451,11 +339,11 @@ export default function PropertyDetailPage() {
         </div>
       </div>
 
-      {/* Barra inferior fija en mobile con safe-area para iOS/Android */}
+      {/* Barra inferior mobile */}
       <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-neutral-200 p-3 px-4 safe-area-bottom-bar flex items-center justify-between gap-3 md:hidden z-30 shadow-[0_-10px_20px_rgba(0,0,0,0.1)]">
         <div>
           <span className="block text-[10px] text-neutral-400 uppercase font-medium">Valor</span>
-          <span className="font-serif text-lg font-bold text-gold-600">{formatPrice(property.price)}</span>
+          <span className="font-serif text-lg font-bold text-gold-600">${formatPrice(property.price)}</span>
         </div>
         <a
           href={getWhatsAppUrl(agentProfile.whatsappNumber, whatsappMessage)}

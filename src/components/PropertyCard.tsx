@@ -13,8 +13,7 @@ import {
   ArrowUpRight,
   Car,
   Play,
-  Video,
-  Box
+  Video
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
@@ -83,12 +82,6 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
 
         {/* Badges superiores - Esquina Derecha: Medios Inmersivos (3D / Video) */}
         <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
-          {(property.has3DTour || property.model3D?.url) && (
-            <span className="bg-neutral-950/85 backdrop-blur-md border border-gold-400/40 text-gold-300 text-[10px] font-medium px-2 py-1 rounded-[2px] flex items-center gap-1 shadow-xs">
-              <Box className="w-3 h-3 text-gold-400" />
-              <span>Tour 3D</span>
-            </span>
-          )}
           {(property.hasVideoTour || property.videoUrl) && (
             <span className="bg-neutral-950/85 backdrop-blur-md border border-white/10 text-white text-[10px] font-medium px-2 py-1 rounded-[2px] flex items-center gap-1 shadow-xs">
               <Play className="w-2.5 h-2.5 fill-current text-neutral-200" />

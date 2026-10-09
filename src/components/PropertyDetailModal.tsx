@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Property, PropertyRoom3D } from "@/lib/types";
+import { Property } from "@/lib/types";
 import { useData } from "@/context/DataContext";
 import { 
   X, 
@@ -24,27 +24,11 @@ import {
   Video,
   Film,
   Eye,
-  Box,
   ExternalLink
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
-import { TourViewer } from "@/components/TourViewer";
 
-const GaussianSplatViewer = dynamic(
-  () => import("@/components/3d/GaussianSplatViewer"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full h-80 sm:h-96 md:h-[480px] bg-luxury-black rounded-sm flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-10 h-10 rounded-full border-2 border-transparent border-t-gold-500 animate-spin mx-auto mb-3" />
-          <p className="text-xs text-neutral-400">Cargando visor 3D...</p>
-        </div>
-      </div>
-    ),
-  }
-);
 
 interface PropertyDetailModalProps {
   property: Property | null;
@@ -55,98 +39,17 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
   const { agentProfile, bankRates } = useData();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  // Normalizar lista de habitaciones 3D (soporta tanto rooms3D como model3D legacy)
-  const rooms3D: PropertyRoom3D[] = property
-    ? property.rooms3D && property.rooms3D.length > 0
-      ? property.rooms3D
-      : property.model3D?.url
-      ? [
-          {
-            id: "room-default",
-            name: "Ambiente Principal",
-            url: property.model3D.url,
-            format: property.model3D.format,
-            initialCameraPosition: property.model3D.initialCameraPosition,
-            initialCameraTarget: property.model3D.initialCameraTarget,
-          },
-        ]
-      : []
-    : [];
-
-  const [activeRoomId, setActiveRoomId] = useState<string>(rooms3D[0]?.id || "");
-
-  useEffect(() => {
-    if (rooms3D.length > 0) {
-      setActiveRoomId(rooms3D[0].id);
-    }
-  }, [property?.id]);
-
-  const currentRoom = rooms3D.find((r) => r.id === activeRoomId) || rooms3D[0];
-
-  const has3DContent = rooms3D.length > 0;
-
-  const [activeMediaTab, setActiveMediaTab] = useState<"3d" | "video" | "photos" | "luma3d">(
-    has3DContent ? "3d" : property?.videoUrl ? "video" : "photos"
+  const [activeMediaTab, setActiveMediaTab] = useState<"video" | "photos">(
+    property?.videoUrl ? "video" : "photos"
   );
 
-  // Sincronizar tab por defecto al cambiar propiedad
   useEffect(() => {
-    if (has3DContent) {
-      setActiveMediaTab("3d");
-    } else if (property?.videoUrl) {
+    if (property?.videoUrl) {
       setActiveMediaTab("video");
     } else {
       setActiveMediaTab("photos");
     }
-  }, [property?.id, has3DContent]);
-
-  // Estado del Pipeline Luma AI para generar el tour 3D
-  const [lumaProcessingState, setLumaProcessingState] = useState<"idle" | "processing" | "ready">("idle");
-  const [lumaProgress, setLumaProgress] = useState(0);
-  const [lumaStepText, setLumaStepText] = useState("");
-  const [generatedTourUrl, setGeneratedTourUrl] = useState<string | null>(null);
-
-  const handleStartLumaProcessing = async () => {
-    if (!property?.videoUrl) return;
-    setLumaProcessingState("processing");
-    setLumaProgress(15);
-    setLumaStepText("Analizando video: patio, accesos y ambientes interiores...");
-
-    setTimeout(() => {
-      setLumaProgress(45);
-      setLumaStepText("Extrayendo nubes de puntos y trayectoria de cámara...");
-    }, 1200);
-
-    setTimeout(() => {
-      setLumaProgress(80);
-      setLumaStepText("Optimizando NeRF y Gaussian Splatting en la nube...");
-    }, 2400);
-
-    try {
-      const res = await fetch("/api/generate-tour", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          propertyId: property.id,
-          videoUrl: property.videoUrl,
-        }),
-      });
-
-      const data = await res.json();
-      setLumaProgress(100);
-      setLumaStepText("¡Recorrido 3D completado con éxito!");
-
-      setTimeout(() => {
-        setGeneratedTourUrl(data.artifactUrl || currentRoom?.url || "/models/demo-fast.splat");
-        setLumaProcessingState("ready");
-      }, 700);
-    } catch (err) {
-      setLumaProgress(100);
-      setLumaStepText("¡Recorrido 3D completado!");
-      setGeneratedTourUrl(currentRoom?.url || "/models/demo-fast.splat");
-      setLumaProcessingState("ready");
-    }
-  };
+  }, [property?.id, property?.videoUrl]);
 
   // Estados para la mini-calculadora hipotecaria dentro de la propiedad
   const [downPaymentPercent, setDownPaymentPercent] = useState(25);
@@ -199,12 +102,6 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
                 {property.opportunityBadge || "Oportunidad"}
               </span>
             )}
-            {(property.has3DTour || property.model3D?.url) && (
-              <span className="text-xs font-medium text-gold-700 bg-gold-50 px-2 py-0.5 rounded-sm flex items-center gap-1">
-                <Box className="w-3 h-3" />
-                Recorrido 3D
-              </span>
-            )}
           </div>
           <div className="flex items-center gap-2">
             <Link
@@ -227,247 +124,40 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
 
         {/* Contenido scrolleable */}
         <div className="max-h-[82vh] overflow-y-auto p-6 md:p-8 space-y-8">
-          {/* Galería Multimedia: Recorrido 3D, Video Tour y Fotos */}
+          {/* Galería Multimedia: Video Tour y Fotos */}
           <div className="space-y-3">
             {/* Barra de Tabs Multimedia */}
-            {(has3DContent || property.videoUrl) && (
+            {property.videoUrl && (
               <div className="flex items-center gap-2 border-b border-neutral-200 pb-2 overflow-x-auto">
-                {has3DContent && (
-                  <button
-                    type="button"
-                    onClick={() => setActiveMediaTab("3d")}
-                    className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile ${
-                      activeMediaTab === "3d"
-                        ? "bg-gold-500 text-luxury-black shadow-md shadow-gold-500/20"
-                        : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
-                    }`}
-                  >
-                    <Box className="w-3.5 h-3.5" />
-                    <span>Recorrido 3D {rooms3D.length > 1 ? `(${rooms3D.length} Ambientes)` : "Gaussian Splatting"}</span>
-                  </button>
-                )}
-
-                {property.videoUrl && (
-                  <button
-                    type="button"
-                    onClick={() => setActiveMediaTab("luma3d")}
-                    className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile ${
-                      activeMediaTab === "luma3d"
-                        ? "bg-purple-600 text-white shadow-md shadow-purple-600/30"
-                        : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
-                    }`}
-                  >
-                    <Sparkles className="w-3.5 h-3.5 fill-current" />
-                    <span>Recorrido IA 3D</span>
-                  </button>
-                )}
-
-                {property.videoUrl && (
-                  <button
-                    type="button"
-                    onClick={() => setActiveMediaTab("video")}
-                    className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile ${
-                      activeMediaTab === "video"
-                        ? "bg-red-600 text-white shadow-md shadow-red-600/30"
-                        : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
-                    }`}
-                  >
-                    <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>Video Tour</span>
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => setActiveMediaTab("video")}
+                  className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile cursor-pointer ${
+                    activeMediaTab === "video"
+                      ? "bg-red-600 text-white shadow-md shadow-red-600/30"
+                      : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+                  }`}
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>Video Tour</span>
+                </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveMediaTab("photos")}
-                  className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile ${
+                  className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-sm transition-all btn-tactile cursor-pointer ${
                     activeMediaTab === "photos"
                       ? "bg-neutral-900 text-white shadow-md"
                       : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
                   }`}
                 >
                   <Eye className="w-3.5 h-3.5" />
-                  <span>Fotografías ({property.images.length})</span>
+                  <span>Fotografías (${property.images.length})</span>
                 </button>
               </div>
             )}
 
-            {/* Vista 3D Gaussian Splatting por Habitaciones */}
-            {activeMediaTab === "3d" && currentRoom?.url ? (
-              <div className="space-y-3">
-                {/* Selector de habitaciones cuando hay múltiples ambientes */}
-                {rooms3D.length > 1 && (
-                  <div className="bg-stone-50 border border-neutral-200 rounded-sm p-3 space-y-2">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-neutral-800 flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
-                        <Box className="w-3.5 h-3.5 text-gold-600" />
-                        <span>Habitaciones Escaneadas en 3D ({rooms3D.length})</span>
-                      </span>
-                      <span className="text-[11px] text-neutral-500">
-                        Hacé clic en cualquier ambiente para recorrerlo
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                      {rooms3D.map((room, idx) => {
-                        const isSelected = room.id === currentRoom.id;
-                        return (
-                          <button
-                            key={room.id}
-                            type="button"
-                            onClick={() => setActiveRoomId(room.id)}
-                            className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-sm whitespace-nowrap transition-all border ${
-                              isSelected
-                                ? "bg-luxury-black text-gold-300 border-gold-500 font-semibold shadow-sm"
-                                : "bg-white text-neutral-700 hover:bg-neutral-100 border-neutral-300"
-                            }`}
-                          >
-                            <span className={`w-2 h-2 rounded-full ${isSelected ? "bg-gold-400 animate-pulse" : "bg-neutral-400"}`} />
-                            <span>{room.name || `Habitación ${idx + 1}`}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Contenedor del visor 3D */}
-                <div className="relative w-full rounded-sm overflow-hidden bg-luxury-black border border-neutral-800 shadow-2xl">
-                  {rooms3D.length > 1 && (
-                    <div className="absolute top-3 left-3 z-10 bg-black/80 backdrop-blur-md text-white text-[11px] sm:text-xs px-3 py-1.5 rounded-full border border-white/20 flex items-center gap-2 shadow-lg pointer-events-none">
-                      <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
-                      <span className="text-neutral-400">Recorriendo:</span>
-                      <span className="font-semibold text-gold-300">{currentRoom.name}</span>
-                    </div>
-                  )}
-
-                  <GaussianSplatViewer
-                    key={currentRoom.id + currentRoom.url}
-                    modelUrl={currentRoom.url}
-                    format={currentRoom.format}
-                    initialCameraPosition={currentRoom.initialCameraPosition}
-                    initialCameraTarget={currentRoom.initialCameraTarget}
-                    propertyTitle={`${property.title} - ${currentRoom.name}`}
-                  />
-                </div>
-              </div>
-            ) : activeMediaTab === "luma3d" && property.videoUrl ? (
-              <div className="space-y-4">
-                <div className="bg-gradient-to-r from-purple-900/10 via-stone-50 to-amber-50 border border-purple-200/70 rounded-sm p-3.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-full bg-purple-600/10 flex items-center justify-center text-purple-600 shrink-0">
-                      <Sparkles className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-neutral-800">Pipeline Luma AI (Video-to-3D Gaussian Splats)</h4>
-                      <p className="text-[11px] text-neutral-500">Convierte el video que recorre el patio y las habitaciones en un modelo 3D navegable</p>
-                    </div>
-                  </div>
-                  <span className="text-[10px] bg-purple-600 text-white px-2.5 py-1 rounded-sm font-semibold uppercase tracking-wider shrink-0">
-                    Luma AI Studio
-                  </span>
-                </div>
-
-                {lumaProcessingState === "ready" || generatedTourUrl ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-xs px-1">
-                      <span className="text-neutral-700 flex items-center gap-1.5 font-medium">
-                        <Check className="w-4 h-4 text-emerald-600" />
-                        <span>Recorrido 3D generado de la propiedad (Patio e Interiores)</span>
-                      </span>
-                      <button
-                        onClick={() => {
-                          setLumaProcessingState("idle");
-                          setGeneratedTourUrl(null);
-                        }}
-                        className="text-[11px] text-purple-600 hover:text-purple-800 underline"
-                      >
-                        Procesar nuevamente
-                      </button>
-                    </div>
-                    <div className="relative w-full rounded-sm overflow-hidden bg-luxury-black border border-neutral-800 shadow-2xl">
-                      <GaussianSplatViewer
-                        modelUrl={generatedTourUrl || currentRoom?.url || "/models/demo-fast.splat"}
-                        propertyTitle={`${property.title} - Reconstrucción 3D`}
-                      />
-                    </div>
-                  </div>
-                ) : lumaProcessingState === "processing" ? (
-                  <div className="p-8 sm:p-12 bg-neutral-900 text-white rounded-sm border border-neutral-800 text-center space-y-5">
-                    <div className="w-12 h-12 rounded-full border-2 border-transparent border-t-purple-500 animate-spin mx-auto" />
-                    <div className="space-y-1.5 max-w-md mx-auto">
-                      <h4 className="font-semibold text-sm sm:text-base text-white">
-                        {lumaStepText || "Procesando video con IA..."}
-                      </h4>
-                      <p className="text-xs text-neutral-400">
-                        Entrenando redes Gaussian Splatting para reconstruir la casa en 3D
-                      </p>
-                    </div>
-                    <div className="w-full max-w-md mx-auto bg-neutral-800 rounded-full h-2 overflow-hidden border border-neutral-700">
-                      <div
-                        className="bg-purple-600 h-full transition-all duration-500 ease-out"
-                        style={{ width: `${lumaProgress}%` }}
-                      />
-                    </div>
-                    <span className="text-[11px] text-neutral-400 font-mono">{lumaProgress}% completado</span>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-stone-50 border border-neutral-200 rounded-sm p-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-700">
-                        <Video className="w-4 h-4 text-red-600" />
-                        <span>Video fuente original (Patio y Recorrido de Casa)</span>
-                      </div>
-                      <div className="relative aspect-video rounded-sm overflow-hidden bg-black">
-                        <video
-                          src={property.videoUrl}
-                          controls
-                          muted
-                          preload="metadata"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex flex-col justify-between space-y-4">
-                      <div className="space-y-2">
-                        <div className="inline-flex items-center gap-1.5 bg-purple-100 text-purple-700 px-2 py-0.5 rounded text-[11px] font-semibold">
-                          <Sparkles className="w-3 h-3" />
-                          <span>Reconstrucción Fotogramétrica 3D</span>
-                        </div>
-                        <h4 className="font-serif text-sm sm:text-base font-bold text-neutral-800">
-                          Generar Recorrido Navegable 3D
-                        </h4>
-                        <p className="text-xs text-neutral-600 leading-relaxed">
-                          Este proceso toma el video grabado con el smartphone y genera un modelo 3D con Gaussian Splats navegable en primera persona, abarcando patio, living y ambientes.
-                        </p>
-                      </div>
-
-                      <div className="space-y-2 pt-2">
-                        <button
-                          type="button"
-                          onClick={handleStartLumaProcessing}
-                          className="w-full bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs sm:text-sm py-3 px-4 rounded-sm transition-all shadow-md flex items-center justify-center gap-2 btn-tactile cursor-pointer"
-                        >
-                          <Sparkles className="w-4 h-4" />
-                          <span>🪄 Procesar este Video con Luma AI</span>
-                        </button>
-
-                        {has3DContent && (
-                          <button
-                            type="button"
-                            onClick={() => setActiveMediaTab("3d")}
-                            className="w-full bg-neutral-200 hover:bg-neutral-300 text-neutral-800 font-medium text-xs py-2 px-3 rounded-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-                          >
-                            <Box className="w-3.5 h-3.5 text-gold-600" />
-                            <span>Ver Tour 3D Escaneado de Ambientes</span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : activeMediaTab === "video" && property.videoUrl ? (
+            {activeMediaTab === "video" && property.videoUrl ? (
               /* Vista de Video Tour */
               <div className="relative h-80 sm:h-96 md:h-[480px] w-full rounded-sm overflow-hidden bg-black flex items-center justify-center border border-neutral-800 shadow-2xl">
                 <video

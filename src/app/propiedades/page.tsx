@@ -20,8 +20,7 @@ import {
   Sparkles,
   Inbox,
   Video,
-  Play,
-  Box
+  Play
 } from "lucide-react";
 
 function PropiedadesContent() {
@@ -35,14 +34,12 @@ function PropiedadesContent() {
   const initialLocation = searchParams.get("location") || "";
   const initialStatus = searchParams.get("status") || "todos";
   const initialVideo = searchParams.get("video") === "true";
-  const initial3D = searchParams.get("tour3d") === "true";
 
   const [searchQuery, setSearchQuery] = useState(initialLocation);
   const [operationFilter, setOperationFilter] = useState<string>(initialOperation);
   const [typeFilter, setTypeFilter] = useState<string>(initialType);
   const [statusFilter, setStatusFilter] = useState<string>(initialStatus);
   const [onlyVideoTour, setOnlyVideoTour] = useState<boolean>(initialVideo);
-  const [only3DTour, setOnly3DTour] = useState<boolean>(initial3D);
   const [minPrice, setMinPrice] = useState<string>("");
   const [maxPrice, setMaxPrice] = useState<string>("");
   const [bedroomsFilter, setBedroomsFilter] = useState<string>("todos");
@@ -70,9 +67,6 @@ function PropiedadesContent() {
     }
     if (searchParams.get("video") === "true") {
       setOnlyVideoTour(true);
-    }
-    if (searchParams.get("tour3d") === "true") {
-      setOnly3DTour(true);
     }
   }, [searchParams]);
 
@@ -120,16 +114,6 @@ function PropiedadesContent() {
         return false;
       }
 
-      // Recorrido 3D Gaussian Splatting
-      if (only3DTour) {
-        const has3D =
-          Boolean(item.has3DTour) ||
-          Boolean((item as any).has_3d_tour) ||
-          Boolean(item.model3D?.url) ||
-          Boolean((item as any).model_3d?.url);
-        if (!has3D) return false;
-      }
-
       // Precios
       if (minPrice && item.price < Number(minPrice)) {
         return false;
@@ -161,7 +145,6 @@ function PropiedadesContent() {
     typeFilter,
     statusFilter,
     onlyVideoTour,
-    only3DTour,
     minPrice,
     maxPrice,
     bedroomsFilter,
@@ -174,7 +157,6 @@ function PropiedadesContent() {
     setTypeFilter("todos");
     setStatusFilter("todos");
     setOnlyVideoTour(false);
-    setOnly3DTour(false);
     setMinPrice("");
     setMaxPrice("");
     setBedroomsFilter("todos");
@@ -199,25 +181,6 @@ function PropiedadesContent() {
 
       {/* Chips Rápidos de Filtrado para Teléfonos y Pantallas Táctiles */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
-        {/* Chip prioritario de Recorrido 3D */}
-        <button
-          type="button"
-          onClick={() => {
-            const nextVal = !only3DTour;
-            setOnly3DTour(nextVal);
-            if (nextVal) {
-              setSearchQuery("");
-            }
-          }}
-          className={`shrink-0 text-xs px-3.5 py-1.5 rounded-[3px] border transition-all flex items-center gap-1.5 font-medium ${
-            only3DTour
-              ? "bg-gold-500 text-neutral-950 border-gold-500 shadow-xs font-semibold"
-              : "bg-white text-stone-700 border-stone-300 hover:border-gold-400"
-          }`}
-        >
-          <Box className="w-3.5 h-3.5 text-current" />
-          <span>Tour 3D</span>
-        </button>
 
         {/* Chip prioritario de Video Tours */}
         <button
@@ -435,18 +398,6 @@ function PropiedadesContent() {
           </div>
 
           <div className="hidden sm:flex sm:col-span-3 justify-end items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setOnly3DTour(!only3DTour)}
-              className={`text-xs flex items-center gap-1.5 py-2 px-2.5 rounded-sm border transition-all ${
-                only3DTour
-                  ? "bg-gold-500 text-luxury-black border-gold-500 font-semibold"
-                  : "bg-stone-50 text-neutral-700 border-neutral-300 hover:border-neutral-400"
-              }`}
-            >
-              <Box className="w-3 h-3 text-current" />
-              <span>Recorridos 3D</span>
-            </button>
 
             <button
               type="button"
