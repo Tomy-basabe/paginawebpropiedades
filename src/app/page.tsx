@@ -96,17 +96,17 @@ export default function HomePage() {
           {/* Badge institucional sobrio */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[2px] bg-white/[0.05] border border-white/[0.1] text-neutral-300 text-[11px] tracking-[0.2em] uppercase font-medium backdrop-blur-md">
             <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
-            <span>99 Propiedades • Desarrollos & Bienes Raíces</span>
+            <span>99 Propiedades • Inmobiliaria Líder en Santa Cruz</span>
           </div>
 
-          {/* Título de impacto editorial sobrio */}
+          {/* Título de impacto editorial con keywords de alta relevancia */}
           <div className="space-y-4">
             <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-normal tracking-tight leading-[1.15] text-white">
-              Propiedades singulares, desarrollos <br className="hidden sm:block" />
-              y asesoramiento inmobiliario de excelencia.
+              Propiedades en Santa Cruz: <br className="hidden sm:block" />
+              Casas, Alquileres, Lotes y Terrenos.
             </h1>
             <p className="max-w-2xl mx-auto text-sm sm:text-base text-neutral-300 leading-relaxed font-light">
-              Gestión inmobiliaria personalizada a cargo de {agentProfile.name}. Comercialización exclusiva de residencias, loteos campestres y emprendimientos en pozo con respaldo financiero.
+              Asesoramiento inmobiliario líder en Río Gallegos, El Calafate y toda la provincia de Santa Cruz a cargo de {agentProfile.name}. Venta de casas, alquileres, loteos y tasaciones sin cargo con video tours profesionales.
             </p>
 
             {/* Acceso directo al catálogo */}
@@ -116,7 +116,7 @@ export default function HomePage() {
                 className="bg-gold-500 hover:bg-gold-400 text-neutral-950 font-semibold text-xs sm:text-sm uppercase tracking-wider px-6 py-3.5 rounded-[3px] transition-all shadow-sm hover:shadow-md flex items-center gap-2.5 group"
               >
                 <Building className="w-4 h-4 text-neutral-950" />
-                <span>Explorar Catálogo Completo</span>
+                <span>Ver Propiedades en Santa Cruz</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -171,13 +171,13 @@ export default function HomePage() {
             <form onSubmit={handleHeroSearch} className="grid grid-cols-1 sm:grid-cols-12 gap-3">
               <div className="sm:col-span-5">
                 <label className="block text-[11px] font-medium uppercase tracking-wider text-neutral-400 mb-1.5">
-                  Ubicación o Barrio
+                  Ciudad o Barrio en Santa Cruz
                 </label>
                 <div className="relative">
                   <MapPin className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
                   <input
                     type="text"
-                    placeholder="Ej: Nordelta, Palermo, San Isidro..."
+                    placeholder="Ej: Río Gallegos, El Calafate, Caleta Olivia..."
                     value={heroLocation}
                     onChange={(e) => setHeroLocation(e.target.value)}
                     className="w-full pl-9 pr-3 py-2.5 text-xs bg-white/[0.05] border border-white/[0.12] rounded-[3px] focus:outline-none focus:border-gold-400 text-white placeholder:text-neutral-500"
@@ -289,6 +289,87 @@ export default function HomePage() {
       {/* 2. SECCIÓN DESTACADA DINÁMICA: OPORTUNIDADES & DESARROLLOS */}
       <section id="contenido-principal" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
         <BannerHero />
+      </section>
+
+      {/* 2.1 HUB DE BÚSQUEDA LOCAL: SANTA CRUZ & PATAGONIA (OPTIMIZADO PARA GOOGLE) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white border border-stone-200/90 rounded-[4px] p-6 sm:p-8 shadow-2xs">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 border-b border-stone-100 pb-4">
+            <div>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-700 block mb-1">
+                Guía Inmobiliaria Regional
+              </span>
+              <h2 className="font-serif text-xl sm:text-2xl font-normal text-neutral-900 tracking-tight">
+                Búsquedas Frecuentes en Santa Cruz
+              </h2>
+            </div>
+            <p className="text-xs text-neutral-500 font-light max-w-md">
+              Acceso directo a las propiedades más consultadas en Río Gallegos, El Calafate y toda la provincia.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {[
+              {
+                title: "Casas en Venta",
+                subtitle: "Santa Cruz",
+                href: "/propiedades?operation=venta&type=casa",
+                badge: "Muy buscado",
+              },
+              {
+                title: "Alquileres",
+                subtitle: "Casas y Deptos",
+                href: "/propiedades?operation=alquiler",
+                badge: "Disponibles",
+              },
+              {
+                title: "Terrenos & Lotes",
+                subtitle: "En Cuotas y Contado",
+                href: "/propiedades?type=loteo",
+                badge: "Inversión",
+              },
+              {
+                title: "Río Gallegos",
+                subtitle: "Centro y Barrios",
+                href: "/propiedades?location=R%C3%ADo%20Gallegos",
+                badge: "Local",
+              },
+              {
+                title: "El Calafate",
+                subtitle: "Turístico & Residencial",
+                href: "/propiedades?location=El%20Calafate",
+                badge: "Patagonia",
+              },
+              {
+                title: "Créditos UVA",
+                subtitle: "Asesoramiento 100%",
+                href: "/financiamiento",
+                badge: "Simulador",
+              },
+            ].map((hub, idx) => (
+              <Link
+                key={idx}
+                href={hub.href}
+                className="group p-3.5 rounded-[3px] bg-stone-50/80 hover:bg-neutral-900 border border-stone-200/80 hover:border-neutral-900 transition-all duration-200 flex flex-col justify-between hover:shadow-md"
+              >
+                <div>
+                  <span className="text-[9px] uppercase tracking-wider font-semibold text-gold-700 group-hover:text-gold-400 block mb-1">
+                    {hub.badge}
+                  </span>
+                  <h3 className="text-xs font-semibold text-neutral-900 group-hover:text-white transition-colors">
+                    {hub.title}
+                  </h3>
+                  <p className="text-[11px] text-neutral-500 group-hover:text-neutral-400 transition-colors mt-0.5">
+                    {hub.subtitle}
+                  </p>
+                </div>
+                <div className="pt-3 flex items-center justify-end text-neutral-400 group-hover:text-gold-400 transition-colors">
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* 3. CATÁLOGO INTERACTIVO: PROPIEDADES DESTACADAS */}

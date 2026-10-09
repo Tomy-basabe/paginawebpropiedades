@@ -156,8 +156,40 @@ export default function PropertyDetailPage() {
     setActiveImageIndex((prev) => (prev - 1 + property.images.length) % property.images.length);
   };
 
+  const propertyJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    name: `${property.title} - ${property.location.city}, Santa Cruz`,
+    description: property.description,
+    url: `https://99propiedades.com.ar/propiedades/${property.id}`,
+    image: property.images,
+    offers: {
+      "@type": "Offer",
+      price: property.price,
+      priceCurrency: property.currency,
+      availability:
+        property.status === "disponible"
+          ? "https://schema.org/InStock"
+          : "https://schema.org/SoldOut",
+    },
+    spatialCoverage: {
+      "@type": "Place",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: property.location.address,
+        addressLocality: property.location.city,
+        addressRegion: property.location.zone || "Santa Cruz",
+        addressCountry: "AR",
+      },
+    },
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-fade-in pb-28 md:pb-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(propertyJsonLd) }}
+      />
       {/* Barra superior de navegación y acciones */}
       <div className="flex items-center justify-between gap-4 border-b border-neutral-200 pb-4">
         <button

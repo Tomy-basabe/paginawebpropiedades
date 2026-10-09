@@ -174,10 +174,10 @@ function PropiedadesContent() {
           <span>Buscador Avanzado & Catálogo Inmobiliario</span>
         </div>
         <h1 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900">
-          Explorar Propiedades Singulares
+          Propiedades en Santa Cruz | Venta, Alquiler, Casas y Terrenos
         </h1>
         <p className="text-xs sm:text-sm text-neutral-500 mt-1 max-w-2xl">
-          Filtre por tipo de operación, tipología arquitectónica, rango de inversión o ubicación para encontrar el activo que mejor se adapte a su perfil.
+          Catálogo inmobiliario líder en la provincia de Santa Cruz con Juan Pablo Pino. Venta de casas, alquileres residenciales, terrenos y loteos en Río Gallegos, El Calafate y toda la Patagonia.
         </p>
       </div>
 
@@ -258,7 +258,7 @@ function PropiedadesContent() {
               <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-3.5 sm:top-3" />
               <input
                 type="text"
-                placeholder="Buscar por barrio, calle, título o REF..."
+                placeholder="Buscar por ciudad (Río Gallegos, El Calafate), barrio o calle..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2.5 text-xs bg-stone-50 border border-neutral-300 rounded-sm focus:outline-none focus:border-gold-500 text-neutral-800"

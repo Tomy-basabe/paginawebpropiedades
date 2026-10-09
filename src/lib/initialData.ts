@@ -94,10 +94,10 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-01.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "Tigre",
-      "neighborhood": "Rincón de Milberg",
-      "address": "Av. Santa María de las Conchas al 3400",
-      "zone": "Zona Norte"
+      "city": "Río Gallegos",
+      "neighborhood": "Barrio Jardín",
+      "address": "Av. San Martín al 1400",
+      "zone": "Santa Cruz"
     },
     "features": {
       "bedrooms": 4,
@@ -106,17 +106,17 @@ export const INITIAL_PROPERTIES: Property[] = [
       "totalArea": 480,
       "coveredArea": 260,
       "yearBuilt": 2019,
-      "expenses": 80
+      "expenses": 0
     },
     "amenities": [
-      "Piscina Climatizada",
+      "Calefacción Central por Radiadores",
       "Quincho Techado con Parrilla",
-      "Jardín Parquizado",
+      "Jardín Parquizado con Cerco Perimetral",
       "Portón Automático",
-      "Riego por Aspersión"
+      "Aberturas Doble Vidrio Hermético"
     ],
-    "highlightSummary": "Lote amplio de casi 500m² con quincho equipado y excelente entorno residencial.",
-    "description": "Sólida propiedad de estilo clásico con refacciones de diseño contemporáneo. Amplio living comedor con hogar a leña, cocina comedor diario totalmente equipada con amoblamiento a medida. En exterior cuenta con galería cubierta, parrilla con cerramiento de acero inoxidable y piscina con filtro automatizado. Lista para habitar.",
+    "highlightSummary": "Lote amplio de casi 500m² con quincho equipado en zona residencial destacada de Río Gallegos, Santa Cruz.",
+    "description": "Sólida casa de construcción tradicional con aislación térmica de alta eficiencia para el clima patagónico. Amplio living comedor con hogar a leña, cocina comedor diario totalmente equipada con amoblamiento a medida. En exterior cuenta con quincho cerrado con cerramiento y jardín parquizado. Lista para habitar en Río Gallegos, Santa Cruz.",
     "images": [
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
@@ -129,8 +129,8 @@ export const INITIAL_PROPERTIES: Property[] = [
   },
   {
     "id": "prop-tour-02",
-    "title": "Residencia Minimalista en Barrio Cerrado con Galería y Solarium",
-    "slug": "residencia-minimalista-barrio-cerrado-galeria",
+    "title": "Residencia con Vista Panorámica al Lago en El Calafate",
+    "slug": "residencia-vista-panoramica-lago-calafate",
     "type": "casa",
     "operation": "venta",
     "status": "oportunidad",
@@ -139,10 +139,10 @@ export const INITIAL_PROPERTIES: Property[] = [
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-02.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "Benavídez",
-      "neighborhood": "Barrio Cerrado La Bota",
-      "address": "Calle de las Rosas 450",
-      "zone": "Zona Norte"
+      "city": "El Calafate",
+      "neighborhood": "Costanera Lago Argentino",
+      "address": "Calle Los Álamos 450",
+      "zone": "Santa Cruz"
     },
     "features": {
       "bedrooms": 4,
@@ -151,61 +151,61 @@ export const INITIAL_PROPERTIES: Property[] = [
       "totalArea": 720,
       "coveredArea": 330,
       "yearBuilt": 2022,
-      "expenses": 190
+      "expenses": 0
     },
     "amenities": [
-      "Seguridad 24hs",
-      "Piscina Iluminada",
-      "Master Suite con Vestidor",
+      "Vista al Lago Argentino",
       "Calefacción por Losa Radiante",
-      "Aberturas DVH A30"
+      "Master Suite con Vestidor",
+      "Aberturas DVH Triple Contacto",
+      "Parrilla Interior con Tiraje Forzado"
     ],
-    "highlightSummary": "Excelente relación m² / precio en barrio consolidado con expensas bajas.",
-    "description": "Vivienda desarrollada en dos plantas con líneas puras y grandes paños vidriados. En planta baja, hall de distribución, escritorio privado, estar de gran volumetría y cocina integrada con isla en silestone. Galería profunda de 12 metros con barra, parrilla completa y baño exterior. Suite con baño compartimentado y terraza propia.",
+    "highlightSummary": "Excelente oportunidad con vistas directas al Lago Argentino en El Calafate, Santa Cruz.",
+    "description": "Vivienda desarrollada en dos plantas con líneas modernas y grandes paños vidriados con aislación térmica de primer nivel. En planta baja, hall de recepción, estar de gran volumetría y cocina integrada con isla. Quincho integrado ideal para todo el año en la Patagonia. Suite con baño compartimentado y terraza propia.",
     "images": [
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80"
     ],
     "isFeatured": true,
     "isOpportunity": true,
-    "opportunityBadge": "Precio Retasado - Oportunidad",
+    "opportunityBadge": "Precio Retasado - Oportunidad Santa Cruz",
     "createdAt": "2026-03-27"
   },
   {
     "id": "prop-tour-03",
-    "title": "Casa Racionalista a Estrenar con Fondo Libre y Cochera Doble",
-    "slug": "casa-racionalista-a-estrenar-fondo-libre",
+    "title": "Casa a Estrenar con Fondo Libre y Cochera en Río Gallegos",
+    "slug": "casa-estrenar-fondo-libre-rio-gallegos",
     "type": "casa",
     "operation": "venta",
     "status": "disponible",
-    "price": 420000,
+    "price": 280000,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-03.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "Escobar",
-      "neighborhood": "Puertos del Lago - Barrio Marinas",
-      "address": "Lote 118, Boulevard de los Lagos",
-      "zone": "Zona Norte"
+      "city": "Río Gallegos",
+      "neighborhood": "Barrio San Benito",
+      "address": "Av. Asturias al 800",
+      "zone": "Santa Cruz"
     },
     "features": {
       "bedrooms": 3,
-      "bathrooms": 3,
+      "bathrooms": 2,
       "parkingSpaces": 2,
       "totalArea": 600,
-      "coveredArea": 250,
+      "coveredArea": 180,
       "yearBuilt": 2024,
-      "expenses": 140
+      "expenses": 0
     },
     "amenities": [
-      "Lago Náutico",
-      "Cancha de Tenis",
-      "Club House",
-      "Seguridad Integral",
-      "Piscina Infinity"
+      "A Estrenar",
+      "Caldera Dual con Radiadores",
+      "Cochera Cubierta Doble",
+      "Aislación Térmica Reforzada",
+      "Patio Cerrado"
     ],
-    "highlightSummary": "A estrenar con entrega inmediata en el desarrollo más buscado de Puertos.",
-    "description": "Proyecto arquitectónico de vanguardia con terminaciones premium. Hormigón a la vista combinado con maderas nobles y detalles en herrería negra. Gran living comedor con vistas al jardín, cocina independiente con comedor diario, toilette de recepción y lavadero. En planta alta 3 dormitorios, principal en suite con vestidor.",
+    "highlightSummary": "A estrenar en zona de rápido crecimiento residencial en Río Gallegos, Santa Cruz.",
+    "description": "Construcción moderna y sólida de categoría pensada para la eficiencia energética. Gran living comedor muy luminoso, cocina independiente con comedor diario, baño completo y lavadero. En planta alta 3 dormitorios con placares empotrados. Apto crédito hipotecario bancario UVA.",
     "images": [
       "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80"
@@ -217,39 +217,39 @@ export const INITIAL_PROPERTIES: Property[] = [
   },
   {
     "id": "prop-tour-04",
-    "title": "Semipiso con Balcón Aterrazado y Vista Panorámica",
-    "slug": "semipiso-balcon-aterrazado-vista-panoramica",
+    "title": "Departamento Luminoso en Alquiler en Centro de Río Gallegos",
+    "slug": "departamento-alquiler-centro-rio-gallegos",
     "type": "departamento",
     "operation": "alquiler",
     "status": "disponible",
-    "price": 1400,
+    "price": 550,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-04.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "CABA",
-      "neighborhood": "Belgrano R",
-      "address": "Echeverría & Zapiola",
-      "zone": "Capital Federal"
+      "city": "Río Gallegos",
+      "neighborhood": "Centro",
+      "address": "Av. Presidente Kirchner al 700",
+      "zone": "Santa Cruz"
     },
     "features": {
-      "bedrooms": 3,
-      "bathrooms": 2,
+      "bedrooms": 2,
+      "bathrooms": 1,
       "parkingSpaces": 1,
-      "totalArea": 130,
-      "coveredArea": 112,
+      "totalArea": 75,
+      "coveredArea": 70,
       "yearBuilt": 2021,
-      "expenses": 160
+      "expenses": 35
     },
     "amenities": [
       "Cochera Fija Cubierta",
-      "Baulera Individual",
-      "SUM con Parrilla",
-      "Seguridad Nocturna",
-      "Balcón Aterrazado"
+      "Ascensor de Última Generación",
+      "Calefacción Individual por Radiadores",
+      "Cámaras de Seguridad 24hs",
+      "Balcón con Vista Abierta"
     ],
-    "highlightSummary": "Ubicación residencial soñada con excelente conectividad y arboledas añejas.",
-    "description": "Excelente departamento semipiso al frente con orientación este, inundado de luz natural. Living apaisado con salida a balcón terraza de 18 m² ideal para mesa y parrilla a gas. Tres dormitorios amplios con placares de piso a techo, cocina reciclada a nueva con mesadas de Silestone y comedor diario integrado.",
+    "highlightSummary": "Ubicación céntrica inmejorable en Río Gallegos, Santa Cruz, a pasos de comercios y bancos.",
+    "description": "Excelente departamento de 3 ambientes al frente con orientación este. Living comedor con balcón, cocina reciclada a nueva con mesadas de granito, dos dormitorios cómodos con placares de piso a techo y baño completo.",
     "images": [
       "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80"
@@ -261,83 +261,83 @@ export const INITIAL_PROPERTIES: Property[] = [
   },
   {
     "id": "prop-tour-05",
-    "title": "Dúplex de Categoría con Terraza Exclusiva y Parrilla Propia",
-    "slug": "duplex-categoria-terraza-exclusiva-parrilla",
+    "title": "Dúplex de Categoría con Terraza y Quincho en Caleta Olivia",
+    "slug": "duplex-categoria-quincho-caleta-olivia",
     "type": "departamento",
     "operation": "venta",
     "status": "oportunidad",
-    "price": 310000,
+    "price": 185000,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-05.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "CABA",
-      "neighborhood": "Núñez",
-      "address": "Manuela Pedraza al 1900",
-      "zone": "Capital Federal"
+      "city": "Caleta Olivia",
+      "neighborhood": "Costanera",
+      "address": "Av. San Martín al 400",
+      "zone": "Santa Cruz"
     },
     "features": {
       "bedrooms": 2,
       "bathrooms": 2,
       "parkingSpaces": 1,
-      "totalArea": 140,
+      "totalArea": 130,
       "coveredArea": 95,
       "yearBuilt": 2023,
-      "expenses": 110
+      "expenses": 40
     },
     "amenities": [
-      "Terraza Propia",
-      "Parrilla Individual",
-      "Jacuzzi Exterior",
-      "Cochera",
+      "Vista al Mar",
+      "Quincho y Parrilla Propia",
+      "Cochera Cubierta",
+      "Calefacción Central",
       "Pisos de Porcelanato"
     ],
-    "highlightSummary": "Bajas expensas, terraza privada de 45 m² con solarium y jacuzzi.",
-    "description": "Dúplex de diseño en edificio boutique de pocas unidades. Primer nivel con living comedor, cocina concepto abierto con barra desayunadora y toilette de recepción. Segundo nivel con 2 dormitorios, baño completo compartimentado y acceso a la terraza privada con pérgola, parrilla y espacio chill-out.",
+    "highlightSummary": "Oportunidad con vista al mar y terraza privada en Caleta Olivia, Santa Cruz.",
+    "description": "Dúplex moderno con diseño de vanguardia. En primera planta, living comedor espacioso con cocina concepto abierto y barra. En segunda planta, 2 dormitorios, baño completo compartimentado y terraza privada con sector de parrilla.",
     "images": [
       "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80"
     ],
     "isFeatured": true,
     "isOpportunity": true,
-    "opportunityBadge": "Dúplex Exclusivo con Terraza",
+    "opportunityBadge": "Dúplex con Vista al Mar",
     "createdAt": "2026-03-24"
   },
   {
     "id": "prop-tour-06",
-    "title": "Casa Estilo Villa Italiana en Lote Central con Parque Arbolado",
-    "slug": "casa-villa-italiana-lote-central-parque",
-    "type": "casa",
+    "title": "Chacra y Residencia en Lote de 2.500 m² en Río Gallegos",
+    "slug": "chacra-residencia-lote-rio-gallegos",
+    "type": "loteo",
     "operation": "venta",
     "status": "disponible",
-    "price": 520000,
+    "price": 230000,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-06.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "Pilar",
-      "neighborhood": "Highland Park Country Club",
-      "address": "Av. Las Palmeras 1240",
-      "zone": "Zona Norte"
+      "city": "Río Gallegos",
+      "neighborhood": "Zona de Chacras",
+      "address": "Ruta Provincial 53 Km 4",
+      "zone": "Santa Cruz"
     },
     "features": {
-      "bedrooms": 4,
-      "bathrooms": 5,
+      "bedrooms": 3,
+      "bathrooms": 2,
       "parkingSpaces": 4,
-      "totalArea": 1200,
-      "coveredArea": 380,
-      "yearBuilt": 2020,
-      "expenses": 290
+      "totalArea": 2500,
+      "coveredArea": 190,
+      "yearBuilt": 2021,
+      "expenses": 0
     },
     "amenities": [
-      "Golf 18 Hoyos",
-      "Canchas de Polo",
-      "Piscina",
-      "Seguridad Máxima",
-      "Club House Histórico"
+      "Lote Amplio de 2.500 m²",
+      "Servicios de Luz y Gas",
+      "Quincho Familiar con Horno a Leña",
+      "Cerco Perimetral Olímpico",
+      "Excelente Acceso Asfaltado"
     ],
-    "highlightSummary": "Lote central de 1.200 m² con arboleda centenaria en barrio tradicional de Pilar.",
-    "description": "Magna propiedad con fachada en revoque tarquini y techos a cuatro aguas con tejas coloniales. Recepción señorial con doble circulación, pisos de incienso entablonado, cocina gourmet con comedor familiar independiente y suite principal con vestidor doble, hidromasaje y visuales abiertas al parque.",
+    "highlightSummary": "Terreno amplio con vivienda lista para habitar en zona de chacras de Río Gallegos, Santa Cruz.",
+    "description": "Excelente propiedad campestre ideal para vivienda permanente o casa de fin de semana. Amplio lote de 2.500 metros cuadrados con arboleda cortina de álamos, vivienda principal confortable, quincho cerrado para 30 personas y galpón auxiliar.",
     "images": [
       "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80"
@@ -349,64 +349,64 @@ export const INITIAL_PROPERTIES: Property[] = [
   },
   {
     "id": "prop-tour-07",
-    "title": "Moderna Residencia con Vista al Lago y Muelle en Nordelta",
-    "slug": "residencia-vista-lago-muelle-nordelta",
-    "type": "casa",
+    "title": "Terrenos y Lotes Residenciales en Preventa en Río Gallegos",
+    "slug": "terrenos-lotes-preventa-rio-gallegos",
+    "type": "loteo",
     "operation": "venta",
     "status": "disponible",
-    "price": 980000,
+    "price": 28000,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-07.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "Tigre",
-      "neighborhood": "Nordelta - El Yacht",
-      "address": "Av. de los Lagos 2100",
-      "zone": "Zona Norte"
+      "city": "Río Gallegos",
+      "neighborhood": "Nuevo Loteo Patagónico",
+      "address": "Acceso Circunvalación",
+      "zone": "Santa Cruz"
     },
     "features": {
-      "bedrooms": 5,
-      "bathrooms": 6,
-      "parkingSpaces": 3,
-      "totalArea": 850,
-      "coveredArea": 460,
-      "yearBuilt": 2023,
-      "expenses": 380
+      "bedrooms": 0,
+      "bathrooms": 0,
+      "parkingSpaces": 0,
+      "totalArea": 500,
+      "coveredArea": 0,
+      "yearBuilt": 2025,
+      "expenses": 0
     },
     "amenities": [
-      "Salida Náutica al Río Luján",
-      "Muelle Privado",
-      "Piscina Climatizada Infinity",
-      "Cine Privado",
-      "Gimnasio"
+      "Lotes de 500 m²",
+      "Servicios de Red Proyectados",
+      "Anticipo y Cuotas en Pesos o USD",
+      "Escrituración Inmediata al Finalizar",
+      "Entorno Tranquilo y de Crecimiento"
     ],
-    "highlightSummary": "Muelle náutico con amarra propia y salida directa al Río Luján.",
-    "description": "Una de las propiedades más distinguidas de Nordelta Yacht. Arquitectura contemporánea enfocada al disfrute del agua. Gran living con doble altura y cerramientos corredizos embutidos que eliminan los límites entre interior y exterior. Master suite con terraza privada al lago, spa y vestidor walk-in de grandes proporciones.",
+    "highlightSummary": "Lotes de 500m² con financiación directa en Río Gallegos, Santa Cruz.",
+    "description": "Excelente oportunidad para constructores, familias o inversores. Lotes planos de 15 x 33 metros con trazado de calles consolidado. Financiación propia en cuotas con mínimos requisitos en la provincia de Santa Cruz.",
     "images": [
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
     ],
     "isFeatured": true,
-    "isOpportunity": false,
-    "opportunityBadge": "",
+    "isOpportunity": true,
+    "opportunityBadge": "Lotes en Cuotas Santa Cruz",
     "createdAt": "2026-03-22"
   },
   {
     "id": "prop-tour-08",
-    "title": "Departamento Apto Profesional de 3 Ambientes con Balcón Corrido",
-    "slug": "departamento-apto-profesional-3-ambientes",
+    "title": "Departamento Apto Profesional de 3 Ambientes en Río Gallegos",
+    "slug": "departamento-apto-profesional-rio-gallegos",
     "type": "departamento",
     "operation": "alquiler",
     "status": "disponible",
-    "price": 850,
+    "price": 600,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-08.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "CABA",
-      "neighborhood": "Palermo Soho",
-      "address": "Malabia & Costa Rica",
-      "zone": "Capital Federal"
+      "city": "Río Gallegos",
+      "neighborhood": "Centro",
+      "address": "Zapiola & Fagnano",
+      "zone": "Santa Cruz"
     },
     "features": {
       "bedrooms": 2,
@@ -415,42 +415,42 @@ export const INITIAL_PROPERTIES: Property[] = [
       "totalArea": 72,
       "coveredArea": 65,
       "yearBuilt": 2019,
-      "expenses": 75
+      "expenses": 40
     },
     "amenities": [
       "Apto Profesional",
-      "Lobby de Entrada con Tarjeta",
-      "Laundry en Edificio",
-      "Balcón Corrido",
-      "Bicicletero"
+      "Lobby de Entrada con Llave Magnética",
+      "Calefacción Central Regulable",
+      "Balcón al Frente",
+      "Vidrios Dobles DVH"
     ],
-    "highlightSummary": "Ubicación neurálgica en Palermo Soho, ideal para renta temporal o consultorio/estudio.",
-    "description": "Impecable unidad en edificio moderno. Living comedor luminoso con ventanal de piso a techo y salida al balcón corrido al frente. Cocina semi-integrada con barra desayunadora, muebles bajo y sobre mesada de melanina touch y conexión para lavarropas. Dos dormitorios cómodos con placard y baño completo.",
+    "highlightSummary": "Ubicación neurálgica en el centro de Río Gallegos, Santa Cruz, ideal para estudio u oficinas.",
+    "description": "Impecable unidad en edificio céntrico. Living comedor luminoso con ventanal y salida al balcón al frente. Cocina semi-integrada con barra desayunadora, muebles bajo mesada y conexión para lavarropas. Dos dormitorios cómodos con placard y baño completo en Río Gallegos, Santa Cruz.",
     "images": [
       "https://images.unsplash.com/photo-1502005229762-ee1b2da97a0f?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80"
     ],
     "isFeatured": false,
     "isOpportunity": true,
-    "opportunityBadge": "Ideal Inversión / Airbnb",
+    "opportunityBadge": "Alquiler Céntrico Santa Cruz",
     "createdAt": "2026-03-21"
   },
   {
     "id": "prop-tour-09",
-    "title": "Chalet en Una Planta con Piscina Climatizada y Quincho Cerrado",
-    "slug": "chalet-una-planta-piscina-climatizada-quincho",
+    "title": "Casa Familiar en Una Planta con Quincho Cerrado en Río Gallegos",
+    "slug": "casa-familiar-una-planta-quincho-rio-gallegos",
     "type": "casa",
     "operation": "venta",
     "status": "disponible",
-    "price": 298000,
+    "price": 240000,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-09.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "Tigre",
-      "neighborhood": "General Pacheco",
-      "address": "Av. Hipólito Yrigoyen al 1100",
-      "zone": "Zona Norte"
+      "city": "Río Gallegos",
+      "neighborhood": "Barrio Belgrano",
+      "address": "Av. Parque Industrial al 500",
+      "zone": "Santa Cruz"
     },
     "features": {
       "bedrooms": 3,
@@ -463,13 +463,13 @@ export const INITIAL_PROPERTIES: Property[] = [
     },
     "amenities": [
       "Sin Expensas",
-      "Piscina Climatizada con Caldera",
+      "Calefacción por Radiadores",
       "Quincho Cerrado Climatizado",
-      "Cochera Pasante",
-      "Alarma Monitoreada"
+      "Cochera Pasante Cubierta",
+      "Alarma y Cámaras Monitoreadas"
     ],
-    "highlightSummary": "Toda desarrollada en planta baja, sin expensas y con excelente conectividad.",
-    "description": "Práctica y muy luminosa casa de una planta sobre lote propio de 420 m². Gran salón principal con techos altos de madera tratada, cocina office con muebles Johnson y lavadero separado. Tres dormitorios de buenas dimensiones con placares embutidos. Gran quincho de 40 m² cerrado con baño propio y vistas al jardín.",
+    "highlightSummary": "Toda en planta baja, con quincho cerrado completo en barrio consolidado de Río Gallegos, Santa Cruz.",
+    "description": "Práctica y muy luminosa casa de una planta sobre lote propio de 420 m². Gran salón principal con cielorrasos de madera tratada, cocina comedor con muebles a medida y lavadero separado. Tres dormitorios de buenas dimensiones con placares embutidos. Gran quincho de 40 m² cerrado con baño propio y parrilla.",
     "images": [
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80"
@@ -481,20 +481,20 @@ export const INITIAL_PROPERTIES: Property[] = [
   },
   {
     "id": "prop-tour-10",
-    "title": "Loft Industrial & Suites Urbanas - Preventa en Pozo",
-    "slug": "loft-industrial-techos-doble-altura",
+    "title": "Complejo Turístico & Residencial en Pozo - El Calafate",
+    "slug": "complejo-turistico-residencial-pozo-calafate",
     "type": "desarrollo",
     "operation": "pozo",
     "status": "oportunidad",
-    "price": 165000,
+    "price": 145000,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-10.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "CABA",
-      "neighborhood": "Colegiales",
-      "address": "Concepción Arenal & Zapiola",
-      "zone": "Capital Federal"
+      "city": "El Calafate",
+      "neighborhood": "Villa Parque Los Glaciares",
+      "address": "Av. del Libertador al 2400",
+      "zone": "Santa Cruz"
     },
     "features": {
       "bedrooms": 1,
@@ -502,62 +502,62 @@ export const INITIAL_PROPERTIES: Property[] = [
       "parkingSpaces": 1,
       "totalArea": 88,
       "coveredArea": 70,
-      "yearBuilt": 2022,
-      "expenses": 95
+      "yearBuilt": 2025,
+      "expenses": 50
     },
     "amenities": [
-      "Piscina en Rooftop",
-      "Seguridad 24hs",
-      "Apto Profesional",
-      "Cochera Opcional",
-      "Balcón Terraza"
+      "Apto Alquiler Turístico Temporario",
+      "Vistas Panorámicas a la Cordillera",
+      "Anticipo y Financiación en Cuotas",
+      "Cochera Incluida",
+      "Aislación Térmica de Máxima Calificación"
     ],
-    "highlightSummary": "Estilo loft neoyorquino en la zona más gastronómica y cultural de Colegiales.",
-    "description": "Concepto abierto y diseño vanguardista. Techos de 4 metros de altura con losa de hormigón visto e instalaciones a la vista pulidas. Gran cocina integrada con mesada en granito negro leather y barra en madera maciza. Entrepiso con dormitorio principal, vestidor y baño en suite. Balcón terraza con vista abierta.",
+    "highlightSummary": "Alta rentabilidad en USD por turismo receptivo en El Calafate, Santa Cruz.",
+    "description": "Unidades de 1 y 2 ambientes diseñadas especialmente para renta temporal turística o vivienda en El Calafate. Vistas panorámicas a la cordillera y los glaciares. Terminaciones de primer nivel en madera de lenga y piedra patagónica.",
     "images": [
       "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80"
     ],
     "isFeatured": true,
     "isOpportunity": true,
-    "opportunityBadge": "Oportunidad Loft de Diseño",
+    "opportunityBadge": "Inversión Turística Santa Cruz",
     "createdAt": "2026-03-19"
   },
   {
     "id": "prop-tour-11",
-    "title": "Gran Casa Quinta en Lote de 2.000 m² con Cancha de Pádel y Piscina",
-    "slug": "gran-casa-quinta-lote-2000m-padel-piscina",
+    "title": "Chacra Productiva y Turística de 2 Hectáreas en Los Antiguos",
+    "slug": "chacra-productiva-turistica-los-antiguos-santa-cruz",
     "type": "casa",
     "operation": "venta",
     "status": "disponible",
-    "price": 430000,
+    "price": 310000,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-11.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "Maschwitz",
-      "neighborhood": "Ingeniero Maschwitz",
-      "address": "Mendoza al 2200",
-      "zone": "Zona Norte"
+      "city": "Los Antiguos",
+      "neighborhood": "Valle Productivo",
+      "address": "Ruta 43 Km 8",
+      "zone": "Santa Cruz"
     },
     "features": {
       "bedrooms": 4,
-      "bathrooms": 4,
-      "parkingSpaces": 6,
-      "totalArea": 2000,
-      "coveredArea": 320,
+      "bathrooms": 3,
+      "parkingSpaces": 4,
+      "totalArea": 20000,
+      "coveredArea": 280,
       "yearBuilt": 2018,
-      "expenses": 40
+      "expenses": 0
     },
     "amenities": [
-      "Cancha de Pádel Propia",
-      "Piscina de 12x5 metros",
-      "Quincho para 40 Personas",
-      "Casa de Huéspedes",
-      "Arboleda Centenaria"
+      "2 Hectáreas con Derechos de Riego",
+      "Plantación de Cerezos y Frutales",
+      "Casa Principal + Cabaña de Huéspedes",
+      "Quincho Patagónico",
+      "Vistas al Lago Buenos Aires"
     ],
-    "highlightSummary": "Parque soñado de 2.000m² con cancha de pádel privada y quincho de celebraciones.",
-    "description": "Quinta excepcional pensada para el esparcimiento familiar o vivienda permanente en un entorno campestre privilegiado. Casa principal con 3 dormitorios en suite, estar con techos de doble altura y chimenea. Segunda edificación independiente para huéspedes o taller. Cancha de pádel con piso sintético y vestuarios.",
+    "highlightSummary": "Chacra de 2 hectáreas con microclima privilegiado y vista al lago en Santa Cruz.",
+    "description": "Propiedad única en el valle de Los Antiguos, Santa Cruz. Cuenta con casa patronal de 4 ambientes, cabaña para renta turística, quincho equipado y 2 hectáreas de cerezos en producción con sistema de riego presurizado.",
     "images": [
       "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80"
@@ -569,39 +569,39 @@ export const INITIAL_PROPERTIES: Property[] = [
   },
   {
     "id": "prop-tour-12",
-    "title": "Residencias Terrazas del Golf - Preventa en Pozo",
-    "slug": "piso-exclusivo-torre-amenities-lujo",
+    "title": "Edificio Residencial & Oficinas en Centro de Río Gallegos",
+    "slug": "edificio-residencial-oficinas-rio-gallegos",
     "type": "desarrollo",
     "operation": "pozo",
     "status": "disponible",
-    "price": 580000,
+    "price": 210000,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-12.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "CABA",
-      "neighborhood": "Palermo Nuevo",
-      "address": "Av. Cerviño al 4700",
-      "zone": "Capital Federal"
+      "city": "Río Gallegos",
+      "neighborhood": "Centro Cívico",
+      "address": "Av. Roca al 1100",
+      "zone": "Santa Cruz"
     },
     "features": {
-      "bedrooms": 3,
-      "bathrooms": 4,
-      "parkingSpaces": 2,
-      "totalArea": 215,
-      "coveredArea": 190,
-      "yearBuilt": 2021,
-      "expenses": 320
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "parkingSpaces": 1,
+      "totalArea": 95,
+      "coveredArea": 85,
+      "yearBuilt": 2025,
+      "expenses": 60
     },
     "amenities": [
-      "Piscina Climatizada In/Out",
-      "Cancha de Tenis",
-      "Gimnasio con Vista Panorámica",
-      "Seguridad 24hs con Control Peatonal",
-      "2 Cocheras Fijas"
+      "Edificio con Ascensor Inteligente",
+      "Cochera Fija Cubierta",
+      "Calefacción por Losa Radiante",
+      "Seguridad Digital",
+      "Terminaciones de Categoría"
     ],
-    "highlightSummary": "Torre de máxima categoría con vistas abiertas hacia los bosques de Palermo.",
-    "description": "Palier privado con dos ascensores de alta velocidad. Amplio living comedor con pisos de madera prefinish y balcón aterrazado con cerramiento de vidrio móvil. Suite principal con vestidor doble, hidromasaje y balcón íntimo. Dos dormitorios en semisuite. Cocina de alta gama con isla y comedor diario, dependencia y lavadero.",
+    "highlightSummary": "Desarrollo en pozo en el centro cívico de Río Gallegos, Santa Cruz. Ideal inversión o vivienda.",
+    "description": "Unidades de 2 y 3 ambientes de excelente diseño y luz natural. Amplio estar comedor, balcón terraza, carpintería de aluminio DVH y cocina con equipamiento de primera calidad en Río Gallegos, Santa Cruz.",
     "images": [
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80"
@@ -613,83 +613,83 @@ export const INITIAL_PROPERTIES: Property[] = [
   },
   {
     "id": "prop-tour-13",
-    "title": "Casa al Agua en Barrio Náutico con Amarra y Solarium Húmedo",
-    "slug": "casa-al-agua-barrio-nautico-amarra",
+    "title": "Chalet Costero con Vista a la Ría en Río Gallegos",
+    "slug": "chalet-costero-vista-ria-rio-gallegos",
     "type": "casa",
     "operation": "venta",
     "status": "oportunidad",
-    "price": 760000,
+    "price": 380000,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-13.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "Tigre",
-      "neighborhood": "Barrio Náutico Santa María",
-      "address": "Costanera del Delta Lote 45",
-      "zone": "Zona Norte"
+      "city": "Río Gallegos",
+      "neighborhood": "Costanera Ría Gallegos",
+      "address": "Av. Almirante Brown al 800",
+      "zone": "Santa Cruz"
     },
     "features": {
       "bedrooms": 4,
-      "bathrooms": 5,
-      "parkingSpaces": 3,
-      "totalArea": 800,
-      "coveredArea": 370,
-      "yearBuilt": 2023,
-      "expenses": 280
+      "bathrooms": 3,
+      "parkingSpaces": 2,
+      "totalArea": 650,
+      "coveredArea": 310,
+      "yearBuilt": 2022,
+      "expenses": 0
     },
     "amenities": [
-      "Salida Náutica",
-      "Amarra Propia",
-      "Piscina con Playa Húmeda",
-      "Cava de Vinos Subterránea",
-      "Domótica Integral"
+      "Vista Panorámica a la Ría",
+      "Quincho Integral de 60 m²",
+      "Calefacción Central Dual",
+      "Garage Doble Automatizado",
+      "Aislación Térmica Patagónica Premium"
     ],
-    "highlightSummary": "Orientación Noroeste con las mejores puestas de sol sobre el lago central.",
-    "description": "Extraordinaria residencia náutica concebida para maximizar el contacto con la naturaleza. Gran recepción con ventanales corredizos motorizados, cocina de diseño con isla central y electrodomésticos empotrados. Galería exterior con parrilla a gas y leña, piscina climatizada con solarium húmedo y rampa de amarre privada.",
+    "highlightSummary": "Ubicación privilegiada frente a la Ría con vistas panorámicas únicas en Río Gallegos, Santa Cruz.",
+    "description": "Extraordinaria residencia costera sobre la Costanera de Río Gallegos. Gran recepción con ventanales hacia la ría, cocina gourmet con isla y comedor diario. Quincho cerrado de 60m² totalmente equipado con parrilla y horno a leña.",
     "images": [
       "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
     ],
     "isFeatured": true,
     "isOpportunity": true,
-    "opportunityBadge": "Oportunidad Náutica Única",
+    "opportunityBadge": "Vista a la Ría Única",
     "createdAt": "2026-03-16"
   },
   {
     "id": "prop-tour-14",
-    "title": "Chalet Tradicional de Categoría en Zona Residencial Tranquila",
-    "slug": "chalet-tradicional-categoria-zona-residencial",
+    "title": "Chalet Tradicional de Construcción Sólida en Río Gallegos",
+    "slug": "chalet-tradicional-solida-rio-gallegos",
     "type": "casa",
     "operation": "venta",
     "status": "disponible",
-    "price": 360000,
+    "price": 215000,
     "currency": "USD",
     "videoUrl": "https://mjxywapawhtcrdenslma.supabase.co/storage/v1/object/public/property-videos/tours/tour-propiedad-14.mp4",
     "hasVideoTour": true,
     "location": {
-      "city": "San Isidro",
-      "neighborhood": "Lomas de San Isidro",
-      "address": "Monseñor Magliano al 800",
-      "zone": "Zona Norte"
+      "city": "Río Gallegos",
+      "neighborhood": "Barrio Docente",
+      "address": "Calle España al 900",
+      "zone": "Santa Cruz"
     },
     "features": {
       "bedrooms": 3,
-      "bathrooms": 3,
+      "bathrooms": 2,
       "parkingSpaces": 2,
-      "totalArea": 550,
-      "coveredArea": 240,
-      "yearBuilt": 2016,
+      "totalArea": 450,
+      "coveredArea": 180,
+      "yearBuilt": 2018,
       "expenses": 0
     },
     "amenities": [
       "Sin Expensas",
-      "Piscina con Cerco Perimetral",
-      "Jardín con Riego Automatizado",
+      "Calefacción por Radiadores",
+      "Patio Cerrado Seguro",
       "Cochera Cubierta para 2 Autos",
-      "Portón Levadizo"
+      "Apto Crédito Bancario UVA"
     ],
-    "highlightSummary": "Excelente ubicación residencial cerca de los mejores colegios y accesos de San Isidro.",
-    "description": "Chalet de sólida construcción tradicional con ladrillo a la vista, techos de teja francesa y aberturas en madera maciza. Amplio living en desnivel con hogar, comedor principal, cocina comedor muy cómoda con despensa y lavadero. En planta alta, 3 dormitorios luminosos, principal en suite con vestidor. Jardín parquizado con piscina.",
+    "highlightSummary": "Excelente ubicación barrial residencial en Río Gallegos, Santa Cruz. Apto crédito hipotecario.",
+    "description": "Chalet de sólida construcción tradicional con ladrillo a la vista y aberturas de aluminio con doble vidriado. Amplio living comedor, cocina comedor independiente, lavadero y 3 dormitorios luminosos. Patio seguro con entrada de autos.",
     "images": [
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80"
