@@ -400,7 +400,6 @@ export default function PropertyDetailPage() {
             </span>
             {property.isOpportunity && (
               <span className="text-xs font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-[3px] flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-amber-600" />
                 {property.opportunityBadge || 'Oportunidad'}
               </span>
             )}
@@ -633,3 +632,4 @@ export default function PropertyDetailPage() {
     </div>
   );
 }
+

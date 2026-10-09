@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useData } from "@/context/DataContext";
@@ -28,6 +28,8 @@ import {
   ImageIcon,
   Star,
   Video,
+  Camera,
+  Film,
   Loader2,
   Box,
   Search,
@@ -488,6 +490,69 @@ export default function AdminSecretPage() {
     } finally {
       setIsUploadingVideo(false);
       e.target.value = "";
+    }
+  };
+
+  const videoExtractRef = useRef<HTMLVideoElement>(null);
+  const [isExtractingFrames, setIsExtractingFrames] = useState(false);
+
+  // Capturar el fotograma que se está reproduciendo actualmente en el video
+  const handleCaptureCurrentFrame = () => {
+    const video = videoExtractRef.current;
+    if (!video) return;
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth || 1280;
+      canvas.height = video.videoHeight || 720;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const frameData = canvas.toDataURL("image/jpeg", 0.92);
+      setPropForm((prev) => ({
+        ...prev,
+        images: [...(prev.images || []), frameData],
+      }));
+    } catch (err) {
+      console.error("Error al capturar frame:", err);
+      alert("No se pudo capturar el fotograma actual.");
+    }
+  };
+
+  // Extraer automáticamente 3 fotogramas distribuidos en el video para usarlos como fotos
+  const handleAutoExtractKeyFrames = async () => {
+    const video = videoExtractRef.current;
+    if (!video) return;
+    setIsExtractingFrames(true);
+    try {
+      const duration = video.duration || 10;
+      const seekPoints = [duration * 0.15, duration * 0.5, duration * 0.85];
+      const originalTime = video.currentTime;
+      const captured: string[] = [];
+
+      for (const time of seekPoints) {
+        video.currentTime = time;
+        await new Promise((r) => setTimeout(r, 450));
+        const canvas = document.createElement("canvas");
+        canvas.width = video.videoWidth || 1280;
+        canvas.height = video.videoHeight || 720;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          captured.push(canvas.toDataURL("image/jpeg", 0.92));
+        }
+      }
+      video.currentTime = originalTime;
+
+      if (captured.length > 0) {
+        setPropForm((prev) => ({
+          ...prev,
+          images: [...(prev.images || []), ...captured],
+        }));
+      }
+    } catch (e) {
+      console.error("Error al extraer fotos automáticas:", e);
+    } finally {
+      setIsExtractingFrames(false);
     }
   };
 
@@ -1869,16 +1934,74 @@ export default function AdminSecretPage() {
                 </label>
 
                 {propForm.videoUrl && (
-                  <div className="flex items-center justify-between p-2.5 bg-white border border-sky-200 rounded-sm text-xs">
-                    <span className="font-mono text-sky-900 truncate max-w-md">{propForm.videoUrl}</span>
-                    <button
-                      type="button"
-                      onClick={() => setPropForm({ ...propForm, videoUrl: "", hasVideoTour: false })}
-                      className="text-rose-500 hover:text-rose-700 shrink-0 cursor-pointer"
-                      title="Quitar video"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
+                  <div className="p-3 bg-white border border-sky-200 rounded-sm space-y-3">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1.5 font-medium text-sky-900 truncate">
+                        <Film className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+                        <span className="truncate max-w-sm font-mono text-[11px]">{propForm.videoUrl}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setPropForm({ ...propForm, videoUrl: "", hasVideoTour: false })}
+                        className="text-rose-500 hover:text-rose-700 shrink-0 cursor-pointer flex items-center gap-1 text-[11px] px-2 py-0.5 rounded hover:bg-rose-50"
+                        title="Quitar video"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                        <span>Quitar</span>
+                      </button>
+                    </div>
+
+                    {/* Previsualizador de Video y Extractor de Fotos */}
+                    <div className="bg-neutral-950 rounded-sm overflow-hidden flex flex-col items-center p-2">
+                      <video
+                        ref={videoExtractRef}
+                        src={propForm.videoUrl}
+                        controls
+                        playsInline
+                        crossOrigin="anonymous"
+                        className="max-h-48 w-full object-contain rounded bg-black"
+                      />
+                    </div>
+
+                    <div className="bg-sky-50/70 border border-sky-100 rounded-sm p-2.5">
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div>
+                          <p className="text-xs font-semibold text-sky-950 flex items-center gap-1.5">
+                            <Camera className="w-3.5 h-3.5 text-sky-600" />
+                            Generar fotos a partir de este video
+                          </p>
+                          <p className="text-[11px] text-sky-700 mt-0.5">
+                            Pausa el video en el momento que quieras o extrae 3 fotos clave automáticamente para la galería.
+                          </p>
+                        </div>
+                        {(!propForm.images || propForm.images.length === 0) && (
+                          <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded shrink-0">
+                            Sin fotos aún
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={handleCaptureCurrentFrame}
+                          disabled={isExtractingFrames}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded text-xs font-medium cursor-pointer shadow-sm active:scale-95 transition-all disabled:opacity-50"
+                        >
+                          <Camera className="w-3.5 h-3.5" />
+                          <span>Capturar cuadro actual</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleAutoExtractKeyFrames}
+                          disabled={isExtractingFrames}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-sky-300 hover:bg-sky-50 text-sky-900 rounded text-xs font-medium cursor-pointer shadow-sm active:scale-95 transition-all disabled:opacity-50"
+                        >
+                          <Film className="w-3.5 h-3.5 text-sky-600" />
+                          <span>{isExtractingFrames ? "Extrayendo..." : "Extraer 3 fotos automáticas"}</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

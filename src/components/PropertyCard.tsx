@@ -120,15 +120,14 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
         {/* Gradiente sutil inferior */}
         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/70 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
 
-        {/* Badges superiores - Esquina Izquierda: Estado & Destacada */}
-        <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10 flex-wrap">
-          <span className="bg-neutral-950/85 backdrop-blur-md text-white text-[10px] font-semibold uppercase tracking-[0.12em] px-2.5 py-1 rounded-[2px] border border-white/10 shadow-xs">
+        {/* Badges superiores - Esquina Izquierda: Estado & Oportunidad */}
+        <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+          <span className="bg-neutral-950/85 backdrop-blur-md text-white text-[10px] font-semibold uppercase tracking-[0.14em] px-2.5 py-1 rounded-[3px] border border-white/10 shadow-xs">
             {operationLabels[property.operation] || property.operation}
           </span>
           {property.isOpportunity && (
-            <span className="bg-gold-500 text-neutral-950 text-[10px] font-bold tracking-wide px-2 py-1 rounded-[2px] flex items-center gap-1 shadow-xs">
-              <Sparkles className="w-2.5 h-2.5" />
-              <span>{property.opportunityBadge || "Destacada"}</span>
+            <span className="bg-gold-600/90 backdrop-blur-md text-white text-[10px] font-semibold uppercase tracking-[0.1em] px-2 py-1 rounded-[3px] shadow-xs">
+              Oportunidad
             </span>
           )}
         </div>
@@ -136,9 +135,9 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
         {/* Badges superiores - Esquina Derecha: Video Tour y Menú 3 Puntos */}
         <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
           {(property.hasVideoTour || property.videoUrl) && (
-            <span className="bg-red-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-[2px] flex items-center gap-1 shadow-md animate-pulse">
-              <Play className="w-2.5 h-2.5 fill-current text-white" />
-              <span>Video Tour</span>
+            <span className="bg-neutral-950/75 backdrop-blur-md text-white text-[10px] font-medium px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1 shadow-sm">
+              <Play className="w-2.5 h-2.5 fill-white text-white" />
+              <span>Video</span>
             </span>
           )}
 

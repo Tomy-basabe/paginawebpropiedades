@@ -165,8 +165,7 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
               {property.operation}
             </span>
             {property.isOpportunity && (
-              <span className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-[4px] inline-flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-amber-600" />
+              <span className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-[4px] inline-flex items-center">
                 <span>{property.opportunityBadge || "Oportunidad"}</span>
               </span>
             )}
