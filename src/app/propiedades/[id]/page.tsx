@@ -267,67 +267,45 @@ export default function PropertyDetailPage() {
         </div>
       </div>
 
-      {/* Sección multimedia principal */}
+      {/* Sección multimedia principal limpia y cinematográfica */}
       <div className="space-y-3">
-        {hasVideo && (
-          <div className="flex items-center gap-2 border-b border-neutral-200 pb-2">
-            <button
-              type="button"
-              onClick={() => setActiveMediaTab('video')}
-              className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-[3px] transition-all btn-tactile cursor-pointer ${
-                effectiveTab === 'video'
-                  ? 'bg-red-600 text-white shadow-md shadow-red-600/30'
-                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-              }`}
-            >
-              <Play className="w-3.5 h-3.5 fill-current" />
-              <span>Video Tour Inmersivo</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveMediaTab('photos')}
-              className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-[3px] transition-all btn-tactile cursor-pointer ${
-                effectiveTab === 'photos'
-                  ? 'bg-neutral-900 text-white shadow-md'
-                  : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
-              }`}
-            >
-              <Eye className="w-3.5 h-3.5" />
-              <span>Fotografías ({property.images.length})</span>
-            </button>
-          </div>
-        )}
+        <div className="relative w-full rounded-xl overflow-hidden bg-neutral-950 shadow-xl">
+          {effectiveTab === 'video' && property.videoUrl ? (
+            /* Reproductor Cinemático de Video Adaptable */
+            <div className="relative w-full max-h-[62vh] sm:max-h-[520px] flex items-center justify-center bg-black/95">
+              <video
+                src={property.videoUrl}
+                controls
+                autoPlay
+                playsInline
+                preload="metadata"
+                poster={property.images?.[0]}
+                className="max-h-[62vh] sm:max-h-[520px] w-auto max-w-full object-contain mx-auto"
+              >
+                Tu navegador no soporta reproducción de video.
+              </video>
 
-        {effectiveTab === 'video' && property.videoUrl ? (
-          /* Reproductor Cinemático de Video */
-          <div className="relative h-80 sm:h-[420px] md:h-[520px] w-full rounded-[4px] overflow-hidden bg-neutral-950 flex items-center justify-center border border-neutral-800 shadow-2xl">
-            <video
-              src={property.videoUrl}
-              controls
-              autoPlay
-              playsInline
-              preload="metadata"
-              poster={property.images && property.images.length > 0 ? property.images[0] : undefined}
-              className="w-full h-full object-contain"
-            >
-              Tu navegador no soporta reproducción de video.
-            </video>
-            <div className="absolute top-4 left-4 bg-red-600/95 text-white text-[11px] font-bold px-3 py-1.5 rounded-[3px] shadow-lg flex items-center gap-2 backdrop-blur-md pointer-events-none">
-              <span className="w-2 h-2 rounded-full bg-white animate-ping" />
-              <span>VIDEO TOUR 4K • 99 PROPIEDADES</span>
+              {property.images?.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setActiveMediaTab('photos')}
+                  className="absolute top-4 right-4 bg-neutral-950/80 hover:bg-neutral-900 active:scale-90 text-white text-xs font-semibold px-3.5 py-1.5 rounded-full border border-white/20 flex items-center gap-1.5 shadow-md btn-tactile-pop cursor-pointer"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Ver Fotografías ({property.images.length})</span>
+                </button>
+              )}
             </div>
-          </div>
-        ) : (
-          /* Galería de Fotografías con Navegación Fluida */
-          <div className="space-y-3">
-            <div className="relative h-80 sm:h-[420px] md:h-[500px] w-full rounded-[4px] overflow-hidden bg-neutral-950 group">
+          ) : (
+            /* Galería de Fotografías con Navegación Táctil */
+            <div className="relative aspect-[16/10] sm:h-[480px] w-full group">
               <Image
                 src={property.images[activeImageIndex] || property.images[0]}
                 alt={property.title}
                 fill
                 priority
                 unoptimized={(property.images[activeImageIndex] || property.images[0])?.startsWith('data:')}
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-102"
+                className="object-cover"
               />
 
               {property.images.length > 1 && (
@@ -335,7 +313,7 @@ export default function PropertyDetailPage() {
                   <button
                     type="button"
                     onClick={handlePrevPhoto}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 active:scale-90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all cursor-pointer z-10"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all cursor-pointer btn-tactile-pop z-10"
                     aria-label="Foto anterior"
                   >
                     <ChevronLeft className="w-5 h-5" />
@@ -344,7 +322,7 @@ export default function PropertyDetailPage() {
                   <button
                     type="button"
                     onClick={handleNextPhoto}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 active:scale-90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all cursor-pointer z-10"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all cursor-pointer btn-tactile-pop z-10"
                     aria-label="Foto siguiente"
                   >
                     <ChevronRight className="w-5 h-5" />
@@ -352,36 +330,65 @@ export default function PropertyDetailPage() {
                 </>
               )}
 
-              <div className="absolute bottom-3 right-3 bg-neutral-950/80 backdrop-blur-md text-white text-xs px-3.5 py-1.5 rounded-[3px] border border-white/10 font-mono">
+              <div className="absolute bottom-3 right-3 bg-neutral-950/80 backdrop-blur-md text-white text-xs px-3.5 py-1.5 rounded-full font-mono">
                 {String(activeImageIndex + 1).padStart(2, '0')} / {String(property.images.length).padStart(2, '0')}
               </div>
-            </div>
 
-            {property.images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
-                {property.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveImageIndex(idx)}
-                    className={`relative w-24 h-18 shrink-0 rounded-[3px] overflow-hidden border-2 transition-all duration-200 cursor-pointer ${
-                      activeImageIndex === idx
-                        ? 'border-gold-500 scale-98 shadow-md'
-                        : 'border-transparent opacity-65 hover:opacity-100 hover:border-neutral-300'
-                    }`}
-                  >
-                    <Image
-                      src={img}
-                      alt={`Miniatura ${idx + 1}`}
-                      fill
-                      unoptimized={img.startsWith('data:')}
-                      className="object-cover"
-                    />
-                  </button>
-                ))}
+              {property.videoUrl && (
+                <button
+                  type="button"
+                  onClick={() => setActiveMediaTab('video')}
+                  className="absolute top-4 left-4 bg-red-600/90 hover:bg-red-600 text-white text-xs font-bold px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg btn-tactile-pop cursor-pointer backdrop-blur-sm"
+                >
+                  <Play className="w-3.5 h-3.5 fill-white" />
+                  <span>Reproducir Video Tour</span>
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Tira de Miniaturas Integrada */}
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {property.videoUrl && (
+            <button
+              type="button"
+              onClick={() => setActiveMediaTab('video')}
+              className={`relative w-20 h-14 shrink-0 rounded-lg overflow-hidden border-2 transition-all flex items-center justify-center bg-neutral-900 cursor-pointer btn-tactile-pop ${
+                effectiveTab === 'video' ? 'border-red-500 scale-95 shadow-md' : 'border-transparent opacity-80 hover:opacity-100'
+              }`}
+            >
+              <div className="flex flex-col items-center justify-center text-white">
+                <Play className="w-4 h-4 fill-red-500 text-red-500" />
+                <span className="text-[9px] font-bold mt-0.5">Video</span>
               </div>
-            )}
-          </div>
-        )}
+            </button>
+          )}
+
+          {property.images.map((img, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => {
+                setActiveMediaTab('photos');
+                setActiveImageIndex(idx);
+              }}
+              className={`relative w-20 h-14 shrink-0 rounded-lg overflow-hidden border-2 transition-all cursor-pointer btn-tactile-pop ${
+                effectiveTab === 'photos' && activeImageIndex === idx
+                  ? 'border-gold-500 scale-95 shadow-md'
+                  : 'border-transparent opacity-70 hover:opacity-100'
+              }`}
+            >
+              <Image
+                src={img}
+                alt={`Miniatura ${idx + 1}`}
+                fill
+                unoptimized={img.startsWith('data:')}
+                className="object-cover"
+              />
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Info Principal de la propiedad */}

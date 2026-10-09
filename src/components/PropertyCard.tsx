@@ -153,17 +153,17 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
                 e.stopPropagation();
                 setShowMenu(!showMenu);
               }}
-              className="w-7 h-7 rounded-full bg-neutral-950/75 hover:bg-neutral-900 active:scale-90 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all duration-200 cursor-pointer shadow-md hover:border-gold-400"
+              className="w-8 h-8 rounded-full bg-neutral-950/80 hover:bg-neutral-900 active:scale-90 text-white backdrop-blur-md border border-white/25 flex items-center justify-center transition-all cursor-pointer shadow-md hover:border-gold-400 btn-tactile-pop"
               title="Más opciones"
               aria-label="Más opciones"
             >
               <MoreHorizontal className={`w-4 h-4 transition-transform duration-200 ${showMenu ? "rotate-90 text-gold-400" : ""}`} />
             </button>
 
-            {/* Menú Desplegable con animación de 3 puntos */}
+            {/* Menú Desplegable con rebote elástico spring */}
             {showMenu && (
               <div 
-                className="absolute right-0 top-9 w-48 bg-white/95 backdrop-blur-lg border border-neutral-200 shadow-2xl rounded-md py-1.5 z-50 animate-scale-in text-neutral-800"
+                className="absolute right-0 top-10 w-48 bg-white/98 backdrop-blur-lg border border-neutral-200 shadow-2xl rounded-lg py-1.5 z-50 animate-popup-spring text-neutral-800"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
@@ -288,7 +288,7 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
         <div className="pt-4 flex items-center gap-2">
           <button
             onClick={() => onSelectProperty && onSelectProperty(property)}
-            className="group/btn flex-1 min-h-[42px] bg-neutral-900 hover:bg-neutral-800 active:scale-[0.96] text-white text-xs font-semibold py-2.5 px-3 rounded-[3px] transition-all duration-200 flex items-center justify-center gap-1.5 btn-tactile shadow-sm hover:shadow-md cursor-pointer"
+            className="group/btn flex-1 min-h-[42px] bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold py-2.5 px-3 rounded-[4px] shadow-sm hover:shadow-md flex items-center justify-center gap-1.5 btn-tactile-pop cursor-pointer"
           >
             <span>Ver Propiedad</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-gold-400 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
@@ -298,7 +298,7 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
             href={getWhatsAppUrl(agentProfile.whatsappNumber, `Hola ${agentProfile.name}, quisiera consultar por la propiedad "${property.title}" (Ref: ${propertyRefCode})`)}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-[42px] h-[42px] min-w-[42px] min-h-[42px] border border-stone-200 hover:border-emerald-500/50 active:scale-[0.92] bg-stone-50 hover:bg-emerald-50 text-neutral-700 hover:text-emerald-700 rounded-[3px] transition-all duration-200 flex items-center justify-center btn-tactile shadow-sm cursor-pointer"
+            className="w-[42px] h-[42px] min-w-[42px] min-h-[42px] border border-stone-200 hover:border-emerald-500/50 bg-stone-50 hover:bg-emerald-50 text-neutral-700 hover:text-emerald-700 rounded-[4px] flex items-center justify-center btn-tactile-pop shadow-sm cursor-pointer"
             title={`Consultar por WhatsApp con ${agentProfile.name}`}
             aria-label="Consultar por WhatsApp"
           >
