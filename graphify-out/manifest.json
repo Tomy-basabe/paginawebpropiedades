@@ -48,9 +48,9 @@
     "semantic_hash": ""
   },
   "src/app/layout.tsx": {
-    "mtime": 1791571234.558846,
-    "seen": 1791577506.0461583,
-    "ast_hash": "45904a8ba6a21968fefa250aaabb012e",
+    "mtime": 1791584454.4632707,
+    "seen": 1791584952.3390462,
+    "ast_hash": "f45227afaf64b521f45f85a99a4f73c4",
     "semantic_hash": ""
   },
   "src/app/page.tsx": {
@@ -60,9 +60,9 @@
     "semantic_hash": ""
   },
   "src/app/propiedades/[id]/page.tsx": {
-    "mtime": 1791583585.927134,
-    "seen": 1791583668.3260477,
-    "ast_hash": "98b8228604d6a1aeca8f16d709fd1d19",
+    "mtime": 1791584897.0398593,
+    "seen": 1791584952.3394177,
+    "ast_hash": "c45078e04b5564a02b9eea22d9206529",
     "semantic_hash": ""
   },
   "src/app/propiedades/page.tsx": {
@@ -102,9 +102,9 @@
     "semantic_hash": "5a363fb3dac58ebff3a82112c5860824"
   },
   "src/components/Footer.tsx": {
-    "mtime": 1791475669.2988868,
-    "seen": 1791476317.1505573,
-    "ast_hash": "2ff31de880359d600b632666fc63711b",
+    "mtime": 1791584813.7800581,
+    "seen": 1791584952.341543,
+    "ast_hash": "a3961ae70258d87ac04d2e0c0cbbcabf",
     "semantic_hash": ""
   },
   "src/components/Header.tsx": {
@@ -126,15 +126,15 @@
     "semantic_hash": ""
   },
   "src/components/PropertyCard.tsx": {
-    "mtime": 1791583570.1787786,
-    "seen": 1791583668.3286803,
-    "ast_hash": "39a8ecc52b0c3d9305e7889533747e1d",
+    "mtime": 1791584512.1098387,
+    "seen": 1791584952.3425245,
+    "ast_hash": "993e44484d0fa371e583ae03df1bb6a9",
     "semantic_hash": ""
   },
   "src/components/PropertyDetailModal.tsx": {
-    "mtime": 1791575254.1646574,
-    "seen": 1791577506.0468245,
-    "ast_hash": "222b3109682dce912658ce6a84ef96d4",
+    "mtime": 1791584677.1452594,
+    "seen": 1791584952.3425293,
+    "ast_hash": "4df09ab19dc9a35f378d1510c53fdaaf",
     "semantic_hash": ""
   },
   "src/components/ValuationModal.tsx": {
@@ -357,6 +357,24 @@
     "mtime": 1791583410.6352339,
     "seen": 1791583668.3304203,
     "ast_hash": "d2fa819aa6560c6602a716e211a60e13",
+    "semantic_hash": ""
+  },
+  "src/components/ShareSiteModal.tsx": {
+    "mtime": 1791584437.4196992,
+    "seen": 1791584952.3425329,
+    "ast_hash": "c1d1399e2cb2296445f8b4ea8081d788",
+    "semantic_hash": ""
+  },
+  "src/lib/share.ts": {
+    "mtime": 1791584425.0144796,
+    "seen": 1791584952.3444414,
+    "ast_hash": "fb744335b74b8eee8ab863828e36fdf6",
+    "semantic_hash": ""
+  },
+  "public/images/og-share.jpg": {
+    "mtime": 1791584402.6166236,
+    "seen": 1791584952.347973,
+    "ast_hash": "7202133b34b08d313496e23904fc4800",
     "semantic_hash": ""
   }
 }

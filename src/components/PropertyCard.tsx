@@ -21,6 +21,7 @@ import {
 import WhatsAppIcon from "./WhatsAppIcon";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
 import { formatPropertyRef, formatCurrencyPrice } from "@/lib/formatters";
+import { getPropertyShareData, shareContent } from "@/lib/share";
 
 interface PropertyCardProps {
   property: Property;
@@ -82,18 +83,11 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowMenu(false);
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: property.title,
-          text: `${property.title} - ${propertyRefCode}`,
-          url: `${window.location.origin}/propiedades/${property.id}`,
-        });
-      } catch {
-        // Fallback silencioso
-      }
-    } else {
-      handleCopyLink(e);
+    const data = getPropertyShareData(property);
+    const result = await shareContent(data);
+    if (result === "copied") {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 

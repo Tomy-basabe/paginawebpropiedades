@@ -46,16 +46,17 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_AR",
     url: "https://99propiedades.com.ar",
-    siteName: "99 Propiedades Santa Cruz",
-    title: "99 Propiedades | Inmobiliaria en Santa Cruz - Casas, Alquiler y Terrenos",
+    siteName: "99 Propiedades",
+    title: "99 Propiedades | Inmobiliaria en Santa Cruz",
     description:
-      "Líder inmobiliario en Santa Cruz. Casas, departamentos, terrenos y loteos en Río Gallegos y toda la provincia con Juan Pablo Pino. Video tours y tasaciones sin cargo.",
+      "Catálogo exclusivo de casas, departamentos, terrenos y desarrollos en Santa Cruz con Juan Pablo Pino. Video tours en alta definición, créditos hipotecarios UVA y tasaciones profesionales.",
     images: [
       {
-        url: "/images/og-share.jpg",
+        url: "https://99propiedades.com.ar/images/og-share.jpg",
         width: 1200,
         height: 630,
         alt: "99 Propiedades - Inmobiliaria en Santa Cruz",
+        type: "image/jpeg",
       },
     ],
   },
@@ -63,8 +64,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "99 Propiedades | Inmobiliaria en Santa Cruz",
     description:
-      "Venta y alquiler de casas, departamentos y terrenos en Santa Cruz con Juan Pablo Pino.",
-    images: ["/images/og-share.jpg"],
+      "Catálogo exclusivo de casas, departamentos, terrenos y desarrollos en Santa Cruz con Juan Pablo Pino. Video tours y tasaciones profesionales.",
+    images: ["https://99propiedades.com.ar/images/og-share.jpg"],
   },
   robots: {
     index: true,

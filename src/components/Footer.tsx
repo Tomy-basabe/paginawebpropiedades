@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useData } from "@/context/DataContext";
 import BrandLogo from "./BrandLogo";
@@ -13,13 +13,16 @@ import {
   Instagram, 
   Linkedin, 
   Youtube,
-  ArrowUpRight
+  ArrowUpRight,
+  Share2
 } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
+import ShareSiteModal from "./ShareSiteModal";
 
 export default function Footer() {
   const { agentProfile } = useData();
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   return (
     <footer className="bg-luxury-black text-neutral-400 border-t border-white/10 pt-16 pb-24 md:pb-12">
@@ -69,6 +72,18 @@ export default function Footer() {
                   <Youtube className="w-4 h-4" />
                 </a>
               )}
+            </div>
+
+            {/* Botón Profesional para Compartir Sitio */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setIsShareModalOpen(true)}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.05] hover:bg-gold-500/20 border border-white/10 hover:border-gold-400/40 text-neutral-300 hover:text-gold-300 text-xs font-medium transition-all cursor-pointer shadow-xs active:scale-95"
+              >
+                <Share2 className="w-3.5 h-3.5 text-gold-400" />
+                <span>Compartir 99propiedades.com.ar</span>
+              </button>
             </div>
           </div>
 
@@ -187,6 +202,11 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      <ShareSiteModal
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+      />
     </footer>
   );
 }

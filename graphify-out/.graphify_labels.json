@@ -1,6 +1,7 @@
 {
   "0": "ref_fs",
   "1": "package.json",
+  "2": "[id]/page.tsx",
   "3": "99propiedades/page.tsx",
   "4": "ref_path",
   "5": "compilerOptions",
@@ -13,5 +14,7 @@
   "12": "ÁUREA | Consultoría Inmobiliaria & Desarrollos",
   "13": "admin/page.tsx",
   "14": "auth.ts",
-  "15": "ref_framer_motion"
+  "15": "ref_framer_motion",
+  "16": "ShareSiteModal.tsx",
+  "17": "logout/route.ts"
 }

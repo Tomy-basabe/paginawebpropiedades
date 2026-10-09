@@ -29,6 +29,7 @@ import WhatsAppIcon from '@/components/WhatsAppIcon';
 import { getWhatsAppUrl } from '@/lib/whatsapp';
 import { formatPropertyRef, formatCurrencyPrice } from '@/lib/formatters';
 import { getGoogleMapsEmbedUrl, getGoogleMapsExternalLink } from '@/lib/maps';
+import { getPropertyShareData, shareContent } from '@/lib/share';
 
 export default function PropertyDetailPage() {
   const params = useParams();
@@ -135,18 +136,12 @@ export default function PropertyDetailPage() {
 
   const handleShare = async () => {
     setShowOptions(false);
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: property.title,
-          text: `${property.title} - ${refCode}`,
-          url: window.location.href,
-        });
-      } catch {
-        // Ignorar
-      }
-    } else {
-      handleCopyLink();
+    if (!property) return;
+    const data = getPropertyShareData(property);
+    const result = await shareContent(data);
+    if (result === "copied") {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -256,7 +251,7 @@ export default function PropertyDetailPage() {
         </div>
       </div>
 
-      {/* Breadcrumb refinado */}
+      {/* Breadcrumb refinado con botón de Compartir */}
       <div className="text-xs text-neutral-400 flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-1.5">
           <Link href="/" className="hover:text-neutral-700 transition-colors">Inicio</Link>
@@ -267,6 +262,25 @@ export default function PropertyDetailPage() {
             {property.title}
           </span>
         </div>
+
+        <button
+          type="button"
+          onClick={handleShare}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-stone-100 hover:bg-stone-200 text-neutral-800 text-xs font-semibold border border-neutral-300 transition-colors cursor-pointer active:scale-95 shadow-2xs"
+          title="Compartir esta propiedad"
+        >
+          {copied ? (
+            <>
+              <Check className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-emerald-700 font-bold">¡Copiado para compartir!</span>
+            </>
+          ) : (
+            <>
+              <Share2 className="w-3.5 h-3.5 text-gold-600" />
+              <span>Compartir Propiedad</span>
+            </>
+          )}
+        </button>
       </div>
 
       {/* Sección multimedia principal limpia y cinematográfica */}

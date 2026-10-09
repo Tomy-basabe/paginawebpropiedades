@@ -27,6 +27,7 @@ import {
 import WhatsAppIcon from "./WhatsAppIcon";
 import { getWhatsAppUrl } from "@/lib/whatsapp";
 import { formatPropertyRef, formatCurrencyPrice } from "@/lib/formatters";
+import { getPropertyShareData, shareContent } from "@/lib/share";
 
 interface PropertyDetailModalProps {
   property: Property | null;
@@ -134,18 +135,12 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
 
   const handleShare = async () => {
     setShowOptions(false);
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: property.title,
-          text: `${property.title} - ${refCode}`,
-          url: `${window.location.origin}/propiedades/${property.id}`,
-        });
-      } catch {
-        // Fallback
-      }
-    } else {
-      handleCopyLink();
+    if (!property) return;
+    const data = getPropertyShareData(property);
+    const result = await shareContent(data);
+    if (result === "copied") {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
