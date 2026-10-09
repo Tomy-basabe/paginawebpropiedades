@@ -126,15 +126,28 @@ const ALL_ADMIN_MODULES: AdminModuleConfig[] = [
   },
 ];
 
-const DEFAULT_ADMIN_USER: AdminUser = {
-  id: "admin-root",
-  username: "admin",
-  password: "••••••••",
-  name: "Administrador",
-  role: "admin",
-  permissions: ALL_ADMIN_MODULES.map((m) => m.id),
-  createdAt: new Date().toISOString(),
-};
+const DEFAULT_USERS: AdminUser[] = [
+  {
+    id: "admin-root",
+    username: "admin",
+    password: "••••••••",
+    name: "Administrador",
+    role: "admin",
+    permissions: ALL_ADMIN_MODULES.map((m) => m.id),
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "user-99propiedades",
+    username: "99propiedades",
+    password: "••••••••",
+    name: "99 Propiedades",
+    role: "asesor",
+    permissions: ["propiedades", "banners", "tasas", "perfil"],
+    createdAt: new Date().toISOString(),
+  },
+];
+
+const DEFAULT_ADMIN_USER: AdminUser = DEFAULT_USERS[0];
 
 export default function AdminSecretPage() {
   const {
@@ -285,8 +298,13 @@ export default function AdminSecretPage() {
     }
   }, []);
 
-  // Función para registrar o desmarcar el pago de un mes
+  // Función para registrar o desmarcar el pago de un mes (exclusiva del superadmin)
   const handleTogglePayment = async (year: number, month: number, forceStatus?: boolean) => {
+    if (currentUser?.role !== "admin" || currentUser?.username !== "admin") {
+      showFeedback("Acceso denegado: Solo el usuario administrador puede modificar el estado de los pagos.", "error");
+      return;
+    }
+
     const id = `${year}-${String(month).padStart(2, "0")}`;
     const existing = appPayments.find((p) => p.id === id);
     const newIsPaid = forceStatus !== undefined ? forceStatus : existing ? !existing.isPaid : true;
@@ -308,7 +326,7 @@ export default function AdminSecretPage() {
     saveLocalStoredPayments(newPayments);
 
     if (newIsPaid) {
-      showFeedback(`Pago del mes de ${monthName} ${year} registrado con éxito. Sistema desbloqueado.`, "success");
+      showFeedback(`Pago del mes de ${monthName} ${year} registrado con éxito. Sistema desbloqueado para modificaciones.`, "success");
     } else {
       showFeedback(`El mes de ${monthName} ${year} ha sido marcado como pendiente.`, "info");
     }
@@ -326,15 +344,22 @@ export default function AdminSecretPage() {
 
   // Guardián contra modificaciones cuando el sistema está bloqueado por falta de pago
   const ensureNotPaymentLocked = (actionName = "Esta acción"): boolean => {
+    // El usuario administrador general nunca está bloqueado
+    if (currentUser?.role === "admin" && currentUser?.username === "admin") {
+      return true;
+    }
     if (isPaymentLocked) {
       showFeedback(
-        `⛔ ${actionName} bloqueada: Debe renovar el pago del mes de ${paymentLockStatus.pendingMonthName} (Vencimiento: ${paymentLockStatus.dueDateStr}) para realizar modificaciones en el sistema.`,
+        `⛔ ${actionName} bloqueada: Se debe renovar el pago del mes de ${paymentLockStatus.pendingMonthName} (Vencimiento: ${paymentLockStatus.dueDateStr}) para realizar modificaciones. Contacte al administrador.`,
         "error"
       );
       return false;
     }
     return true;
   };
+
+  // Bloqueo visual de acciones en UI si el pago está vencido y el usuario no es el administrador
+  const isActionBlocked = isPaymentLocked && !(currentUser?.role === "admin" && currentUser?.username === "admin");
 
   // Filtros y búsqueda en catálogo de propiedades
   const [filterOperation, setFilterOperation] = useState<"todas" | "venta" | "alquiler" | "pozo">("todas");
@@ -572,18 +597,29 @@ export default function AdminSecretPage() {
               role: (u.role as "admin" | "asesor") || "asesor",
               permissions:
                 Array.isArray(u.permissions) && u.permissions.length > 0
-                  ? u.permissions
+                  ? (u.role === "admin" && u.username === "admin"
+                      ? ALL_ADMIN_MODULES.map((m) => m.id)
+                      : u.permissions.filter((m) => m !== "pagos" && m !== "usuarios"))
                   : u.role === "admin"
                   ? ALL_ADMIN_MODULES.map((m) => m.id)
-                  : (["propiedades"] as AdminModule[]),
+                  : (["propiedades", "banners", "tasas", "perfil"] as AdminModule[]),
               createdAt: u.createdAt || new Date().toISOString(),
             }));
+
+            // Asegurar que admin y 99propiedades siempre existan
+            if (!normalized.some((u) => u.username.toLowerCase() === "admin")) {
+              normalized.unshift(DEFAULT_USERS[0]);
+            }
+            if (!normalized.some((u) => u.username.toLowerCase() === "99propiedades")) {
+              normalized.push(DEFAULT_USERS[1]);
+            }
+
             setUsers(normalized);
           } else {
-            setUsers([DEFAULT_ADMIN_USER]);
+            setUsers(DEFAULT_USERS);
           }
         } else {
-          setUsers([DEFAULT_ADMIN_USER]);
+          setUsers(DEFAULT_USERS);
         }
 
         const checkLocalSession = () => {
@@ -613,16 +649,19 @@ export default function AdminSecretPage() {
           .then((data) => {
             if (data?.authenticated && data?.user) {
               setIsAuthenticated(true);
-              const rootUser: AdminUser = {
-                id: "admin-root",
+              const isMasterAdmin = data.user.username.toLowerCase() === "admin" && data.user.role === "admin";
+              const userObj: AdminUser = {
+                id: isMasterAdmin ? "admin-root" : `user-${data.user.username}`,
                 username: data.user.username,
                 password: "••••••••",
                 name: data.user.name,
                 role: data.user.role,
-                permissions: ALL_ADMIN_MODULES.map((m) => m.id),
+                permissions: isMasterAdmin
+                  ? ALL_ADMIN_MODULES.map((m) => m.id)
+                  : ["propiedades", "banners", "tasas", "perfil"],
                 createdAt: new Date().toISOString(),
               };
-              setCurrentUser(rootUser);
+              setCurrentUser(userObj);
               setProfileForm(agentProfile);
             } else {
               checkLocalSession();
@@ -637,13 +676,14 @@ export default function AdminSecretPage() {
     }
   }, [agentProfile]);
 
-  // Módulos permitidos según los permisos del usuario activo
+  // Módulos permitidos según los permisos del usuario activo (99propiedades no tiene acceso a pagos ni a usuarios)
   const userAllowedModules: AdminModule[] = currentUser
-    ? currentUser.role === "admin"
+    ? currentUser.role === "admin" && currentUser.username === "admin"
       ? ALL_ADMIN_MODULES.map((m) => m.id)
-      : currentUser.permissions && currentUser.permissions.length > 0
-      ? currentUser.permissions
-      : ["propiedades"]
+      : (currentUser.permissions && currentUser.permissions.length > 0
+          ? currentUser.permissions
+          : (["propiedades", "banners", "tasas", "perfil"] as AdminModule[])
+        ).filter((m) => m !== "pagos" && m !== "usuarios")
     : [];
 
   // Redirección automática si la pestaña activa no está permitida para el usuario
@@ -676,13 +716,16 @@ export default function AdminSecretPage() {
 
       if (res.ok && data.success) {
         setIsAuthenticated(true);
+        const isMasterAdmin = data.user.username.toLowerCase() === "admin" && data.user.role === "admin";
         const loggedUser: AdminUser = {
-          id: "admin-root",
+          id: isMasterAdmin ? "admin-root" : `user-${data.user.username}`,
           username: data.user.username,
           password: "••••••••",
           name: data.user.name,
           role: data.user.role,
-          permissions: ALL_ADMIN_MODULES.map((m) => m.id),
+          permissions: isMasterAdmin
+            ? ALL_ADMIN_MODULES.map((m) => m.id)
+            : ["propiedades", "banners", "tasas", "perfil"],
           createdAt: new Date().toISOString(),
         };
         setCurrentUser(loggedUser);
@@ -694,8 +737,8 @@ export default function AdminSecretPage() {
         setProfileForm(agentProfile);
         showFeedback(`Bienvenido al panel, ${data.user.name}.`, "success");
       } else {
-        // Fallback: verificación directa de admin y TOMAS2812
-        if (u === "admin" && p === "TOMAS2812") {
+        // Fallback: verificación directa de admin y Tomas2812
+        if (u === "admin" && (p === "Tomas2812" || p === "TOMAS2812")) {
           setIsAuthenticated(true);
           const rootUser: AdminUser = {
             id: "admin-root",
@@ -714,6 +757,29 @@ export default function AdminSecretPage() {
           setLoginPassword("");
           setProfileForm(agentProfile);
           showFeedback("Bienvenido al panel, Administrador.", "success");
+          return;
+        }
+
+        // Fallback: verificación directa de 99propiedades y 123456
+        if (u === "99propiedades" && p === "123456") {
+          setIsAuthenticated(true);
+          const clientUser: AdminUser = {
+            id: "user-99propiedades",
+            username: "99propiedades",
+            password: "••••••••",
+            name: "99 Propiedades",
+            role: "asesor",
+            permissions: ["propiedades", "banners", "tasas", "perfil"],
+            createdAt: new Date().toISOString(),
+          };
+          setCurrentUser(clientUser);
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem("aurea_active_session_user", JSON.stringify(clientUser));
+          }
+          setLoginError("");
+          setLoginPassword("");
+          setProfileForm(agentProfile);
+          showFeedback("Bienvenido al panel, 99 Propiedades.", "success");
           return;
         }
 
@@ -738,7 +804,7 @@ export default function AdminSecretPage() {
         setLoginError(data.error || "Usuario o contraseña incorrectos.");
       }
     } catch {
-      if (u === "admin" && p === "TOMAS2812") {
+      if (u === "admin" && (p === "Tomas2812" || p === "TOMAS2812")) {
         setIsAuthenticated(true);
         const rootUser: AdminUser = {
           id: "admin-root",
@@ -757,6 +823,28 @@ export default function AdminSecretPage() {
         setLoginPassword("");
         setProfileForm(agentProfile);
         showFeedback("Bienvenido al panel, Administrador.", "success");
+        return;
+      }
+
+      if (u === "99propiedades" && p === "123456") {
+        setIsAuthenticated(true);
+        const clientUser: AdminUser = {
+          id: "user-99propiedades",
+          username: "99propiedades",
+          password: "••••••••",
+          name: "99 Propiedades",
+          role: "asesor",
+          permissions: ["propiedades", "banners", "tasas", "perfil"],
+          createdAt: new Date().toISOString(),
+        };
+        setCurrentUser(clientUser);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("aurea_active_session_user", JSON.stringify(clientUser));
+        }
+        setLoginError("");
+        setLoginPassword("");
+        setProfileForm(agentProfile);
+        showFeedback("Bienvenido al panel, 99 Propiedades.", "success");
         return;
       }
 
@@ -907,6 +995,11 @@ export default function AdminSecretPage() {
 
     const target = users.find((u) => u.id === userId);
     if (!target) return;
+
+    if (target.username.toLowerCase() === "admin" || target.username.toLowerCase() === "99propiedades") {
+      showFeedback("No se pueden eliminar las cuentas base del sistema (admin y 99propiedades).", "error");
+      return;
+    }
 
     if (!confirm(`¿Eliminar al usuario "${target.name}" (@${target.username})?`)) {
       return;
@@ -1304,32 +1397,47 @@ export default function AdminSecretPage() {
                   ¡Atención! Debe renovar el pago del mes de {paymentLockStatus.pendingMonthName} {paymentLockStatus.pendingYear}
                 </h2>
                 <p className="text-xs sm:text-sm text-red-100 max-w-3xl leading-relaxed">
-                  El período de renovación venció el <strong className="text-white underline font-bold">10 de {paymentLockStatus.pendingMonthName}</strong> y no se encuentra marcado como pagado. El panel está en <strong className="text-white">modo solo lectura</strong>: las altas, modificaciones y bajas están suspendidas hasta regularizar el pago.
+                  {currentUser?.role === "admin" && currentUser?.username === "admin" ? (
+                    <>
+                      El período de renovación venció el <strong className="text-white underline font-bold">10 de {paymentLockStatus.pendingMonthName}</strong> y no se encuentra registrado como pagado. Como administrador, puedes certificar la acreditación del pago para reactivar las facultades de modificación del usuario 99propiedades.
+                    </>
+                  ) : (
+                    <>
+                      El servicio de la página web registra el pago del mes de <strong className="text-white font-bold">{paymentLockStatus.pendingMonthName} {paymentLockStatus.pendingYear}</strong> como pendiente. El panel se encuentra en <strong className="text-white">modo solo lectura</strong>: las altas, modificaciones y bajas están suspendidas hasta que el administrador verifique y acredite el pago.
+                    </>
+                  )}
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
-              <button
-                type="button"
-                onClick={() => {
-                  const pendingMonthNum = MONTH_NAMES_ES.indexOf(paymentLockStatus.pendingMonthName) + 1;
-                  handleTogglePayment(paymentLockStatus.pendingYear, pendingMonthNum, true);
-                }}
-                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider rounded-md shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
-              >
-                <Check className="w-4 h-4 stroke-[3]" />
-                <span>Marcar como Pagado Ahora</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab("pagos")}
-                className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-semibold rounded-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <CalendarDays className="w-4 h-4 text-gold-400" />
-                <span>Ver Calendario de Pagos</span>
-              </button>
-            </div>
+            {currentUser?.role === "admin" && currentUser?.username === "admin" ? (
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const pendingMonthNum = MONTH_NAMES_ES.indexOf(paymentLockStatus.pendingMonthName) + 1;
+                    handleTogglePayment(paymentLockStatus.pendingYear, pendingMonthNum, true);
+                  }}
+                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider rounded-md shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                >
+                  <Check className="w-4 h-4 stroke-[3]" />
+                  <span>Marcar como Pagado Ahora</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("pagos")}
+                  className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-semibold rounded-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <CalendarDays className="w-4 h-4 text-gold-400" />
+                  <span>Ver Calendario de Pagos</span>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2.5 px-4 py-3 bg-red-950/80 border border-red-700/60 rounded-md text-xs text-red-200 shrink-0">
+                <Shield className="w-4 h-4 text-amber-300 shrink-0" />
+                <span>Contacte a la administración para validar el comprobante de pago.</span>
+              </div>
+            )}
           </div>
         </div>
       ) : paymentLockStatus.isApproachingDue ? (
@@ -1342,14 +1450,16 @@ export default function AdminSecretPage() {
               <strong>{paymentLockStatus.dueDateStr}</strong> (faltan {paymentLockStatus.daysUntilDue} días).
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setActiveTab("pagos")}
-            className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs rounded transition-colors self-start sm:self-auto cursor-pointer flex items-center gap-1.5 shrink-0"
-          >
-            <CalendarCheck className="w-3.5 h-3.5" />
-            <span>Gestionar Pago</span>
-          </button>
+          {currentUser?.role === "admin" && currentUser?.username === "admin" && (
+            <button
+              type="button"
+              onClick={() => setActiveTab("pagos")}
+              className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs rounded transition-colors self-start sm:self-auto cursor-pointer flex items-center gap-1.5 shrink-0"
+            >
+              <CalendarCheck className="w-3.5 h-3.5" />
+              <span>Gestionar Pago</span>
+            </button>
+          )}
         </div>
       ) : null}
 
@@ -1520,13 +1630,13 @@ export default function AdminSecretPage() {
             <button
               onClick={startCreateProperty}
               className={`text-xs font-semibold uppercase tracking-wider px-4 py-2.5 rounded-sm transition-colors flex items-center gap-2 shadow-sm cursor-pointer ${
-                isPaymentLocked
+                isActionBlocked
                   ? "bg-stone-300 text-neutral-600 hover:bg-stone-400"
                   : "bg-gold-500 hover:bg-gold-600 text-luxury-black"
               }`}
-              title={isPaymentLocked ? "Bloqueado por pago pendiente" : "Crear nueva propiedad"}
+              title={isActionBlocked ? "Bloqueado por pago pendiente" : "Crear nueva propiedad"}
             >
-              {isPaymentLocked ? <Lock className="w-4 h-4 text-neutral-700" /> : <Plus className="w-4 h-4" />}
+              {isActionBlocked ? <Lock className="w-4 h-4 text-neutral-700" /> : <Plus className="w-4 h-4" />}
               <span>Nueva Propiedad</span>
             </button>
           </div>
@@ -2374,13 +2484,13 @@ export default function AdminSecretPage() {
             <button
               onClick={startCreateBanner}
               className={`text-xs font-semibold uppercase tracking-wider px-4 py-2.5 rounded-sm transition-colors flex items-center gap-2 shadow-sm cursor-pointer ${
-                isPaymentLocked
+                isActionBlocked
                   ? "bg-stone-300 text-neutral-600 hover:bg-stone-400"
                   : "bg-gold-500 hover:bg-gold-600 text-luxury-black"
               }`}
-              title={isPaymentLocked ? "Bloqueado por pago pendiente" : "Crear nuevo banner"}
+              title={isActionBlocked ? "Bloqueado por pago pendiente" : "Crear nuevo banner"}
             >
-              {isPaymentLocked ? <Lock className="w-4 h-4 text-neutral-700" /> : <Plus className="w-4 h-4" />}
+              {isActionBlocked ? <Lock className="w-4 h-4 text-neutral-700" /> : <Plus className="w-4 h-4" />}
               <span>Nuevo Banner</span>
             </button>
           </div>
@@ -2590,13 +2700,13 @@ export default function AdminSecretPage() {
             <button
               onClick={startCreateBank}
               className={`text-xs font-semibold uppercase tracking-wider px-4 py-2.5 rounded-sm transition-colors flex items-center gap-2 shadow-sm cursor-pointer ${
-                isPaymentLocked
+                isActionBlocked
                   ? "bg-stone-300 text-neutral-600 hover:bg-stone-400"
                   : "bg-gold-500 hover:bg-gold-600 text-luxury-black"
               }`}
-              title={isPaymentLocked ? "Bloqueado por pago pendiente" : "Agregar entidad bancaria"}
+              title={isActionBlocked ? "Bloqueado por pago pendiente" : "Agregar entidad bancaria"}
             >
-              {isPaymentLocked ? <Lock className="w-4 h-4 text-neutral-700" /> : <Plus className="w-4 h-4" />}
+              {isActionBlocked ? <Lock className="w-4 h-4 text-neutral-700" /> : <Plus className="w-4 h-4" />}
               <span>Nuevo Banco</span>
             </button>
           </div>

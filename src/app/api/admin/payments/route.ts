@@ -60,6 +60,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No autorizado." }, { status: 401 });
     }
 
+    if (session.role !== "admin" || session.username !== "admin") {
+      return NextResponse.json(
+        { error: "Acceso denegado: Solo el usuario administrador puede modificar el estado de pagos del sistema." },
+        { status: 403 }
+      );
+    }
+
     const body = await req.json();
     const { action, payment, payments } = body;
 
