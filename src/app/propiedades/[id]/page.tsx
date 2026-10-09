@@ -395,12 +395,7 @@ export default function PropertyDetailPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-neutral-200">
         <div>
           <div className="flex items-center gap-2.5 flex-wrap mb-2.5">
-            {/* Código de catálogo limpio */}
-            <span className="text-xs font-mono font-bold tracking-wider text-neutral-800 bg-stone-100 border border-stone-200 px-2.5 py-1 rounded-[3px]">
-              {refCode}
-            </span>
-            <span className="text-neutral-300">•</span>
-            <span className="text-xs font-semibold uppercase tracking-wider text-gold-700 bg-gold-50 border border-gold-200 px-2.5 py-1 rounded-[3px]">
+            <span className="text-xs font-semibold uppercase tracking-wider text-gold-700 bg-gold-50 border border-gold-200 px-3 py-1 rounded-[3px]">
               {property.operation}
             </span>
             {property.isOpportunity && (

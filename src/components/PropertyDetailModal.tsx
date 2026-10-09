@@ -161,15 +161,11 @@ export default function PropertyDetailModal({ property, onClose }: PropertyDetai
         {/* Barra superior de navegación limpia y exclusiva */}
         <div className="sticky top-0 bg-white/95 backdrop-blur-md z-30 px-4 sm:px-6 py-3 border-b border-neutral-200 flex items-center justify-between safe-area-top shrink-0">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold tracking-wider text-neutral-800 bg-stone-100 border border-stone-200 px-2.5 py-1 rounded-[4px]">
-              {refCode}
-            </span>
-            <span className="text-neutral-300">•</span>
-            <span className="text-xs font-semibold uppercase tracking-wider text-gold-700 bg-gold-50 border border-gold-200 px-2.5 py-1 rounded-[4px]">
+            <span className="text-xs font-semibold uppercase tracking-wider text-gold-700 bg-gold-50 border border-gold-200 px-3 py-1 rounded-[4px]">
               {property.operation}
             </span>
             {property.isOpportunity && (
-              <span className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-[4px] hidden sm:inline-flex items-center gap-1">
+              <span className="text-[11px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-[4px] inline-flex items-center gap-1">
                 <Sparkles className="w-3 h-3 text-amber-600" />
                 <span>{property.opportunityBadge || "Oportunidad"}</span>
               </span>

@@ -318,6 +318,41 @@ h1 {
   filter: brightness(0.95);
 }
 
+/* Animación de apertura de cortina de lujo para el menú de 3 barras */
+@keyframes mobileMenuSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.98);
+    max-height: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    max-height: 80vh;
+  }
+}
+
+.animate-menu-slide-down {
+  animation: mobileMenuSlideDown 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  overflow: hidden;
+}
+
+/* Efecto de cascada sutil para los enlaces del menú móvil */
+@keyframes menuItemFade {
+  0% {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-menu-item {
+  animation: menuItemFade 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* Prevenir auto-zoom en iOS Safari al enfocar inputs/selects */
 @media screen and (max-width: 768px) {
   input[type="text"],
@@ -329,6 +364,7 @@ h1 {
     font-size: 16px !important;
   }
 }
+
 
 
 

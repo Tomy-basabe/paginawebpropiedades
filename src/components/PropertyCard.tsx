@@ -120,13 +120,10 @@ export default function PropertyCard({ property, onSelectProperty }: PropertyCar
         {/* Gradiente sutil inferior */}
         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/70 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
 
-        {/* Badges superiores - Esquina Izquierda: Estado, Ref & Destacada */}
+        {/* Badges superiores - Esquina Izquierda: Estado & Destacada */}
         <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10 flex-wrap">
           <span className="bg-neutral-950/85 backdrop-blur-md text-white text-[10px] font-semibold uppercase tracking-[0.12em] px-2.5 py-1 rounded-[2px] border border-white/10 shadow-xs">
             {operationLabels[property.operation] || property.operation}
-          </span>
-          <span className="bg-white/90 backdrop-blur-md text-neutral-900 text-[10px] font-mono font-bold tracking-wider px-2 py-1 rounded-[2px] shadow-xs">
-            {propertyRefCode}
           </span>
           {property.isOpportunity && (
             <span className="bg-gold-500 text-neutral-950 text-[10px] font-bold tracking-wide px-2 py-1 rounded-[2px] flex items-center gap-1 shadow-xs">
