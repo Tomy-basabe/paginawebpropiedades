@@ -124,15 +124,118 @@ h1 {
 }
 
 .btn-tactile {
-  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-tactile:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  filter: brightness(1.03);
 }
 
 .btn-tactile:active {
-  transform: translateY(1px) scale(0.98);
+  transform: translateY(1px) scale(0.96);
+}
+
+/* Animaciones de microinteracción táctil para botones con efecto click */
+.btn-pressable {
+  transition: transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 150ms ease, background-color 150ms ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.btn-pressable:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.btn-pressable:active {
+  transform: translateY(1.5px) scale(0.95);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Animación de apertura para menús flotantes (menú de 3 puntos) */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top right;
+}
+
+/* Animación de los 3 puntos (Dots loader / bouncing indicators) */
+@keyframes dotPulse {
+  0%, 80%, 100% {
+    transform: scale(0.7);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+.dot-pulse-1 {
+  animation: dotPulse 1.4s infinite ease-in-out;
+  animation-delay: -0.32s;
+}
+
+.dot-pulse-2 {
+  animation: dotPulse 1.4s infinite ease-in-out;
+  animation-delay: -0.16s;
+}
+
+.dot-pulse-3 {
+  animation: dotPulse 1.4s infinite ease-in-out;
+}
+
+/* Animaciones cinematográficas para el movimiento de Banners */
+@keyframes bannerSlideText {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-banner-text {
+  animation: bannerSlideText 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes kenBurnsSlow {
+  0% {
+    transform: scale(1.0);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1.0);
+  }
+}
+
+.animate-ken-burns {
+  animation: kenBurnsSlow 20s ease-in-out infinite alternate;
+}
+
+/* Barra de progreso de auto-slide de banners */
+@keyframes bannerTimerProgress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+.animate-banner-progress {
+  animation: bannerTimerProgress 7s linear infinite;
 }
 
 /* Fade-in para elementos dinámicos (visor 3D, modales, etc.) */
@@ -156,4 +259,5 @@ h1 {
     font-size: 16px !important;
   }
 }
+
 
