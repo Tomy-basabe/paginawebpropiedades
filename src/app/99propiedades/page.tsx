@@ -7,6 +7,7 @@ import { useData } from "@/context/DataContext";
 import BrandLogo from "@/components/BrandLogo";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { uploadPropertyImage, uploadPropertyVideo } from "@/lib/supabase";
+import { extractSmartBestFrames, autoSmartFrame } from "@/lib/smartFrames";
 import { cleanWhatsAppNumber, getWhatsAppUrl } from "@/lib/whatsapp";
 import { Property, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus } from "@/lib/types";
 import { 
@@ -617,7 +618,9 @@ export default function AdminSecretPage() {
       if (!ctx) throw new Error("No se pudo iniciar el canvas.");
 
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const blob = await canvasToBlob(canvas, 0.92);
+      // Aplicar encuadre inteligente automático en 16:9 si se captura como portada
+      const finalCanvas = asCover ? autoSmartFrame(canvas, 1600, 900) : canvas;
+      const blob = await canvasToBlob(finalCanvas, 0.93);
 
       // Subida garantizada a Supabase Storage (evita error 413 y cuota de localStorage)
       let publicUrl: string;
@@ -625,7 +628,7 @@ export default function AdminSecretPage() {
         publicUrl = await uploadPropertyImage(blob);
       } catch (uploadErr) {
         console.warn("Fallo en Storage, fallback a URL local:", uploadErr);
-        publicUrl = canvas.toDataURL("image/jpeg", 0.9);
+        publicUrl = finalCanvas.toDataURL("image/jpeg", 0.9);
       }
 
       setPropForm((prev) => {
@@ -646,7 +649,7 @@ export default function AdminSecretPage() {
 
       showFeedback(
         asCover
-          ? "¡Fotograma capturado y guardado como portada en la web!"
+          ? "¡Fotograma encuadrado y guardado como portada en la web!"
           : "¡Fotograma capturado y añadido a la galería!",
         "success"
       );
@@ -658,53 +661,63 @@ export default function AdminSecretPage() {
     }
   };
 
-  // Extraer automáticamente 3 fotogramas distribuidos en el video y subirlos a la nube
-  const handleAutoExtractKeyFrames = async () => {
-    if (!ensureNotPaymentLocked("Extraer fotos automáticas")) return;
+  const [smartExtractStatus, setSmartExtractStatus] = useState<string>("");
+
+  // Algoritmo Inteligente: Selecciona los mejores fotogramas por nitidez, luz y encuadre
+  const handleAutoExtractKeyFrames = async (targetCount = 6) => {
+    if (!ensureNotPaymentLocked("Extraer fotos automáticas con IA")) return;
     const video = videoExtractRef.current;
     if (!video) return;
     setIsExtractingFrames(true);
+    setSmartExtractStatus("Iniciando escaneo inteligente...");
 
     try {
-      const duration = video.duration || 10;
-      const seekPoints = [duration * 0.15, duration * 0.5, duration * 0.85];
-      const originalTime = video.currentTime;
+      const bestFrames = await extractSmartBestFrames(
+        video,
+        targetCount,
+        (pct, msg) => {
+          setSmartExtractStatus(`${msg} (${pct}%)`);
+        }
+      );
+
+      if (bestFrames.length === 0) {
+        throw new Error("No se detectaron fotogramas con nitidez suficiente.");
+      }
+
+      setSmartExtractStatus("Subiendo mejores fotos al servidor...");
       const uploadedUrls: string[] = [];
 
-      for (let i = 0; i < seekPoints.length; i++) {
-        const time = seekPoints[i];
-        video.currentTime = time;
-        await new Promise((r) => setTimeout(r, 450));
-
-        const canvas = document.createElement("canvas");
-        canvas.width = video.videoWidth || 1280;
-        canvas.height = video.videoHeight || 720;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          try {
-            const blob = await canvasToBlob(canvas, 0.92);
-            const url = await uploadPropertyImage(blob);
-            uploadedUrls.push(url);
-          } catch {
-            uploadedUrls.push(canvas.toDataURL("image/jpeg", 0.85));
-          }
+      for (let i = 0; i < bestFrames.length; i++) {
+        setSmartExtractStatus(`Guardando foto ${i + 1} de ${bestFrames.length} en la nube...`);
+        try {
+          const url = await uploadPropertyImage(bestFrames[i].blob);
+          uploadedUrls.push(url);
+        } catch (upErr) {
+          console.warn("Fallo en upload individual, omitiendo:", upErr);
         }
       }
-      video.currentTime = originalTime;
 
       if (uploadedUrls.length > 0) {
-        setPropForm((prev) => ({
-          ...prev,
-          images: [...(prev.images || []), ...uploadedUrls],
-        }));
-        showFeedback(`¡Se extrajeron y guardaron ${uploadedUrls.length} fotos del video con éxito!`, "success");
+        setPropForm((prev) => {
+          const existing = prev.images || [];
+          // Si no tenía portada, la primera foto seleccionada por el algoritmo será la portada
+          return {
+            ...prev,
+            images: existing.length === 0 ? uploadedUrls : [...existing, ...uploadedUrls],
+          };
+        });
+        showFeedback(
+          `¡Éxito! Se analizaron y seleccionaron ${uploadedUrls.length} fotos de máxima calidad con encuadre automático.`,
+          "success"
+        );
       }
-    } catch (e) {
-      console.error("Error al extraer fotos automáticas:", e);
-      showFeedback("Error al extraer fotogramas automáticos.", "error");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Error desconocido";
+      console.error("Error al extraer mejores fotos:", e);
+      showFeedback(`No se pudieron extraer las fotos: ${msg}`, "error");
     } finally {
       setIsExtractingFrames(false);
+      setSmartExtractStatus("");
     }
   };
 
@@ -2396,16 +2409,16 @@ export default function AdminSecretPage() {
                         )}
                       </div>
 
-                      <div className="flex flex-wrap gap-2 pt-1">
+                      <div className="flex flex-wrap items-center gap-2 pt-1">
                         <button
                           type="button"
                           onClick={() => handleCaptureCurrentFrame(true)}
                           disabled={isExtractingFrames}
                           className="flex items-center gap-1.5 px-3 py-1.5 bg-gold-500 hover:bg-gold-600 text-luxury-black rounded text-xs font-bold cursor-pointer shadow-sm active:scale-95 transition-all disabled:opacity-50"
-                          title="Captura el cuadro actual y lo ubica como la foto principal del inmueble"
+                          title="Captura el cuadro actual con encuadre 16:9 automático y lo ubica como portada principal"
                         >
                           <Star className="w-3.5 h-3.5 fill-current" />
-                          <span>{isExtractingFrames ? "Guardando..." : "Capturar como Portada"}</span>
+                          <span>{isExtractingFrames ? "Guardando..." : "Capturar y Encuadrar Portada"}</span>
                         </button>
                         <button
                           type="button"
@@ -2418,14 +2431,33 @@ export default function AdminSecretPage() {
                         </button>
                         <button
                           type="button"
-                          onClick={handleAutoExtractKeyFrames}
+                          onClick={() => handleAutoExtractKeyFrames(6)}
                           disabled={isExtractingFrames}
-                          className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-sky-300 hover:bg-sky-50 text-sky-900 rounded text-xs font-medium cursor-pointer shadow-sm active:scale-95 transition-all disabled:opacity-50"
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-sky-300 hover:bg-sky-50 text-sky-900 rounded text-xs font-semibold cursor-pointer shadow-sm active:scale-95 transition-all disabled:opacity-50"
+                          title="Escanea el video analizando nitidez, contraste e iluminación para elegir los 6 mejores momentos"
                         >
-                          <Film className="w-3.5 h-3.5 text-sky-600" />
-                          <span>{isExtractingFrames ? "Extrayendo..." : "Extraer 3 fotos automáticas"}</span>
+                          <Sparkles className="w-3.5 h-3.5 text-gold-600" />
+                          <span>{isExtractingFrames ? "Analizando video..." : "Selección Inteligente (6 mejores)"}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleAutoExtractKeyFrames(10)}
+                          disabled={isExtractingFrames}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-100/60 border border-sky-200 hover:bg-sky-200/60 text-sky-950 rounded text-xs font-medium cursor-pointer shadow-sm active:scale-95 transition-all disabled:opacity-50"
+                          title="Extrae un pack completo de 10 fotos optimizadas de todo el recorrido"
+                        >
+                          <Film className="w-3.5 h-3.5 text-sky-700" />
+                          <span>Pack Extendido (10 fotos)</span>
                         </button>
                       </div>
+
+                      {/* Barra de progreso / Estado del Algoritmo Inteligente */}
+                      {isExtractingFrames && smartExtractStatus && (
+                        <div className="mt-2.5 p-2 bg-white/90 border border-sky-200 rounded text-xs flex items-center gap-2 text-sky-900 animate-pulse">
+                          <Loader2 className="w-3.5 h-3.5 animate-spin text-sky-600 shrink-0" />
+                          <span className="font-medium text-[11px]">{smartExtractStatus}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
