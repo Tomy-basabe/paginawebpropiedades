@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
 
     // Credenciales del Administrador configuradas en .env.local
     const envAdminUser = (process.env.ADMIN_USER || "admin").toLowerCase();
-    const envAdminPass = process.env.ADMIN_PASSWORD || "AureaAdmin2026!#Secure_X9kL";
+    const envAdminPass = process.env.ADMIN_PASSWORD || "TOMAS2812";
 
     // Validación estricta sin puertas traseras
     const isUserValid = safeCompare(username, envAdminUser);

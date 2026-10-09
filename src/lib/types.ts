@@ -94,3 +94,15 @@ export interface AgentProfile {
     description: string;
   }[];
 }
+
+export interface AppMonthlyPayment {
+  id: string; // formato "YYYY-MM", ej. "2026-10"
+  year: number;
+  month: number; // 1-12
+  monthName: string;
+  isPaid: boolean;
+  paidAt?: string;
+  paidBy?: string;
+  amount?: number;
+  notes?: string;
+}

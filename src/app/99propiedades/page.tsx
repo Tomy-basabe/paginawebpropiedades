@@ -40,9 +40,26 @@ import {
   ShieldCheck,
   CheckCheck,
   UserPlus,
+  CalendarDays,
+  CalendarCheck,
+  AlertTriangle,
+  CreditCard,
+  Clock,
+  Ban,
+  AlertOctagon,
+  Info,
 } from "lucide-react";
+import { AppMonthlyPayment } from "@/lib/types";
+import {
+  buildYearPayments,
+  checkAppPaymentLock,
+  getLocalStoredPayments,
+  saveLocalStoredPayments,
+  MONTH_NAMES_ES,
+  PaymentLockStatus,
+} from "@/lib/payments";
 
-type AdminModule = "propiedades" | "banners" | "tasas" | "perfil" | "usuarios";
+type AdminModule = "propiedades" | "banners" | "tasas" | "perfil" | "usuarios" | "pagos";
 
 interface AdminUser {
   id: string;
@@ -97,6 +114,13 @@ const ALL_ADMIN_MODULES: AdminModuleConfig[] = [
     shortLabel: "Usuarios",
     description: "Administración de accesos y roles del equipo",
     icon: Users,
+  },
+  {
+    id: "pagos",
+    label: "Control de Pagos",
+    shortLabel: "Pagos",
+    description: "Calendario y registro de pagos mensuales de la app",
+    icon: CalendarCheck,
   },
 ];
 
@@ -228,8 +252,87 @@ export default function AdminSecretPage() {
     }, 4000);
   };
 
-  // Tabs (sin 'backup' ni restablecer datos)
-  const [activeTab, setActiveTab] = useState<"propiedades" | "banners" | "tasas" | "perfil" | "usuarios">("propiedades");
+  // Tabs
+  const [activeTab, setActiveTab] = useState<AdminModule>("propiedades");
+
+  // Estado de pagos mensuales de la app
+  const [appPayments, setAppPayments] = useState<AppMonthlyPayment[]>([]);
+  const [selectedPaymentYear, setSelectedPaymentYear] = useState<number>(new Date().getFullYear());
+  const [selectedCalendarMonth, setSelectedCalendarMonth] = useState<number>(new Date().getMonth() + 1);
+
+  // Verificación de estado de bloqueo de la app por pagos
+  const paymentLockStatus: PaymentLockStatus = checkAppPaymentLock(appPayments);
+  const isPaymentLocked = paymentLockStatus.isBlocked;
+
+  // Cargar pagos guardados al inicializar
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const local = getLocalStoredPayments();
+      if (local && local.length > 0) {
+        setAppPayments(local);
+      }
+      fetch("/api/admin/payments")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.success && Array.isArray(data.payments) && data.payments.length > 0) {
+            setAppPayments(data.payments);
+            saveLocalStoredPayments(data.payments);
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
+
+  // Función para registrar o desmarcar el pago de un mes
+  const handleTogglePayment = async (year: number, month: number, forceStatus?: boolean) => {
+    const id = `${year}-${String(month).padStart(2, "0")}`;
+    const existing = appPayments.find((p) => p.id === id);
+    const newIsPaid = forceStatus !== undefined ? forceStatus : existing ? !existing.isPaid : true;
+    const monthName = MONTH_NAMES_ES[month - 1];
+
+    const updatedPayment: AppMonthlyPayment = {
+      id,
+      year,
+      month,
+      monthName,
+      isPaid: newIsPaid,
+      paidAt: newIsPaid ? new Date().toISOString() : undefined,
+      paidBy: newIsPaid ? (currentUser?.name || "admin") : undefined,
+    };
+
+    const newPayments = appPayments.filter((p) => p.id !== id);
+    newPayments.push(updatedPayment);
+    setAppPayments(newPayments);
+    saveLocalStoredPayments(newPayments);
+
+    if (newIsPaid) {
+      showFeedback(`Pago del mes de ${monthName} ${year} registrado con éxito. Sistema desbloqueado.`, "success");
+    } else {
+      showFeedback(`El mes de ${monthName} ${year} ha sido marcado como pendiente.`, "info");
+    }
+
+    try {
+      await fetch("/api/admin/payments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "toggle", payment: updatedPayment }),
+      });
+    } catch (err) {
+      console.warn("Aviso al guardar pago en API:", err);
+    }
+  };
+
+  // Guardián contra modificaciones cuando el sistema está bloqueado por falta de pago
+  const ensureNotPaymentLocked = (actionName = "Esta acción"): boolean => {
+    if (isPaymentLocked) {
+      showFeedback(
+        `⛔ ${actionName} bloqueada: Debe renovar el pago del mes de ${paymentLockStatus.pendingMonthName} (Vencimiento: ${paymentLockStatus.dueDateStr}) para realizar modificaciones en el sistema.`,
+        "error"
+      );
+      return false;
+    }
+    return true;
+  };
 
   // Filtros y búsqueda en catálogo de propiedades
   const [filterOperation, setFilterOperation] = useState<"todas" | "venta" | "alquiler" | "pozo">("todas");
@@ -290,6 +393,10 @@ export default function AdminSecretPage() {
   const [videoStatus, setVideoStatus] = useState("");
 
   const handleImageFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!ensureNotPaymentLocked("Subir imágenes")) {
+      e.target.value = "";
+      return;
+    }
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
@@ -320,6 +427,7 @@ export default function AdminSecretPage() {
   };
 
   const handleAddManualUrl = () => {
+    if (!ensureNotPaymentLocked("Agregar imágenes")) return;
     if (!manualImageUrl.trim()) return;
     setPropForm((prev) => ({
       ...prev,
@@ -329,6 +437,7 @@ export default function AdminSecretPage() {
   };
 
   const handleRemoveImage = (indexToRemove: number) => {
+    if (!ensureNotPaymentLocked("Eliminar imágenes")) return;
     setPropForm((prev) => ({
       ...prev,
       images: (prev.images || []).filter((_, i) => i !== indexToRemove),
@@ -336,6 +445,7 @@ export default function AdminSecretPage() {
   };
 
   const handleMakeCoverImage = (indexToCover: number) => {
+    if (!ensureNotPaymentLocked("Organizar imágenes")) return;
     setPropForm((prev) => {
       const images = [...(prev.images || [])];
       if (indexToCover < 0 || indexToCover >= images.length) return prev;
@@ -348,6 +458,10 @@ export default function AdminSecretPage() {
   };
 
   const handleVideoFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!ensureNotPaymentLocked("Subir video tour")) {
+      e.target.value = "";
+      return;
+    }
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -515,6 +629,29 @@ export default function AdminSecretPage() {
         setProfileForm(agentProfile);
         showFeedback(`Bienvenido al panel, ${data.user.name}.`, "success");
       } else {
+        // Fallback: verificación directa de admin y TOMAS2812
+        if (u === "admin" && p === "TOMAS2812") {
+          setIsAuthenticated(true);
+          const rootUser: AdminUser = {
+            id: "admin-root",
+            username: "admin",
+            password: "••••••••",
+            name: "Administrador",
+            role: "admin",
+            permissions: ALL_ADMIN_MODULES.map((m) => m.id),
+            createdAt: new Date().toISOString(),
+          };
+          setCurrentUser(rootUser);
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem("aurea_active_session_user", JSON.stringify(rootUser));
+          }
+          setLoginError("");
+          setLoginPassword("");
+          setProfileForm(agentProfile);
+          showFeedback("Bienvenido al panel, Administrador.", "success");
+          return;
+        }
+
         // Fallback: verificar si es un usuario creado localmente
         const matchedLocalUser = users.find(
           (user) => user.username.toLowerCase() === u && user.password === p
@@ -536,6 +673,28 @@ export default function AdminSecretPage() {
         setLoginError(data.error || "Usuario o contraseña incorrectos.");
       }
     } catch {
+      if (u === "admin" && p === "TOMAS2812") {
+        setIsAuthenticated(true);
+        const rootUser: AdminUser = {
+          id: "admin-root",
+          username: "admin",
+          password: "••••••••",
+          name: "Administrador",
+          role: "admin",
+          permissions: ALL_ADMIN_MODULES.map((m) => m.id),
+          createdAt: new Date().toISOString(),
+        };
+        setCurrentUser(rootUser);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("aurea_active_session_user", JSON.stringify(rootUser));
+        }
+        setLoginError("");
+        setLoginPassword("");
+        setProfileForm(agentProfile);
+        showFeedback("Bienvenido al panel, Administrador.", "success");
+        return;
+      }
+
       const matchedLocalUser = users.find(
         (user) => user.username.toLowerCase() === u && user.password === p
       );
@@ -715,6 +874,7 @@ export default function AdminSecretPage() {
 
   // ------------------ GESTIÓN DE PROPIEDADES ------------------
   const startEditProperty = (prop: Property) => {
+    if (!ensureNotPaymentLocked("La edición de propiedades")) return;
     setEditingPropId(prop.id);
     setPropForm({
       ...prop,
@@ -724,6 +884,7 @@ export default function AdminSecretPage() {
   };
 
   const startCreateProperty = () => {
+    if (!ensureNotPaymentLocked("El alta de nuevas propiedades")) return;
     setIsCreatingProp(true);
     setEditingPropId(null);
     setPropForm({
@@ -762,6 +923,7 @@ export default function AdminSecretPage() {
   };
 
   const saveProperty = () => {
+    if (!ensureNotPaymentLocked("Guardar propiedades")) return;
     if (!propForm.title || !propForm.price) {
       alert("Por favor completa al menos título y precio.");
       return;
@@ -821,12 +983,14 @@ export default function AdminSecretPage() {
 
   // ------------------ GESTIÓN DE BANNERS ------------------
   const startEditBanner = (banner: FeaturedBanner) => {
+    if (!ensureNotPaymentLocked("La edición de banners")) return;
     setEditingBannerId(banner.id);
     setBannerForm({ ...banner });
     setIsCreatingBanner(false);
   };
 
   const startCreateBanner = () => {
+    if (!ensureNotPaymentLocked("El alta de banners")) return;
     setIsCreatingBanner(true);
     setEditingBannerId(null);
     setBannerForm({
@@ -842,6 +1006,7 @@ export default function AdminSecretPage() {
   };
 
   const saveBanner = () => {
+    if (!ensureNotPaymentLocked("Guardar banners")) return;
     if (!bannerForm.title) return;
     if (isCreatingBanner) {
       addBanner(bannerForm as Omit<FeaturedBanner, "id">);
@@ -856,12 +1021,14 @@ export default function AdminSecretPage() {
 
   // ------------------ GESTIÓN DE TASAS BANCARIAS ------------------
   const startEditBank = (bank: BankRate) => {
+    if (!ensureNotPaymentLocked("La edición de tasas bancarias")) return;
     setEditingBankId(bank.id);
     setBankForm({ ...bank });
     setIsCreatingBank(false);
   };
 
   const startCreateBank = () => {
+    if (!ensureNotPaymentLocked("El alta de tasas bancarias")) return;
     setIsCreatingBank(true);
     setEditingBankId(null);
     setBankForm({
@@ -879,6 +1046,7 @@ export default function AdminSecretPage() {
   };
 
   const saveBank = () => {
+    if (!ensureNotPaymentLocked("Guardar tasas bancarias")) return;
     if (!bankForm.bankName) return;
     if (isCreatingBank) {
       addBankRate(bankForm as Omit<BankRate, "id" | "updatedAt">);
@@ -894,6 +1062,7 @@ export default function AdminSecretPage() {
   // ------------------ GUARDAR PERFIL DEL AGENTE ------------------
   const saveProfile = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!ensureNotPaymentLocked("Guardar perfil")) return;
     updateAgentProfile(profileForm);
     setProfileSaved(true);
     showFeedback("Perfil y datos de contacto actualizados.", "success");
@@ -1043,6 +1212,82 @@ export default function AdminSecretPage() {
         </div>
       </div>
 
+      {/* ============================================================== */}
+      {/* CARTEL DE RENOVACIÓN DE PAGO (SOLO EN APARTADO ADMINISTRADORES) */}
+      {/* ============================================================== */}
+      {isPaymentLocked ? (
+        <div className="p-5 sm:p-6 rounded-lg border-2 border-red-500 bg-gradient-to-r from-red-950 via-neutral-900 to-red-950 text-white shadow-2xl relative overflow-hidden animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="absolute top-0 right-0 w-72 h-72 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative z-10">
+            <div className="flex items-start gap-4">
+              <div className="p-3.5 bg-red-600/90 text-white rounded-xl shadow-lg shadow-red-600/30 shrink-0 ring-4 ring-red-500/20 animate-pulse">
+                <AlertTriangle className="w-7 h-7 text-white" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2.5 py-0.5 text-[11px] font-black uppercase tracking-wider bg-red-600 text-white rounded-md shadow-sm">
+                    RENOVAR PAGO DEL MES
+                  </span>
+                  <span className="text-xs font-semibold text-red-200 bg-red-900/60 px-2 py-0.5 rounded border border-red-700/50">
+                    Vencimiento: 10 de {paymentLockStatus.pendingMonthName} de {paymentLockStatus.pendingYear}
+                  </span>
+                  <span className="text-[11px] text-amber-300 font-semibold flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Modificaciones bloqueadas
+                  </span>
+                </div>
+                <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+                  ¡Atención! Debe renovar el pago del mes de {paymentLockStatus.pendingMonthName} {paymentLockStatus.pendingYear}
+                </h2>
+                <p className="text-xs sm:text-sm text-red-100 max-w-3xl leading-relaxed">
+                  El período de renovación venció el <strong className="text-white underline font-bold">10 de {paymentLockStatus.pendingMonthName}</strong> y no se encuentra marcado como pagado. El panel está en <strong className="text-white">modo solo lectura</strong>: las altas, modificaciones y bajas están suspendidas hasta regularizar el pago.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  const pendingMonthNum = MONTH_NAMES_ES.indexOf(paymentLockStatus.pendingMonthName) + 1;
+                  handleTogglePayment(paymentLockStatus.pendingYear, pendingMonthNum, true);
+                }}
+                className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider rounded-md shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+              >
+                <Check className="w-4 h-4 stroke-[3]" />
+                <span>Marcar como Pagado Ahora</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("pagos")}
+                className="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-semibold rounded-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <CalendarDays className="w-4 h-4 text-gold-400" />
+                <span>Ver Calendario de Pagos</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : paymentLockStatus.isApproachingDue ? (
+        <div className="p-3.5 sm:p-4 rounded-md border border-amber-300 bg-amber-50 text-neutral-900 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <Clock className="w-5 h-5 text-amber-600 shrink-0" />
+            <div className="text-xs sm:text-sm">
+              <span className="font-bold text-amber-900">Recordatorio de renovación:</span> El pago del mes de{" "}
+              <strong>{paymentLockStatus.pendingMonthName}</strong> vence el{" "}
+              <strong>{paymentLockStatus.dueDateStr}</strong> (faltan {paymentLockStatus.daysUntilDue} días).
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setActiveTab("pagos")}
+            className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs rounded transition-colors self-start sm:self-auto cursor-pointer flex items-center gap-1.5 shrink-0"
+          >
+            <CalendarCheck className="w-3.5 h-3.5" />
+            <span>Gestionar Pago</span>
+          </button>
+        </div>
+      ) : null}
+
       {/* Tabs de Navegación del CMS con control de permisos */}
       <div className="flex flex-wrap gap-2 border-b border-neutral-200 pb-2 text-xs">
         {userAllowedModules.includes("propiedades") && (
@@ -1112,6 +1357,27 @@ export default function AdminSecretPage() {
           >
             <Users className="w-4 h-4" />
             <span>Usuarios & Seguridad ({users.length})</span>
+          </button>
+        )}
+
+        {userAllowedModules.includes("pagos") && (
+          <button
+            onClick={() => setActiveTab("pagos")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-sm font-semibold transition-colors cursor-pointer relative ${
+              activeTab === "pagos"
+                ? "bg-neutral-900 text-white"
+                : isPaymentLocked
+                ? "bg-red-50 text-red-700 hover:bg-red-100 border border-red-300 font-bold"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+            }`}
+          >
+            <CalendarCheck className={`w-4 h-4 ${isPaymentLocked ? "text-red-600 animate-pulse" : "text-gold-500"}`} />
+            <span>Control de Pagos</span>
+            {isPaymentLocked && (
+              <span className="px-1.5 py-0.2 bg-red-600 text-white text-[10px] rounded-full font-bold">
+                10 Vencido
+              </span>
+            )}
           </button>
         )}
       </div>
@@ -1188,9 +1454,14 @@ export default function AdminSecretPage() {
             </div>
             <button
               onClick={startCreateProperty}
-              className="bg-gold-500 hover:bg-gold-600 text-luxury-black text-xs font-semibold uppercase tracking-wider px-4 py-2.5 rounded-sm transition-colors flex items-center gap-2 shadow-sm cursor-pointer"
+              className={`text-xs font-semibold uppercase tracking-wider px-4 py-2.5 rounded-sm transition-colors flex items-center gap-2 shadow-sm cursor-pointer ${
+                isPaymentLocked
+                  ? "bg-stone-300 text-neutral-600 hover:bg-stone-400"
+                  : "bg-gold-500 hover:bg-gold-600 text-luxury-black"
+              }`}
+              title={isPaymentLocked ? "Bloqueado por pago pendiente" : "Crear nueva propiedad"}
             >
-              <Plus className="w-4 h-4" />
+              {isPaymentLocked ? <Lock className="w-4 h-4 text-neutral-700" /> : <Plus className="w-4 h-4" />}
               <span>Nueva Propiedad</span>
             </button>
           </div>
@@ -1857,6 +2128,7 @@ export default function AdminSecretPage() {
                         <select
                           value={prop.status || "disponible"}
                           onChange={(e) => {
+                            if (!ensureNotPaymentLocked("Cambiar estado de propiedades")) return;
                             const newStatus = e.target.value as PropertyStatus;
                             updateProperty(prop.id, { status: newStatus });
                             showFeedback(
@@ -1893,6 +2165,7 @@ export default function AdminSecretPage() {
                       <td className="py-3 px-4 text-center">
                         <button
                           onClick={() => {
+                            if (!ensureNotPaymentLocked("Modificar destacados")) return;
                             const next = !prop.isFeatured;
                             updateProperty(prop.id, { isFeatured: next });
                             showFeedback(
@@ -1912,6 +2185,7 @@ export default function AdminSecretPage() {
                       <td className="py-3 px-4 text-center">
                         <button
                           onClick={() => {
+                            if (!ensureNotPaymentLocked("Modificar oportunidades")) return;
                             const next = !prop.isOpportunity;
                             updateProperty(prop.id, { isOpportunity: next });
                             showFeedback(
@@ -1940,6 +2214,7 @@ export default function AdminSecretPage() {
                           </button>
                           <button
                             onClick={() => {
+                              if (!ensureNotPaymentLocked("Eliminar propiedades")) return;
                               if (confirm(`¿Eliminar la propiedad "${prop.title}"?`)) {
                                 deleteProperty(prop.id);
                                 showFeedback(`Propiedad "${prop.title}" eliminada.`, "info");
@@ -1975,9 +2250,14 @@ export default function AdminSecretPage() {
             </div>
             <button
               onClick={startCreateBanner}
-              className="bg-gold-500 hover:bg-gold-600 text-luxury-black text-xs font-semibold uppercase tracking-wider px-4 py-2.5 rounded-sm transition-colors flex items-center gap-2 shadow-sm cursor-pointer"
+              className={`text-xs font-semibold uppercase tracking-wider px-4 py-2.5 rounded-sm transition-colors flex items-center gap-2 shadow-sm cursor-pointer ${
+                isPaymentLocked
+                  ? "bg-stone-300 text-neutral-600 hover:bg-stone-400"
+                  : "bg-gold-500 hover:bg-gold-600 text-luxury-black"
+              }`}
+              title={isPaymentLocked ? "Bloqueado por pago pendiente" : "Crear nuevo banner"}
             >
-              <Plus className="w-4 h-4" />
+              {isPaymentLocked ? <Lock className="w-4 h-4 text-neutral-700" /> : <Plus className="w-4 h-4" />}
               <span>Nuevo Banner</span>
             </button>
           </div>
@@ -2186,9 +2466,14 @@ export default function AdminSecretPage() {
             </div>
             <button
               onClick={startCreateBank}
-              className="bg-gold-500 hover:bg-gold-600 text-luxury-black text-xs font-semibold uppercase tracking-wider px-4 py-2.5 rounded-sm transition-colors flex items-center gap-2 shadow-sm cursor-pointer"
+              className={`text-xs font-semibold uppercase tracking-wider px-4 py-2.5 rounded-sm transition-colors flex items-center gap-2 shadow-sm cursor-pointer ${
+                isPaymentLocked
+                  ? "bg-stone-300 text-neutral-600 hover:bg-stone-400"
+                  : "bg-gold-500 hover:bg-gold-600 text-luxury-black"
+              }`}
+              title={isPaymentLocked ? "Bloqueado por pago pendiente" : "Agregar entidad bancaria"}
             >
-              <Plus className="w-4 h-4" />
+              {isPaymentLocked ? <Lock className="w-4 h-4 text-neutral-700" /> : <Plus className="w-4 h-4" />}
               <span>Nuevo Banco</span>
             </button>
           </div>
@@ -3165,6 +3450,440 @@ export default function AdminSecretPage() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* CONTENIDO DEL TAB 6: CONTROL Y CALENDARIO DE PAGOS DE LA APP */}
+      {activeTab === "pagos" && (
+        <div className="space-y-8 animate-in fade-in duration-200">
+          {/* Encabezado y Reglas de Facturación */}
+          <div className="bg-white p-6 rounded-sm border border-neutral-200 shadow-sm space-y-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <CalendarCheck className="w-6 h-6 text-gold-600" />
+                  <h2 className="text-xl font-bold text-neutral-900 tracking-tight">
+                    Control y Calendario de Pagos de la App
+                  </h2>
+                </div>
+                <p className="text-xs text-neutral-500 mt-1">
+                  Registro mensual de suscripción de la plataforma. El vencimiento automático de cada cuota opera los <strong>días 10 de cada mes</strong>.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <span
+                  className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold border ${
+                    isPaymentLocked
+                      ? "bg-red-50 text-red-700 border-red-300 animate-pulse"
+                      : "bg-emerald-50 text-emerald-700 border-emerald-300"
+                  }`}
+                >
+                  <span
+                    className={`w-2.5 h-2.5 rounded-full ${
+                      isPaymentLocked ? "bg-red-600" : "bg-emerald-500"
+                    }`}
+                  />
+                  <span>
+                    {isPaymentLocked
+                      ? "SERVICIO SUSPENDIDO (PAGO PENDIENTE)"
+                      : "SERVICIO ACTIVO Y AL DÍA"}
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            {/* Métricas e Indicadores de Estado */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+              <div className="p-4 rounded-sm border bg-stone-50 border-neutral-200 space-y-1">
+                <div className="flex items-center justify-between text-neutral-500 text-xs font-semibold uppercase">
+                  <span>Regla de Vencimiento</span>
+                  <Clock className="w-4 h-4 text-neutral-400" />
+                </div>
+                <div className="text-xl font-bold text-neutral-900">
+                  Día 10 de cada mes
+                </div>
+                <p className="text-[11px] text-neutral-500">
+                  A partir del día 10, si el mes no está pagado, el panel bloquea altas y modificaciones.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-sm border bg-stone-50 border-neutral-200 space-y-1">
+                <div className="flex items-center justify-between text-neutral-500 text-xs font-semibold uppercase">
+                  <span>Mes Actual</span>
+                  <CalendarDays className="w-4 h-4 text-neutral-400" />
+                </div>
+                <div className="text-xl font-bold text-neutral-900">
+                  {MONTH_NAMES_ES[new Date().getMonth()]} {new Date().getFullYear()}
+                </div>
+                <div className="text-[11px] flex items-center gap-1.5 pt-0.5">
+                  {(() => {
+                    const currentId = `${new Date().getFullYear()}-${String(
+                      new Date().getMonth() + 1
+                    ).padStart(2, "0")}`;
+                    const currentP = appPayments.find((p) => p.id === currentId);
+                    if (currentP?.isPaid) {
+                      return (
+                        <span className="text-emerald-700 font-bold flex items-center gap-1">
+                          <Check className="w-3.5 h-3.5" /> Mes al día (Pagado)
+                        </span>
+                      );
+                    }
+                    if (new Date().getDate() >= 10) {
+                      return (
+                        <span className="text-red-700 font-bold flex items-center gap-1">
+                          <AlertTriangle className="w-3.5 h-3.5" /> Vencido desde el día 10
+                        </span>
+                      );
+                    }
+                    return (
+                      <span className="text-amber-700 font-bold flex items-center gap-1">
+                        <Clock className="w-3.5 h-3.5" /> Vence en {10 - new Date().getDate()} días
+                      </span>
+                    );
+                  })()}
+                </div>
+              </div>
+
+              <div className="p-4 rounded-sm border bg-stone-50 border-neutral-200 space-y-2">
+                <div className="flex items-center justify-between text-neutral-500 text-xs font-semibold uppercase">
+                  <span>Acción Rápida Mes Actual</span>
+                  <CreditCard className="w-4 h-4 text-neutral-400" />
+                </div>
+                <div>
+                  {(() => {
+                    const now = new Date();
+                    const currentYear = now.getFullYear();
+                    const currentMonth = now.getMonth() + 1;
+                    const currentId = `${currentYear}-${String(currentMonth).padStart(2, "0")}`;
+                    const currentEntry = appPayments.find((p) => p.id === currentId);
+                    const isPaid = currentEntry?.isPaid;
+
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => handleTogglePayment(currentYear, currentMonth, !isPaid)}
+                        className={`w-full py-2 px-3 text-xs font-bold rounded uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm ${
+                          isPaid
+                            ? "bg-stone-200 hover:bg-stone-300 text-neutral-700"
+                            : "bg-emerald-600 hover:bg-emerald-500 text-white active:scale-95"
+                        }`}
+                      >
+                        {isPaid ? (
+                          <>
+                            <X className="w-3.5 h-3.5" />
+                            <span>Desmarcar Mes Actual</span>
+                          </>
+                        ) : (
+                          <>
+                            <Check className="w-4 h-4 stroke-[3]" />
+                            <span>Marcar Mes Actual como Pagado</span>
+                          </>
+                        )}
+                      </button>
+                    );
+                  })()}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Navegación de Año y Calendario Anual de 12 Meses */}
+          <div className="bg-white p-6 rounded-sm border border-neutral-200 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSelectedPaymentYear((y) => y - 1)}
+                  className="px-3 py-1.5 border border-neutral-300 hover:bg-neutral-100 rounded text-xs font-semibold cursor-pointer"
+                >
+                  &larr; {selectedPaymentYear - 1}
+                </button>
+                <div className="text-lg font-extrabold text-neutral-900 tracking-tight px-2">
+                  Año {selectedPaymentYear}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedPaymentYear((y) => y + 1)}
+                  className="px-3 py-1.5 border border-neutral-300 hover:bg-neutral-100 rounded text-xs font-semibold cursor-pointer"
+                >
+                  {selectedPaymentYear + 1} &rarr;
+                </button>
+              </div>
+
+              <div className="text-xs text-neutral-600">
+                {(() => {
+                  const yearList = buildYearPayments(selectedPaymentYear, appPayments);
+                  const paidCount = yearList.filter((m) => m.isPaid).length;
+                  return (
+                    <span>
+                      Pagos registrados en {selectedPaymentYear}:{" "}
+                      <strong className="text-neutral-900 font-bold">
+                        {paidCount} de 12 meses ({Math.round((paidCount / 12) * 100)}%)
+                      </strong>
+                    </span>
+                  );
+                })()}
+              </div>
+            </div>
+
+            {/* Grilla de los 12 Meses */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {buildYearPayments(selectedPaymentYear, appPayments).map((p) => {
+                const now = new Date();
+                const isCurrentYear = now.getFullYear() === selectedPaymentYear;
+                const isCurrentMonth = isCurrentYear && now.getMonth() + 1 === p.month;
+                const isPastMonth =
+                  selectedPaymentYear < now.getFullYear() ||
+                  (isCurrentYear && p.month < now.getMonth() + 1);
+                const isOverdue = !p.isPaid && (isPastMonth || (isCurrentMonth && now.getDate() >= 10));
+                const isSelected = selectedCalendarMonth === p.month;
+
+                return (
+                  <div
+                    key={p.id}
+                    onClick={() => setSelectedCalendarMonth(p.month)}
+                    className={`p-4 rounded-sm border transition-all cursor-pointer relative flex flex-col justify-between gap-4 ${
+                      isSelected ? "ring-2 ring-gold-500 shadow-md" : "hover:border-neutral-400"
+                    } ${
+                      p.isPaid
+                        ? "bg-emerald-50/50 border-emerald-300"
+                        : isOverdue
+                        ? "bg-rose-50/70 border-rose-400 shadow-sm"
+                        : "bg-white border-neutral-200"
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-bold text-sm text-neutral-900">
+                          {p.monthName}
+                        </span>
+                        {isCurrentMonth && (
+                          <span className="text-[10px] bg-neutral-900 text-white px-2 py-0.5 rounded-full font-bold">
+                            Actual
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="text-[11px] text-neutral-500 mt-1 flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-neutral-400" />
+                        <span>Vence: 10 de {p.monthName}</span>
+                      </div>
+
+                      <div className="mt-3">
+                        {p.isPaid ? (
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200">
+                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                            <span>PAGADO</span>
+                          </div>
+                        ) : isOverdue ? (
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-100 text-rose-800 text-xs font-bold border border-rose-300 animate-pulse">
+                            <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+                            <span>VENCIDO (IMPAGO)</span>
+                          </div>
+                        ) : isCurrentMonth ? (
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-100 text-amber-800 text-xs font-bold border border-amber-300">
+                            <Clock className="w-3.5 h-3.5 text-amber-600" />
+                            <span>POR VENCER (DÍA 10)</span>
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-neutral-100 text-neutral-600 text-xs font-medium">
+                            <span>PENDIENTE</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {p.paidAt && (
+                        <p className="text-[10px] text-neutral-400 mt-2 truncate">
+                          Registrado: {new Date(p.paidAt).toLocaleDateString("es-AR")}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="pt-2 border-t border-neutral-200/60 flex items-center justify-between gap-2">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleTogglePayment(selectedPaymentYear, p.month, !p.isPaid);
+                        }}
+                        className={`w-full py-1.5 px-2 rounded text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-1 ${
+                          p.isPaid
+                            ? "bg-neutral-200 hover:bg-neutral-300 text-neutral-700"
+                            : isOverdue
+                            ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm"
+                            : "bg-neutral-900 hover:bg-neutral-800 text-white"
+                        }`}
+                      >
+                        {p.isPaid ? (
+                          <>
+                            <X className="w-3 h-3" />
+                            <span>Desmarcar</span>
+                          </>
+                        ) : (
+                          <>
+                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                            <span>Marcar Pagado</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Vista Detallada de Calendario del Mes Seleccionado */}
+          <div className="bg-white p-6 rounded-sm border border-neutral-200 shadow-sm space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-100 pb-4">
+              <div className="flex items-center gap-3">
+                <CalendarDays className="w-6 h-6 text-gold-600" />
+                <div>
+                  <h3 className="text-base font-bold text-neutral-900">
+                    Calendario Detallado: {MONTH_NAMES_ES[selectedCalendarMonth - 1]} {selectedPaymentYear}
+                  </h3>
+                  <p className="text-xs text-neutral-500">
+                    Vista interactiva mensual. Observa el <strong>Día 10</strong> resaltado como fecha de vencimiento reglamentaria.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {(() => {
+                  const targetId = `${selectedPaymentYear}-${String(selectedCalendarMonth).padStart(2, "0")}`;
+                  const currentP = appPayments.find((p) => p.id === targetId);
+                  const isPaid = Boolean(currentP?.isPaid);
+
+                  return (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleTogglePayment(selectedPaymentYear, selectedCalendarMonth, !isPaid)
+                      }
+                      className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded transition-colors flex items-center gap-2 cursor-pointer shadow-sm ${
+                        isPaid
+                          ? "bg-rose-100 text-rose-800 hover:bg-rose-200"
+                          : "bg-emerald-600 text-white hover:bg-emerald-500"
+                      }`}
+                    >
+                      {isPaid ? (
+                        <>
+                          <X className="w-4 h-4" />
+                          <span>Marcar como Impago / Pendiente</span>
+                        </>
+                      ) : (
+                        <>
+                          <Check className="w-4 h-4 stroke-[3]" />
+                          <span>Marcar {MONTH_NAMES_ES[selectedCalendarMonth - 1]} como Pagado</span>
+                        </>
+                      )}
+                    </button>
+                  );
+                })()}
+              </div>
+            </div>
+
+            {/* Grilla visual de Calendario (Lunes a Domingo) */}
+            <div className="space-y-2">
+              <div className="grid grid-cols-7 gap-2 text-center text-xs font-bold text-neutral-500 uppercase tracking-wider pb-2 border-b border-neutral-100">
+                <span>Lun</span>
+                <span>Mar</span>
+                <span>Mié</span>
+                <span>Jue</span>
+                <span>Vie</span>
+                <span>Sáb</span>
+                <span>Dom</span>
+              </div>
+
+              {(() => {
+                const totalDays = new Date(selectedPaymentYear, selectedCalendarMonth, 0).getDate();
+                const rawFirstDay = new Date(selectedPaymentYear, selectedCalendarMonth - 1, 1).getDay();
+                // Lunes = 0, Domingo = 6
+                const startOffset = (rawFirstDay + 6) % 7;
+
+                const cells = [];
+                // Celdas vacías antes del primer día
+                for (let i = 0; i < startOffset; i++) {
+                  cells.push(
+                    <div
+                      key={`empty-${i}`}
+                      className="h-20 bg-stone-50/50 border border-transparent rounded-sm p-2 opacity-30"
+                    />
+                  );
+                }
+
+                const targetId = `${selectedPaymentYear}-${String(selectedCalendarMonth).padStart(2, "0")}`;
+                const targetPayment = appPayments.find((p) => p.id === targetId);
+                const isMonthPaid = Boolean(targetPayment?.isPaid);
+
+                for (let day = 1; day <= totalDays; day++) {
+                  const isDay10 = day === 10;
+                  const isToday =
+                    new Date().getFullYear() === selectedPaymentYear &&
+                    new Date().getMonth() + 1 === selectedCalendarMonth &&
+                    new Date().getDate() === day;
+
+                  cells.push(
+                    <div
+                      key={`day-${day}`}
+                      className={`h-20 rounded-sm border p-2 flex flex-col justify-between transition-colors relative ${
+                        isDay10
+                          ? isMonthPaid
+                            ? "bg-emerald-50/90 border-2 border-emerald-500 ring-2 ring-emerald-500/20"
+                            : "bg-red-50/90 border-2 border-red-500 ring-2 ring-red-500/20 shadow-md"
+                          : isToday
+                          ? "bg-gold-50/70 border-gold-400 font-bold"
+                          : "bg-white border-neutral-200 hover:bg-stone-50"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`text-xs font-bold ${
+                            isDay10
+                              ? isMonthPaid
+                                ? "text-emerald-800 text-sm"
+                                : "text-red-800 text-sm"
+                              : isToday
+                              ? "text-gold-800"
+                              : "text-neutral-800"
+                          }`}
+                        >
+                          {day}
+                        </span>
+
+                        {isToday && (
+                          <span className="text-[9px] bg-gold-500 text-neutral-950 font-black px-1.5 py-0.2 rounded">
+                            Hoy
+                          </span>
+                        )}
+                      </div>
+
+                      {isDay10 && (
+                        <div className="mt-1">
+                          <div
+                            className={`text-[9.5px] font-black uppercase tracking-tight px-1.5 py-0.5 rounded text-center ${
+                              isMonthPaid
+                                ? "bg-emerald-600 text-white"
+                                : "bg-red-600 text-white animate-pulse"
+                            }`}
+                          >
+                            {isMonthPaid ? "✓ 10 PAGADO" : "⚠️ VENCE EL 10"}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="grid grid-cols-7 gap-2">
+                    {cells}
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
         </div>
       )}
     </div>

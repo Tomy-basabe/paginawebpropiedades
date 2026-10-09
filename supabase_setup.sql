@@ -63,6 +63,20 @@ CREATE TABLE IF NOT EXISTS public.agent_profile (
     updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now())
 );
 
+-- 5. TABLA: app_payments (Registro de pagos mensuales de la app)
+CREATE TABLE IF NOT EXISTS public.app_payments (
+    id TEXT PRIMARY KEY, -- Formato 'YYYY-MM', ej: '2026-10'
+    year INT NOT NULL,
+    month INT NOT NULL,
+    month_name TEXT,
+    is_paid BOOLEAN DEFAULT false,
+    paid_at TIMESTAMPTZ,
+    paid_by TEXT,
+    amount NUMERIC,
+    notes TEXT,
+    updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now())
+);
+
 -- ==============================================================================
 -- ACTIVACIÓN Y POLÍTICAS DE RLS SEGURAS (Defensa contra borrado y defacing anónimo)
 -- ==============================================================================
@@ -71,6 +85,7 @@ ALTER TABLE public.properties ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.featured_banners ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.bank_rates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.agent_profile ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.app_payments ENABLE ROW LEVEL SECURITY;
 
 -- Limpieza de políticas inseguras anteriores que permitían borrado y edición pública
 DROP POLICY IF EXISTS "Acceso total properties" ON public.properties;
@@ -81,6 +96,8 @@ DROP POLICY IF EXISTS "Lectura publica properties" ON public.properties;
 DROP POLICY IF EXISTS "Lectura publica banners" ON public.featured_banners;
 DROP POLICY IF EXISTS "Lectura publica bank_rates" ON public.bank_rates;
 DROP POLICY IF EXISTS "Lectura publica profile" ON public.agent_profile;
+DROP POLICY IF EXISTS "Modificacion autorizada app_payments" ON public.app_payments;
+DROP POLICY IF EXISTS "Lectura autorizada app_payments" ON public.app_payments;
 
 -- A) LECTURA PÚBLICA (Permitida para visitantes y catálogo)
 CREATE POLICY "Lectura publica properties" ON public.properties
@@ -107,6 +124,9 @@ CREATE POLICY "Modificacion autorizada bank_rates" ON public.bank_rates
     FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
 CREATE POLICY "Modificacion autorizada profile" ON public.agent_profile
+    FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+CREATE POLICY "Modificacion autorizada app_payments" ON public.app_payments
     FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
 -- ==============================================================================
