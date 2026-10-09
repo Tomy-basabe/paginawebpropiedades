@@ -51,6 +51,10 @@ import {
   AlertOctagon,
   Info,
   MapPin,
+  Crop,
+  ZoomIn,
+  ZoomOut,
+  Move,
 } from "lucide-react";
 import { AppMonthlyPayment } from "@/lib/types";
 import {
@@ -569,63 +573,238 @@ export default function AdminSecretPage() {
   const videoExtractRef = useRef<HTMLVideoElement>(null);
   const [isExtractingFrames, setIsExtractingFrames] = useState(false);
 
-  // Capturar el fotograma que se está reproduciendo actualmente en el video
-  const handleCaptureCurrentFrame = () => {
+  // Estado para la herramienta de encuadre interactivo (Crop & Framing)
+  const [framingImageIdx, setFramingImageIdx] = useState<number | null>(null);
+  const [cropZoom, setCropZoom] = useState<number>(1);
+  const [cropOffsetX, setCropOffsetX] = useState<number>(0);
+  const [cropOffsetY, setCropOffsetY] = useState<number>(0);
+  const [cropAspectRatio, setCropAspectRatio] = useState<"16:9" | "4:3" | "1:1">("16:9");
+  const [isSavingCrop, setIsSavingCrop] = useState<boolean>(false);
+  const [isDraggingCrop, setIsDraggingCrop] = useState<boolean>(false);
+  const dragStartRef = useRef<{ x: number; y: number; startOffX: number; startOffY: number }>({
+    x: 0,
+    y: 0,
+    startOffX: 0,
+    startOffY: 0,
+  });
+
+  // Helper para convertir canvas a Blob
+  const canvasToBlob = (canvas: HTMLCanvasElement, quality = 0.92): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error("No se pudo generar imagen desde el canvas"));
+        },
+        "image/jpeg",
+        quality
+      );
+    });
+  };
+
+  // Capturar el fotograma actual y subirlo directamente al CDN de Supabase
+  const handleCaptureCurrentFrame = async (asCover = false) => {
+    if (!ensureNotPaymentLocked("Capturar fotograma de video")) return;
     const video = videoExtractRef.current;
     if (!video) return;
+
+    setIsExtractingFrames(true);
     try {
       const canvas = document.createElement("canvas");
       canvas.width = video.videoWidth || 1280;
       canvas.height = video.videoHeight || 720;
       const ctx = canvas.getContext("2d");
-      if (!ctx) return;
+      if (!ctx) throw new Error("No se pudo iniciar el canvas.");
+
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const frameData = canvas.toDataURL("image/jpeg", 0.92);
-      setPropForm((prev) => ({
-        ...prev,
-        images: [...(prev.images || []), frameData],
-      }));
+      const blob = await canvasToBlob(canvas, 0.92);
+
+      // Subida garantizada a Supabase Storage (evita error 413 y cuota de localStorage)
+      let publicUrl: string;
+      try {
+        publicUrl = await uploadPropertyImage(blob);
+      } catch (uploadErr) {
+        console.warn("Fallo en Storage, fallback a URL local:", uploadErr);
+        publicUrl = canvas.toDataURL("image/jpeg", 0.9);
+      }
+
+      setPropForm((prev) => {
+        const currentImages = prev.images || [];
+        if (asCover) {
+          // Si es como portada, ubicar en la primera posición [0]
+          return {
+            ...prev,
+            images: [publicUrl, ...currentImages.filter((img) => img !== publicUrl)],
+          };
+        } else {
+          return {
+            ...prev,
+            images: [...currentImages, publicUrl],
+          };
+        }
+      });
+
+      showFeedback(
+        asCover
+          ? "¡Fotograma capturado y guardado como portada en la web!"
+          : "¡Fotograma capturado y añadido a la galería!",
+        "success"
+      );
     } catch (err) {
       console.error("Error al capturar frame:", err);
-      alert("No se pudo capturar el fotograma actual.");
+      showFeedback("No se pudo capturar el fotograma actual.", "error");
+    } finally {
+      setIsExtractingFrames(false);
     }
   };
 
-  // Extraer automáticamente 3 fotogramas distribuidos en el video para usarlos como fotos
+  // Extraer automáticamente 3 fotogramas distribuidos en el video y subirlos a la nube
   const handleAutoExtractKeyFrames = async () => {
+    if (!ensureNotPaymentLocked("Extraer fotos automáticas")) return;
     const video = videoExtractRef.current;
     if (!video) return;
     setIsExtractingFrames(true);
+
     try {
       const duration = video.duration || 10;
       const seekPoints = [duration * 0.15, duration * 0.5, duration * 0.85];
       const originalTime = video.currentTime;
-      const captured: string[] = [];
+      const uploadedUrls: string[] = [];
 
-      for (const time of seekPoints) {
+      for (let i = 0; i < seekPoints.length; i++) {
+        const time = seekPoints[i];
         video.currentTime = time;
         await new Promise((r) => setTimeout(r, 450));
+
         const canvas = document.createElement("canvas");
         canvas.width = video.videoWidth || 1280;
         canvas.height = video.videoHeight || 720;
         const ctx = canvas.getContext("2d");
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          captured.push(canvas.toDataURL("image/jpeg", 0.92));
+          try {
+            const blob = await canvasToBlob(canvas, 0.92);
+            const url = await uploadPropertyImage(blob);
+            uploadedUrls.push(url);
+          } catch {
+            uploadedUrls.push(canvas.toDataURL("image/jpeg", 0.85));
+          }
         }
       }
       video.currentTime = originalTime;
 
-      if (captured.length > 0) {
+      if (uploadedUrls.length > 0) {
         setPropForm((prev) => ({
           ...prev,
-          images: [...(prev.images || []), ...captured],
+          images: [...(prev.images || []), ...uploadedUrls],
         }));
+        showFeedback(`¡Se extrajeron y guardaron ${uploadedUrls.length} fotos del video con éxito!`, "success");
       }
     } catch (e) {
       console.error("Error al extraer fotos automáticas:", e);
+      showFeedback("Error al extraer fotogramas automáticos.", "error");
     } finally {
       setIsExtractingFrames(false);
+    }
+  };
+
+  // Iniciar encuadre de una imagen de la galería
+  const handleStartFraming = (index: number) => {
+    if (!ensureNotPaymentLocked("Encuadrar imagen")) return;
+    setFramingImageIdx(index);
+    setCropZoom(1);
+    setCropOffsetX(0);
+    setCropOffsetY(0);
+    setCropAspectRatio("16:9");
+  };
+
+  // Procesar y guardar la imagen encuadrada
+  const handleSaveFramedImage = async () => {
+    if (framingImageIdx === null) return;
+    const currentImages = propForm.images || [];
+    const targetUrl = currentImages[framingImageIdx];
+    if (!targetUrl) return;
+
+    setIsSavingCrop(true);
+    try {
+      const img = new window.Image();
+      img.crossOrigin = "anonymous";
+      img.src = targetUrl;
+
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error("No se pudo cargar la imagen para encuadrar"));
+      });
+
+      // Dimensiones de salida en alta definición según relación de aspecto
+      let outputW = 1600;
+      let outputH = 900; // 16:9 por defecto
+      if (cropAspectRatio === "4:3") {
+        outputW = 1600;
+        outputH = 1200;
+      } else if (cropAspectRatio === "1:1") {
+        outputW = 1200;
+        outputH = 1200;
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = outputW;
+      canvas.height = outputH;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("No se pudo iniciar el canvas de encuadre");
+
+      // Pintar fondo limpio
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, outputW, outputH);
+
+      // Calcular proporción de imagen vs contenedor
+      const targetAspect = outputW / outputH;
+      const imgAspect = img.naturalWidth / img.naturalHeight;
+
+      let drawW: number;
+      let drawH: number;
+
+      // Object-cover base
+      if (imgAspect > targetAspect) {
+        drawH = outputH * cropZoom;
+        drawW = drawH * imgAspect;
+      } else {
+        drawW = outputW * cropZoom;
+        drawH = drawW / imgAspect;
+      }
+
+      // Desplazamiento proporcional (offset en %)
+      const posX = (outputW - drawW) / 2 + (cropOffsetX / 100) * outputW;
+      const posY = (outputH - drawH) / 2 + (cropOffsetY / 100) * outputH;
+
+      ctx.drawImage(img, posX, posY, drawW, drawH);
+
+      const blob = await canvasToBlob(canvas, 0.93);
+      let newPublicUrl: string;
+      try {
+        newPublicUrl = await uploadPropertyImage(blob);
+      } catch (e) {
+        console.warn("Fallo subiendo recorte a Storage:", e);
+        newPublicUrl = canvas.toDataURL("image/jpeg", 0.9);
+      }
+
+      // Reemplazar imagen encuadrada en la galería
+      setPropForm((prev) => {
+        const nextImages = [...(prev.images || [])];
+        nextImages[framingImageIdx] = newPublicUrl;
+        return {
+          ...prev,
+          images: nextImages,
+        };
+      });
+
+      showFeedback("¡Imagen encuadrada y guardada con éxito!", "success");
+      setFramingImageIdx(null);
+    } catch (err) {
+      console.error("Error al encuadrar imagen:", err);
+      showFeedback("No se pudo encuadrar la imagen. Verifica que la imagen permita acceso.", "error");
+    } finally {
+      setIsSavingCrop(false);
     }
   };
 
@@ -2078,12 +2257,21 @@ export default function AdminSecretPage() {
                             PORTADA
                           </span>
                         )}
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 z-20">
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 z-20 px-1">
+                          <button
+                            type="button"
+                            onClick={() => handleStartFraming(idx)}
+                            className="p-1.5 bg-neutral-900/90 hover:bg-black text-gold-400 border border-gold-500/40 rounded text-[10px] font-bold cursor-pointer flex items-center gap-1 shadow-xs"
+                            title="Encuadrar y ajustar imagen (Zoom, Recorte y Posición)"
+                          >
+                            <Crop className="w-3 h-3" />
+                            <span>Encuadrar</span>
+                          </button>
                           {idx !== 0 && (
                             <button
                               type="button"
                               onClick={() => handleMakeCoverImage(idx)}
-                              className="p-1.5 bg-gold-500 hover:bg-gold-600 text-luxury-black rounded text-[10px] font-bold cursor-pointer"
+                              className="p-1.5 bg-gold-500 hover:bg-gold-600 text-luxury-black rounded text-[10px] font-bold cursor-pointer shadow-xs"
                               title="Hacer foto de portada"
                             >
                               Portada
@@ -2195,10 +2383,10 @@ export default function AdminSecretPage() {
                         <div>
                           <p className="text-xs font-semibold text-sky-950 flex items-center gap-1.5">
                             <Camera className="w-3.5 h-3.5 text-sky-600" />
-                            Generar fotos a partir de este video
+                            Generar fotos y portadas a partir del video
                           </p>
                           <p className="text-[11px] text-sky-700 mt-0.5">
-                            Pausa el video en el momento que quieras o extrae 3 fotos clave automáticamente para la galería.
+                            Pausa el video en el mejor momento y establécelo como portada o agrégalo a las fotos de la propiedad.
                           </p>
                         </div>
                         {(!propForm.images || propForm.images.length === 0) && (
@@ -2211,12 +2399,22 @@ export default function AdminSecretPage() {
                       <div className="flex flex-wrap gap-2 pt-1">
                         <button
                           type="button"
-                          onClick={handleCaptureCurrentFrame}
+                          onClick={() => handleCaptureCurrentFrame(true)}
+                          disabled={isExtractingFrames}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-gold-500 hover:bg-gold-600 text-luxury-black rounded text-xs font-bold cursor-pointer shadow-sm active:scale-95 transition-all disabled:opacity-50"
+                          title="Captura el cuadro actual y lo ubica como la foto principal del inmueble"
+                        >
+                          <Star className="w-3.5 h-3.5 fill-current" />
+                          <span>{isExtractingFrames ? "Guardando..." : "Capturar como Portada"}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleCaptureCurrentFrame(false)}
                           disabled={isExtractingFrames}
                           className="flex items-center gap-1.5 px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded text-xs font-medium cursor-pointer shadow-sm active:scale-95 transition-all disabled:opacity-50"
                         >
                           <Camera className="w-3.5 h-3.5" />
-                          <span>Capturar cuadro actual</span>
+                          <span>{isExtractingFrames ? "Guardando..." : "Capturar cuadro (Galería)"}</span>
                         </button>
                         <button
                           type="button"
@@ -2263,6 +2461,221 @@ export default function AdminSecretPage() {
                   <Save className="w-4 h-4" />
                   <span>Guardar Propiedad</span>
                 </button>
+              </div>
+            </div>
+          )}
+
+          {/* Modal de Encuadre Interactivo de Portadas y Fotos */}
+          {framingImageIdx !== null && propForm.images && propForm.images[framingImageIdx] && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+              <div className="bg-neutral-900 border border-neutral-700 w-full max-w-2xl rounded-sm shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+                {/* Header del Modal */}
+                <div className="flex items-center justify-between px-5 py-3.5 border-b border-neutral-800 bg-neutral-950">
+                  <div className="flex items-center gap-2">
+                    <Crop className="w-4 h-4 text-gold-400" />
+                    <div>
+                      <h3 className="font-serif font-bold text-white text-sm">
+                        Encuadrar y Ajustar Foto {framingImageIdx === 0 ? "(Portada Principal)" : `#${framingImageIdx + 1}`}
+                      </h3>
+                      <p className="text-[11px] text-neutral-400">
+                        Arrastra para posicionar el mejor ángulo y usa el zoom para enfocar el detalle.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setFramingImageIdx(null)}
+                    disabled={isSavingCrop}
+                    className="text-neutral-400 hover:text-white p-1 rounded-sm cursor-pointer disabled:opacity-50"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Área de Visualización y Encuadre Interactivo */}
+                <div className="p-4 bg-neutral-950 flex flex-col items-center justify-center select-none overflow-hidden flex-1">
+                  <div
+                    className={`relative overflow-hidden border-2 border-gold-500/80 shadow-2xl bg-black cursor-grab active:cursor-grabbing rounded-sm transition-all ${
+                      cropAspectRatio === "16:9"
+                        ? "w-full max-w-lg aspect-video"
+                        : cropAspectRatio === "4:3"
+                        ? "w-full max-w-md aspect-[4/3]"
+                        : "w-full max-w-sm aspect-square"
+                    }`}
+                    onMouseDown={(e) => {
+                      setIsDraggingCrop(true);
+                      dragStartRef.current = {
+                        x: e.clientX,
+                        y: e.clientY,
+                        startOffX: cropOffsetX,
+                        startOffY: cropOffsetY,
+                      };
+                    }}
+                    onMouseMove={(e) => {
+                      if (!isDraggingCrop) return;
+                      const deltaX = ((e.clientX - dragStartRef.current.x) / 300) * 50;
+                      const deltaY = ((e.clientY - dragStartRef.current.y) / 200) * 50;
+                      setCropOffsetX(Math.max(-50, Math.min(50, dragStartRef.current.startOffX + deltaX)));
+                      setCropOffsetY(Math.max(-50, Math.min(50, dragStartRef.current.startOffY + deltaY)));
+                    }}
+                    onMouseUp={() => setIsDraggingCrop(false)}
+                    onMouseLeave={() => setIsDraggingCrop(false)}
+                    onTouchStart={(e) => {
+                      if (e.touches.length === 1) {
+                        setIsDraggingCrop(true);
+                        dragStartRef.current = {
+                          x: e.touches[0].clientX,
+                          y: e.touches[0].clientY,
+                          startOffX: cropOffsetX,
+                          startOffY: cropOffsetY,
+                        };
+                      }
+                    }}
+                    onTouchMove={(e) => {
+                      if (!isDraggingCrop || e.touches.length !== 1) return;
+                      const deltaX = ((e.touches[0].clientX - dragStartRef.current.x) / 300) * 50;
+                      const deltaY = ((e.touches[0].clientY - dragStartRef.current.y) / 200) * 50;
+                      setCropOffsetX(Math.max(-50, Math.min(50, dragStartRef.current.startOffX + deltaX)));
+                      setCropOffsetY(Math.max(-50, Math.min(50, dragStartRef.current.startOffY + deltaY)));
+                    }}
+                    onTouchEnd={() => setIsDraggingCrop(false)}
+                  >
+                    {/* Imagen con transformaciones dinámicas de encuadre */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={propForm.images[framingImageIdx]}
+                      alt="Encuadre"
+                      draggable={false}
+                      className="absolute w-full h-full object-cover pointer-events-none transition-transform duration-75"
+                      style={{
+                        transform: `scale(${cropZoom}) translate(${cropOffsetX}%, ${cropOffsetY}%)`,
+                        transformOrigin: "center center",
+                      }}
+                    />
+
+                    {/* Guías de regla de tercios cinematográfica para encuadre perfecto */}
+                    <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none opacity-30">
+                      <div className="border-r border-b border-white/60" />
+                      <div className="border-r border-b border-white/60" />
+                      <div className="border-b border-white/60" />
+                      <div className="border-r border-b border-white/60" />
+                      <div className="border-r border-b border-white/60" />
+                      <div className="border-b border-white/60" />
+                      <div className="border-r border-white/60" />
+                      <div className="border-r border-white/60" />
+                      <div />
+                    </div>
+
+                    <div className="absolute bottom-2 left-2 bg-black/75 backdrop-blur-xs text-[10px] text-white/90 px-2 py-0.5 rounded flex items-center gap-1 font-mono pointer-events-none">
+                      <Move className="w-3 h-3 text-gold-400" />
+                      <span>Arrastra para centrar</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Controles de Zoom, Aspect Ratio y Reset */}
+                <div className="p-4 bg-neutral-900 border-t border-neutral-800 space-y-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
+                    {/* Selector de Relación de Aspecto */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-neutral-400 font-medium text-[11px]">Proporción:</span>
+                      <div className="flex items-center bg-neutral-800 p-0.5 rounded border border-neutral-700">
+                        <button
+                          type="button"
+                          onClick={() => setCropAspectRatio("16:9")}
+                          className={`px-2.5 py-1 rounded text-xs font-semibold cursor-pointer transition-colors ${
+                            cropAspectRatio === "16:9" ? "bg-gold-500 text-luxury-black" : "text-neutral-300 hover:text-white"
+                          }`}
+                        >
+                          16:9 (Recomendado Portada)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setCropAspectRatio("4:3")}
+                          className={`px-2.5 py-1 rounded text-xs font-semibold cursor-pointer transition-colors ${
+                            cropAspectRatio === "4:3" ? "bg-gold-500 text-luxury-black" : "text-neutral-300 hover:text-white"
+                          }`}
+                        >
+                          4:3 Clásico
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setCropAspectRatio("1:1")}
+                          className={`px-2.5 py-1 rounded text-xs font-semibold cursor-pointer transition-colors ${
+                            cropAspectRatio === "1:1" ? "bg-gold-500 text-luxury-black" : "text-neutral-300 hover:text-white"
+                          }`}
+                        >
+                          1:1 Cuadrado
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCropZoom(1);
+                        setCropOffsetX(0);
+                        setCropOffsetY(0);
+                      }}
+                      className="text-neutral-400 hover:text-white text-[11px] underline cursor-pointer"
+                    >
+                      Restablecer posición
+                    </button>
+                  </div>
+
+                  {/* Slider de Zoom */}
+                  <div className="flex items-center gap-3">
+                    <ZoomOut className="w-4 h-4 text-neutral-400 shrink-0" />
+                    <input
+                      type="range"
+                      min="1"
+                      max="2.5"
+                      step="0.05"
+                      value={cropZoom}
+                      onChange={(e) => setCropZoom(parseFloat(e.target.value))}
+                      className="w-full accent-gold-500 cursor-pointer h-1.5 bg-neutral-700 rounded-lg appearance-none"
+                    />
+                    <ZoomIn className="w-4 h-4 text-neutral-400 shrink-0" />
+                    <span className="text-xs text-gold-400 font-mono w-12 text-right">
+                      {cropZoom.toFixed(1)}x
+                    </span>
+                  </div>
+
+                  {/* Acciones de Guardar */}
+                  <div className="flex items-center justify-between pt-2 border-t border-neutral-800">
+                    <span className="text-[11px] text-neutral-400">
+                      Se exportará en resolución HD optimizada para la web.
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setFramingImageIdx(null)}
+                        disabled={isSavingCrop}
+                        className="px-4 py-1.5 rounded text-xs font-medium text-neutral-300 hover:bg-neutral-800 cursor-pointer disabled:opacity-50"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleSaveFramedImage}
+                        disabled={isSavingCrop}
+                        className="px-5 py-2 rounded text-xs font-bold bg-gold-500 hover:bg-gold-600 text-luxury-black flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer disabled:opacity-50"
+                      >
+                        {isSavingCrop ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-luxury-black" />
+                            <span>Procesando...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Check className="w-3.5 h-3.5" />
+                            <span>Guardar Encuadre</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}

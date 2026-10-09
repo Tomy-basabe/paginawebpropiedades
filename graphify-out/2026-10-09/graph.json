@@ -23,7 +23,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "propertycardprops",
       "source_file": "src/components/PropertyCard.tsx",
@@ -36,11 +36,24 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "propertydetailmodalprops",
       "source_file": "src/components/PropertyDetailModal.tsx",
       "source_location": "L31"
+    },
+    {
+      "id": "src_lib_maps_parsedlocationdata",
+      "label": "ParsedLocationData",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "[id]/page.tsx",
+      "file_type": "code",
+      "norm_label": "parsedlocationdata",
+      "source_file": "src/lib/maps.ts",
+      "source_location": "L3"
     },
     {
       "id": "src_lib_types_property",
@@ -49,7 +62,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "property",
       "source_file": "src/lib/types.ts",
@@ -66,7 +79,7 @@
       "file_type": "code",
       "norm_label": "adminmodule",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L64"
+      "source_location": "L70"
     },
     {
       "id": "src_app_99propiedades_page_adminmoduleconfig",
@@ -79,7 +92,7 @@
       "file_type": "code",
       "norm_label": "adminmoduleconfig",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L76"
+      "source_location": "L82"
     },
     {
       "id": "src_app_99propiedades_page_adminuser",
@@ -92,7 +105,7 @@
       "file_type": "code",
       "norm_label": "adminuser",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L66"
+      "source_location": "L72"
     },
     {
       "id": "src_context_datacontext_datacontexttype",
@@ -131,7 +144,7 @@
       "file_type": "code",
       "norm_label": "agentprofile",
       "source_file": "src/lib/types.ts",
-      "source_location": "L69"
+      "source_location": "L70"
     },
     {
       "id": "src_lib_types_appmonthlypayment",
@@ -144,7 +157,7 @@
       "file_type": "code",
       "norm_label": "appmonthlypayment",
       "source_file": "src/lib/types.ts",
-      "source_location": "L98"
+      "source_location": "L99"
     },
     {
       "id": "src_lib_types_bankrate",
@@ -157,7 +170,7 @@
       "file_type": "code",
       "norm_label": "bankrate",
       "source_file": "src/lib/types.ts",
-      "source_location": "L41"
+      "source_location": "L42"
     },
     {
       "id": "src_lib_types_featuredbanner",
@@ -170,7 +183,7 @@
       "file_type": "code",
       "norm_label": "featuredbanner",
       "source_file": "src/lib/types.ts",
-      "source_location": "L56"
+      "source_location": "L57"
     },
     {
       "id": "src_lib_types_operationtype",
@@ -218,7 +231,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "brandlogoprops",
       "source_file": "src/components/BrandLogo.tsx",
@@ -231,7 +244,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "headerprops",
       "source_file": "src/components/Header.tsx",
@@ -244,7 +257,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "mobilebottomnavprops",
       "source_file": "src/components/MobileBottomNav.tsx",
@@ -257,7 +270,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "valuationmodalprops",
       "source_file": "src/components/ValuationModal.tsx",
@@ -270,7 +283,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "whatsappiconprops",
       "source_file": "src/components/WhatsAppIcon.tsx",
@@ -445,6 +458,18 @@
       "source_location": "L17"
     },
     {
+      "id": "src_app_layout_rootlayout",
+      "label": "RootLayout()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "next",
+      "file_type": "code",
+      "norm_label": "rootlayout()",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L89"
+    },
+    {
       "id": "src_app_robots_robots",
       "label": "robots()",
       "_callable": true,
@@ -455,6 +480,18 @@
       "norm_label": "robots()",
       "source_file": "src/app/robots.ts",
       "source_location": "L3"
+    },
+    {
+      "id": "src_context_datacontext_dataprovider",
+      "label": "DataProvider()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "next",
+      "file_type": "code",
+      "norm_label": "dataprovider()",
+      "source_file": "src/context/DataContext.tsx",
+      "source_location": "L42"
     },
     {
       "id": "src_lib_auth_base64urltobuffer",
@@ -558,11 +595,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "propertydetailpage()",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L31"
+      "source_location": "L33"
     },
     {
       "id": "src_app_propiedades_id_page_propertydetailpage_handleclickoutside",
@@ -570,11 +607,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "handleclickoutside()",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L58"
+      "source_location": "L60"
     },
     {
       "id": "src_app_propiedades_page_propiedadescontent",
@@ -582,7 +619,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "propiedadescontent()",
       "source_file": "src/app/propiedades/page.tsx",
@@ -594,7 +631,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "propiedadespage()",
       "source_file": "src/app/propiedades/page.tsx",
@@ -606,7 +643,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "propertycard()",
       "source_file": "src/components/PropertyCard.tsx",
@@ -618,7 +655,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "handleclickoutside()",
       "source_file": "src/components/PropertyCard.tsx",
@@ -630,7 +667,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "propertydetailmodal()",
       "source_file": "src/components/PropertyDetailModal.tsx",
@@ -642,7 +679,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "handleclickoutside()",
       "source_file": "src/components/PropertyDetailModal.tsx",
@@ -654,7 +691,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "formatcurrencyprice()",
       "source_file": "src/lib/formatters.ts",
@@ -666,11 +703,47 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "formatpropertyref()",
       "source_file": "src/lib/formatters.ts",
       "source_location": "L6"
+    },
+    {
+      "id": "src_lib_maps_getgooglemapsembedurl",
+      "label": "getGoogleMapsEmbedUrl()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "[id]/page.tsx",
+      "file_type": "code",
+      "norm_label": "getgooglemapsembedurl()",
+      "source_file": "src/lib/maps.ts",
+      "source_location": "L15"
+    },
+    {
+      "id": "src_lib_maps_getgooglemapsexternallink",
+      "label": "getGoogleMapsExternalLink()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "[id]/page.tsx",
+      "file_type": "code",
+      "norm_label": "getgooglemapsexternallink()",
+      "source_file": "src/lib/maps.ts",
+      "source_location": "L88"
+    },
+    {
+      "id": "src_lib_maps_parseandgeocodelocation",
+      "label": "parseAndGeocodeLocation()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "[id]/page.tsx",
+      "file_type": "code",
+      "norm_label": "parseandgeocodelocation()",
+      "source_file": "src/lib/maps.ts",
+      "source_location": "L125"
     },
     {
       "id": "src_app_99propiedades_page_adminsecretpage",
@@ -682,19 +755,7 @@
       "file_type": "code",
       "norm_label": "adminsecretpage()",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L152"
-    },
-    {
-      "id": "src_app_layout_rootlayout",
-      "label": "RootLayout()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "file_type": "code",
-      "norm_label": "rootlayout()",
-      "source_file": "src/app/layout.tsx",
-      "source_location": "L89"
+      "source_location": "L158"
     },
     {
       "id": "src_app_sitemap_sitemap",
@@ -707,18 +768,6 @@
       "norm_label": "sitemap()",
       "source_file": "src/app/sitemap.ts",
       "source_location": "L4"
-    },
-    {
-      "id": "src_context_datacontext_dataprovider",
-      "label": "DataProvider()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "file_type": "code",
-      "norm_label": "dataprovider()",
-      "source_file": "src/context/DataContext.tsx",
-      "source_location": "L42"
     },
     {
       "id": "src_lib_payments_buildyearpayments",
@@ -810,7 +859,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "contactocontent()",
       "source_file": "src/app/contacto/page.tsx",
@@ -822,7 +871,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "contactopage()",
       "source_file": "src/app/contacto/page.tsx",
@@ -834,7 +883,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "financiamientopage()",
       "source_file": "src/app/financiamiento/page.tsx",
@@ -846,7 +895,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "homepage()",
       "source_file": "src/app/page.tsx",
@@ -858,7 +907,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "sobremipage()",
       "source_file": "src/app/sobre-mi/page.tsx",
@@ -870,7 +919,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "bankratestable()",
       "source_file": "src/components/BankRatesTable.tsx",
@@ -882,7 +931,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "bannerhero()",
       "source_file": "src/components/BannerHero.tsx",
@@ -894,7 +943,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "brandlogo()",
       "source_file": "src/components/BrandLogo.tsx",
@@ -906,7 +955,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "clientshell()",
       "source_file": "src/components/ClientShell.tsx",
@@ -918,7 +967,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "footer()",
       "source_file": "src/components/Footer.tsx",
@@ -930,7 +979,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "header()",
       "source_file": "src/components/Header.tsx",
@@ -942,7 +991,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "mobilebottomnav()",
       "source_file": "src/components/MobileBottomNav.tsx",
@@ -954,7 +1003,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "mortgagecalculator()",
       "source_file": "src/components/MortgageCalculator.tsx",
@@ -966,7 +1015,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "valuationmodal()",
       "source_file": "src/components/ValuationModal.tsx",
@@ -978,7 +1027,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "whatsappfloat()",
       "source_file": "src/components/WhatsAppFloat.tsx",
@@ -990,7 +1039,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "whatsappicon()",
       "source_file": "src/components/WhatsAppIcon.tsx",
@@ -1002,7 +1051,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "usedata()",
       "source_file": "src/context/DataContext.tsx",
@@ -1014,7 +1063,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "cleanwhatsappnumber()",
       "source_file": "src/lib/whatsapp.ts",
@@ -1026,7 +1075,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "getwhatsappurl()",
       "source_file": "src/lib/whatsapp.ts",
@@ -1653,6 +1702,28 @@
       "source_location": "L8"
     },
     {
+      "id": "src_app_layout",
+      "label": "layout.tsx",
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "next",
+      "file_type": "code",
+      "norm_label": "layout.tsx",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_layout_metadata",
+      "label": "metadata",
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "next",
+      "file_type": "code",
+      "norm_label": "metadata",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L6"
+    },
+    {
       "id": "src_app_robots",
       "label": "robots.ts",
       "_origin": "ast",
@@ -1723,7 +1794,7 @@
       "label": "[id]/page.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "[id]/page.tsx",
       "source_file": "src/app/propiedades/[id]/page.tsx",
@@ -1734,7 +1805,7 @@
       "label": "propiedades/page.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "propiedades/page.tsx",
       "source_file": "src/app/propiedades/page.tsx",
@@ -1745,7 +1816,7 @@
       "label": "PropertyCard.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "propertycard.tsx",
       "source_file": "src/components/PropertyCard.tsx",
@@ -1756,7 +1827,7 @@
       "label": "PropertyDetailModal.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "propertydetailmodal.tsx",
       "source_file": "src/components/PropertyDetailModal.tsx",
@@ -1767,10 +1838,21 @@
       "label": "formatters.ts",
       "_origin": "ast",
       "community": 2,
-      "community_name": "PropertyCard.tsx",
+      "community_name": "[id]/page.tsx",
       "file_type": "code",
       "norm_label": "formatters.ts",
       "source_file": "src/lib/formatters.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_lib_maps",
+      "label": "maps.ts",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "[id]/page.tsx",
+      "file_type": "code",
+      "norm_label": "maps.ts",
+      "source_file": "src/lib/maps.ts",
       "source_location": "L1"
     },
     {
@@ -1793,7 +1875,7 @@
       "file_type": "code",
       "norm_label": "all_admin_modules",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L84"
+      "source_location": "L90"
     },
     {
       "id": "src_app_99propiedades_page_default_users",
@@ -1804,29 +1886,7 @@
       "file_type": "code",
       "norm_label": "default_users",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L129"
-    },
-    {
-      "id": "src_app_layout",
-      "label": "layout.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "file_type": "code",
-      "norm_label": "layout.tsx",
-      "source_file": "src/app/layout.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_app_layout_metadata",
-      "label": "metadata",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "file_type": "code",
-      "norm_label": "metadata",
-      "source_file": "src/app/layout.tsx",
-      "source_location": "L6"
+      "source_location": "L135"
     },
     {
       "id": "src_app_sitemap",
@@ -1838,28 +1898,6 @@
       "norm_label": "sitemap.ts",
       "source_file": "src/app/sitemap.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "src_context_datacontext",
-      "label": "DataContext.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "file_type": "code",
-      "norm_label": "datacontext.tsx",
-      "source_file": "src/context/DataContext.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_context_datacontext_datacontext",
-      "label": "DataContext",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "file_type": "code",
-      "norm_label": "datacontext",
-      "source_file": "src/context/DataContext.tsx",
-      "source_location": "L40"
     },
     {
       "id": "src_lib_initialdata",
@@ -2233,7 +2271,7 @@
       "label": "contacto/page.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "contacto/page.tsx",
       "source_file": "src/app/contacto/page.tsx",
@@ -2244,7 +2282,7 @@
       "label": "financiamiento/page.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "financiamiento/page.tsx",
       "source_file": "src/app/financiamiento/page.tsx",
@@ -2255,7 +2293,7 @@
       "label": "app/page.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "app/page.tsx",
       "source_file": "src/app/page.tsx",
@@ -2266,7 +2304,7 @@
       "label": "sobre-mi/page.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "sobre-mi/page.tsx",
       "source_file": "src/app/sobre-mi/page.tsx",
@@ -2277,7 +2315,7 @@
       "label": "BankRatesTable.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "bankratestable.tsx",
       "source_file": "src/components/BankRatesTable.tsx",
@@ -2288,7 +2326,7 @@
       "label": "BannerHero.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "bannerhero.tsx",
       "source_file": "src/components/BannerHero.tsx",
@@ -2299,7 +2337,7 @@
       "label": "BrandLogo.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "brandlogo.tsx",
       "source_file": "src/components/BrandLogo.tsx",
@@ -2310,7 +2348,7 @@
       "label": "ClientShell.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "clientshell.tsx",
       "source_file": "src/components/ClientShell.tsx",
@@ -2321,7 +2359,7 @@
       "label": "Footer.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "footer.tsx",
       "source_file": "src/components/Footer.tsx",
@@ -2332,7 +2370,7 @@
       "label": "Header.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "header.tsx",
       "source_file": "src/components/Header.tsx",
@@ -2343,7 +2381,7 @@
       "label": "MobileBottomNav.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "mobilebottomnav.tsx",
       "source_file": "src/components/MobileBottomNav.tsx",
@@ -2354,7 +2392,7 @@
       "label": "MortgageCalculator.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "mortgagecalculator.tsx",
       "source_file": "src/components/MortgageCalculator.tsx",
@@ -2365,7 +2403,7 @@
       "label": "ValuationModal.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "valuationmodal.tsx",
       "source_file": "src/components/ValuationModal.tsx",
@@ -2376,7 +2414,7 @@
       "label": "WhatsAppFloat.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "whatsappfloat.tsx",
       "source_file": "src/components/WhatsAppFloat.tsx",
@@ -2387,18 +2425,40 @@
       "label": "WhatsAppIcon.tsx",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "whatsappicon.tsx",
       "source_file": "src/components/WhatsAppIcon.tsx",
       "source_location": "L1"
     },
     {
+      "id": "src_context_datacontext",
+      "label": "DataContext.tsx",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "datacontext.tsx",
+      "source_file": "src/context/DataContext.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_context_datacontext_datacontext",
+      "label": "DataContext",
+      "_origin": "ast",
+      "community": 8,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "datacontext",
+      "source_file": "src/context/DataContext.tsx",
+      "source_location": "L40"
+    },
+    {
       "id": "src_lib_whatsapp",
       "label": "whatsapp.ts",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "code",
       "norm_label": "whatsapp.ts",
       "source_file": "src/lib/whatsapp.ts",
@@ -2409,7 +2469,7 @@
       "label": "lucide-react",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "concept",
       "norm_label": "lucide-react",
       "source_file": "package.json",
@@ -2420,7 +2480,7 @@
       "label": "react",
       "_origin": "ast",
       "community": 8,
-      "community_name": "useData",
+      "community_name": "DataContext.tsx",
       "file_type": "concept",
       "norm_label": "react",
       "source_file": "package.json",
@@ -2472,6 +2532,18 @@
       "type": "external"
     },
     {
+      "id": "src_app_globals",
+      "label": "src_app_globals",
+      "_origin": "semantic",
+      "community": 14,
+      "community_name": "next",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "src_app_globals",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "ref_framer_motion",
       "label": "ref_framer_motion",
       "_origin": "semantic",
@@ -2480,18 +2552,6 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "ref_framer_motion",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "src_app_globals",
-      "label": "src_app_globals",
-      "_origin": "semantic",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "src_app_globals",
       "source_file": "",
       "type": "external"
     },
@@ -2518,7 +2578,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L1237",
+      "source_location": "L1285",
       "weight": 1.0
     },
     {
@@ -2530,7 +2590,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L172",
+      "source_location": "L178",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page_adminsecretpage",
+      "target": "src_lib_maps_getgooglemapsexternallink",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L1853",
       "weight": 1.0
     },
     {
@@ -2542,7 +2614,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L279",
+      "source_location": "L285",
       "weight": 1.0
     },
     {
@@ -2554,7 +2626,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L285",
+      "source_location": "L291",
       "weight": 1.0
     },
     {
@@ -2566,7 +2638,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L294",
+      "source_location": "L300",
       "weight": 1.0
     },
     {
@@ -2578,7 +2650,31 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L3849",
+      "source_location": "L3966",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page_adminsecretpage",
+      "target": "src_lib_maps_parseandgeocodelocation",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L440",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page_adminsecretpage",
+      "target": "src_lib_maps_getgooglemapsembedurl",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L461",
       "weight": 1.0
     },
     {
@@ -2590,7 +2686,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L436",
+      "source_location": "L484",
       "weight": 1.0
     },
     {
@@ -2602,7 +2698,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L500",
+      "source_location": "L548",
       "weight": 1.0
     },
     {
@@ -2943,6 +3039,18 @@
     },
     {
       "source": "src_app_propiedades_id_page_propertydetailpage",
+      "target": "src_lib_formatters_formatpropertyref",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/app/propiedades/[id]/page.tsx",
+      "source_location": "L100",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_propiedades_id_page_propertydetailpage",
       "target": "src_lib_formatters_formatcurrencyprice",
       "relation": "calls",
       "_origin": "ast",
@@ -2950,7 +3058,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L103",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -2962,7 +3070,31 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L34",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_propiedades_id_page_propertydetailpage",
+      "target": "src_lib_maps_getgooglemapsexternallink",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/app/propiedades/[id]/page.tsx",
+      "source_location": "L503",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_propiedades_id_page_propertydetailpage",
+      "target": "src_lib_maps_getgooglemapsembedurl",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/app/propiedades/[id]/page.tsx",
+      "source_location": "L514",
       "weight": 1.0
     },
     {
@@ -2974,7 +3106,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L598",
+      "source_location": "L639",
       "weight": 1.0
     },
     {
@@ -2986,19 +3118,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L603",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_propiedades_id_page_propertydetailpage",
-      "target": "src_lib_formatters_formatpropertyref",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L98",
+      "source_location": "L644",
       "weight": 1.0
     },
     {
@@ -3578,6 +3698,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_lib_maps_parseandgeocodelocation",
+      "target": "src_lib_maps_getgooglemapsembedurl",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/maps.ts",
+      "source_location": "L246",
+      "weight": 1.0
+    },
+    {
       "source": "src_lib_supabase_uploadpropertyvideo",
       "target": "src_lib_supabase_compressvideoinbrowser",
       "relation": "calls",
@@ -3970,7 +4102,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L54",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -3982,7 +4114,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -3994,7 +4126,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -4006,7 +4138,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -4018,7 +4150,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -4030,7 +4162,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -4042,7 +4174,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -4055,6 +4187,42 @@
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
       "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page",
+      "target": "src_lib_maps_getgooglemapsembedurl",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page",
+      "target": "src_lib_maps_getgooglemapsexternallink",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page",
+      "target": "src_lib_maps_parseandgeocodelocation",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L64",
       "weight": 1.0
     },
     {
@@ -4378,7 +4546,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L27",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -4390,7 +4558,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L28",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -4402,7 +4570,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L29",
+      "source_location": "L30",
       "weight": 1.0
     },
     {
@@ -4414,7 +4582,31 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L29",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_propiedades_id_page",
+      "target": "src_lib_maps_getgooglemapsembedurl",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/propiedades/[id]/page.tsx",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_propiedades_id_page",
+      "target": "src_lib_maps_getgooglemapsexternallink",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/propiedades/[id]/page.tsx",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -5278,7 +5470,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L54",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -5290,7 +5482,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L55",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -5303,6 +5495,18 @@
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
       "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page",
+      "target": "src_lib_maps",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L64",
       "weight": 1.0
     },
     {
@@ -5831,24 +6035,12 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L27",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_propiedades_id_page",
-      "target": "src_lib_whatsapp",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/propiedades/[id]/page.tsx",
       "source_location": "L28",
       "weight": 1.0
     },
     {
       "source": "src_app_propiedades_id_page",
-      "target": "src_lib_formatters",
+      "target": "src_lib_whatsapp",
       "relation": "imports_from",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -5868,6 +6060,30 @@
       "context": "import",
       "source_file": "src/app/propiedades/[id]/page.tsx",
       "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_propiedades_id_page",
+      "target": "src_lib_formatters",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/propiedades/[id]/page.tsx",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_propiedades_id_page",
+      "target": "src_lib_maps",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/propiedades/[id]/page.tsx",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -7418,7 +7634,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L129",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
@@ -7429,7 +7645,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L152",
+      "source_location": "L158",
       "weight": 1.0
     },
     {
@@ -7440,7 +7656,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L64",
+      "source_location": "L70",
       "weight": 1.0
     },
     {
@@ -7451,7 +7667,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L66",
+      "source_location": "L72",
       "weight": 1.0
     },
     {
@@ -7462,7 +7678,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L76",
+      "source_location": "L82",
       "weight": 1.0
     },
     {
@@ -7473,7 +7689,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L84",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -7737,7 +7953,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L31",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -8214,6 +8430,50 @@
       "weight": 1.0
     },
     {
+      "source": "src_lib_maps",
+      "target": "src_lib_maps_parseandgeocodelocation",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/maps.ts",
+      "source_location": "L125",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_maps",
+      "target": "src_lib_maps_getgooglemapsembedurl",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/maps.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_maps",
+      "target": "src_lib_maps_parsedlocationdata",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/maps.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_maps",
+      "target": "src_lib_maps_getgooglemapsexternallink",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/maps.ts",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
       "source": "src_lib_payments",
       "target": "src_lib_payments_getlocalstoredpayments",
       "relation": "contains",
@@ -8375,7 +8635,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/types.ts",
-      "source_location": "L41",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -8397,7 +8657,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/types.ts",
-      "source_location": "L56",
+      "source_location": "L57",
       "weight": 1.0
     },
     {
@@ -8408,7 +8668,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/types.ts",
-      "source_location": "L69",
+      "source_location": "L70",
       "weight": 1.0
     },
     {
@@ -8419,7 +8679,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/types.ts",
-      "source_location": "L98",
+      "source_location": "L99",
       "weight": 1.0
     },
     {
@@ -8691,7 +8951,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L64",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -8720,5 +8980,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "36ab7150e5466da9762adae3a698d511cbef330f"
+  "built_at_commit": "5163f193e7747d5ab5462bc724f147bfbe4cad23"
 }

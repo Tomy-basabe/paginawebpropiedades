@@ -79,7 +79,7 @@
       "file_type": "code",
       "norm_label": "adminmodule",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L70"
+      "source_location": "L74"
     },
     {
       "id": "src_app_99propiedades_page_adminmoduleconfig",
@@ -92,7 +92,7 @@
       "file_type": "code",
       "norm_label": "adminmoduleconfig",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L82"
+      "source_location": "L86"
     },
     {
       "id": "src_app_99propiedades_page_adminuser",
@@ -105,7 +105,7 @@
       "file_type": "code",
       "norm_label": "adminuser",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L72"
+      "source_location": "L76"
     },
     {
       "id": "src_context_datacontext_datacontexttype",
@@ -755,7 +755,7 @@
       "file_type": "code",
       "norm_label": "adminsecretpage()",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L158"
+      "source_location": "L162"
     },
     {
       "id": "src_app_sitemap_sitemap",
@@ -827,7 +827,7 @@
       "file_type": "code",
       "norm_label": "compressvideoinbrowser()",
       "source_file": "src/lib/supabase.ts",
-      "source_location": "L49"
+      "source_location": "L52"
     },
     {
       "id": "src_lib_supabase_uploadpropertyimage",
@@ -851,7 +851,7 @@
       "file_type": "code",
       "norm_label": "uploadpropertyvideo()",
       "source_file": "src/lib/supabase.ts",
-      "source_location": "L162"
+      "source_location": "L172"
     },
     {
       "id": "src_app_contacto_page_contactocontent",
@@ -1875,7 +1875,7 @@
       "file_type": "code",
       "norm_label": "all_admin_modules",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L90"
+      "source_location": "L94"
     },
     {
       "id": "src_app_99propiedades_page_default_users",
@@ -1886,7 +1886,7 @@
       "file_type": "code",
       "norm_label": "default_users",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L135"
+      "source_location": "L139"
     },
     {
       "id": "src_app_sitemap",
@@ -2578,7 +2578,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L1285",
+      "source_location": "L1464",
       "weight": 1.0
     },
     {
@@ -2590,7 +2590,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L178",
+      "source_location": "L182",
       "weight": 1.0
     },
     {
@@ -2602,7 +2602,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L1853",
+      "source_location": "L2032",
       "weight": 1.0
     },
     {
@@ -2614,7 +2614,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L285",
+      "source_location": "L289",
       "weight": 1.0
     },
     {
@@ -2626,7 +2626,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L291",
+      "source_location": "L295",
       "weight": 1.0
     },
     {
@@ -2638,7 +2638,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L300",
+      "source_location": "L304",
       "weight": 1.0
     },
     {
@@ -2650,7 +2650,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L3966",
+      "source_location": "L4379",
       "weight": 1.0
     },
     {
@@ -2662,7 +2662,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L440",
+      "source_location": "L444",
       "weight": 1.0
     },
     {
@@ -2674,7 +2674,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L461",
+      "source_location": "L465",
       "weight": 1.0
     },
     {
@@ -2686,7 +2686,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L484",
+      "source_location": "L488",
       "weight": 1.0
     },
     {
@@ -2698,7 +2698,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L548",
+      "source_location": "L552",
       "weight": 1.0
     },
     {
@@ -3718,7 +3718,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/supabase.ts",
-      "source_location": "L181",
+      "source_location": "L191",
       "weight": 1.0
     },
     {
@@ -4102,79 +4102,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L55",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_99propiedades_page",
-      "target": "src_lib_payments_buildyearpayments",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L56",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_99propiedades_page",
-      "target": "src_lib_payments_checkapppaymentlock",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L56",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_99propiedades_page",
-      "target": "src_lib_payments_getlocalstoredpayments",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L56",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_99propiedades_page",
-      "target": "src_lib_payments_month_names_es",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L56",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_99propiedades_page",
-      "target": "src_lib_payments_paymentlockstatus",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L56",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_99propiedades_page",
-      "target": "src_lib_payments_savelocalstoredpayments",
-      "relation": "imports",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L56",
+      "source_location": "L59",
       "weight": 1.0
     },
     {
@@ -4191,6 +4119,78 @@
     },
     {
       "source": "src_app_99propiedades_page",
+      "target": "src_lib_payments_buildyearpayments",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page",
+      "target": "src_lib_payments_checkapppaymentlock",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page",
+      "target": "src_lib_payments_getlocalstoredpayments",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page",
+      "target": "src_lib_payments_month_names_es",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page",
+      "target": "src_lib_payments_paymentlockstatus",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page",
+      "target": "src_lib_payments_savelocalstoredpayments",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page",
       "target": "src_lib_maps_getgooglemapsembedurl",
       "relation": "imports",
       "_origin": "ast",
@@ -4198,7 +4198,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L64",
+      "source_location": "L68",
       "weight": 1.0
     },
     {
@@ -4210,7 +4210,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L64",
+      "source_location": "L68",
       "weight": 1.0
     },
     {
@@ -4222,7 +4222,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L64",
+      "source_location": "L68",
       "weight": 1.0
     },
     {
@@ -5470,19 +5470,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L55",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_99propiedades_page",
-      "target": "src_lib_payments",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L56",
+      "source_location": "L59",
       "weight": 1.0
     },
     {
@@ -5499,6 +5487,18 @@
     },
     {
       "source": "src_app_99propiedades_page",
+      "target": "src_lib_payments",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/99propiedades/page.tsx",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_99propiedades_page",
       "target": "src_lib_maps",
       "relation": "imports_from",
       "_origin": "ast",
@@ -5506,7 +5506,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L64",
+      "source_location": "L68",
       "weight": 1.0
     },
     {
@@ -7634,7 +7634,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L135",
+      "source_location": "L139",
       "weight": 1.0
     },
     {
@@ -7645,7 +7645,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L158",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -7656,7 +7656,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L70",
+      "source_location": "L74",
       "weight": 1.0
     },
     {
@@ -7667,7 +7667,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L72",
+      "source_location": "L76",
       "weight": 1.0
     },
     {
@@ -7678,7 +7678,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L82",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -7689,7 +7689,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L90",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -8569,7 +8569,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/supabase.ts",
-      "source_location": "L162",
+      "source_location": "L172",
       "weight": 1.0
     },
     {
@@ -8580,7 +8580,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/supabase.ts",
-      "source_location": "L49",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -8980,5 +8980,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "5163f193e7747d5ab5462bc724f147bfbe4cad23"
+  "built_at_commit": "c9cf99a3ee2960b1b5789f291ca21fcc0334bd4d"
 }

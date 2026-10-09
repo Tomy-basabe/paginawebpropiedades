@@ -14,7 +14,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
  */
 export async function uploadPropertyImage(file: File | Blob, customName?: string): Promise<string> {
   try {
-    const ext = file.type.split("/")[1] || "jpg";
+    const mime = file.type || "image/jpeg";
+    const ext = mime.includes("/") ? mime.split("/")[1].replace("jpeg", "jpg") : "jpg";
     const fileName = customName || `prop-${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${ext}`;
     const filePath = `properties/${fileName}`;
 
@@ -23,6 +24,7 @@ export async function uploadPropertyImage(file: File | Blob, customName?: string
       .upload(filePath, file, {
         cacheControl: "3600",
         upsert: true,
+        contentType: mime,
       });
 
     if (uploadError) {
@@ -42,8 +44,9 @@ export async function uploadPropertyImage(file: File | Blob, customName?: string
 }
 
 /**
- * Comprime un video en el browser usando Canvas + MediaRecorder con codec WebM/VP8.
- * Reduce el peso hasta un 60-70% manteniendo calidad visual alta (720p max).
+ * Comprime un video en el browser usando Canvas + MediaRecorder con codec WebM/VP8 o VP9.
+ * Detecta orientación horizontal vs vertical (Reels móviles) para mantener máxima nitidez
+ * sin exceder peso excesivo.
  * onProgress(0–100) se llama durante la compresión.
  */
 export async function compressVideoInBrowser(
@@ -67,23 +70,30 @@ export async function compressVideoInBrowser(
     video.src = objectUrl;
 
     video.onloadedmetadata = () => {
-      const MAX_WIDTH = 1280;
-      const MAX_HEIGHT = 720;
+      const isVertical = video.videoHeight > video.videoWidth;
+
+      // Límites óptimos según orientación:
+      // Vertical (Reels móviles): max 720x1280 (HD vertical nítido)
+      // Horizontal: max 1280x720 (HD widescreen nítido)
+      const MAX_W = isVertical ? 720 : 1280;
+      const MAX_H = isVertical ? 1280 : 720;
+
       const ratio = Math.min(
-        MAX_WIDTH / video.videoWidth,
-        MAX_HEIGHT / video.videoHeight,
+        MAX_W / video.videoWidth,
+        MAX_H / video.videoHeight,
         1 // No ampliar si ya es más pequeño
       );
-      const w = Math.round(video.videoWidth * ratio);
-      const h = Math.round(video.videoHeight * ratio);
+      const w = Math.round((video.videoWidth * ratio) / 2) * 2;
+      const h = Math.round((video.videoHeight * ratio) / 2) * 2;
 
       const canvas = document.createElement("canvas");
       canvas.width = w;
       canvas.height = h;
       const ctx = canvas.getContext("2d")!;
 
-      // Bitrate adaptativo: ~2.5 Mbps para 720p, ~1.2 Mbps para 480p
-      const bitsPerSecond = w >= 1280 ? 2_500_000 : w >= 854 ? 1_800_000 : 1_200_000;
+      // Bitrate adaptativo optimizado: 2.8 Mbps para nitidez cristalina en detalles de inmuebles
+      const pixels = w * h;
+      const bitsPerSecond = pixels >= 1280 * 720 ? 2_800_000 : pixels >= 854 * 480 ? 1_800_000 : 1_200_000;
 
       const stream = canvas.captureStream(30);
 

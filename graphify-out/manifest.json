@@ -156,9 +156,9 @@
     "semantic_hash": "4809646b4995dc46675d57c46915f917"
   },
   "src/context/DataContext.tsx": {
-    "mtime": 1791556384.6189668,
-    "seen": 1791558934.9237788,
-    "ast_hash": "0d030d97644c9f48b27ed00475efbdfe",
+    "mtime": 1791578882.9631078,
+    "seen": 1791579085.5280344,
+    "ast_hash": "19ae3eb16d50eb74795d8a229066c41b",
     "semantic_hash": ""
   },
   "src/lib/initialData.ts": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "src/lib/supabase.ts": {
-    "mtime": 1791556250.6679869,
-    "seen": 1791558934.9239912,
-    "ast_hash": "d9f6aa3d80dcf4fe7f20ff39d85838b3",
+    "mtime": 1791578903.905821,
+    "seen": 1791579085.528539,
+    "ast_hash": "e35d9956ed82d9a8a03f6add6e9d108e",
     "semantic_hash": ""
   },
   "src/lib/types.ts": {
@@ -276,9 +276,9 @@
     "semantic_hash": ""
   },
   "src/app/99propiedades/page.tsx": {
-    "mtime": 1791578442.3865042,
-    "seen": 1791578496.9852254,
-    "ast_hash": "f91c37d3e1a8ae5f9995ec00ee5dae48",
+    "mtime": 1791579036.8981097,
+    "seen": 1791579085.5250123,
+    "ast_hash": "b8dd0b93f2e414c611ab85bc1a1566ba",
     "semantic_hash": ""
   },
   "src/app/api/admin/login/route.ts": {
