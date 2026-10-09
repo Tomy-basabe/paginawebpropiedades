@@ -4,6 +4,32 @@
   "graph": {},
   "nodes": [
     {
+      "id": "src_components_propertycard_propertycardprops",
+      "label": "PropertyCardProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propertycardprops",
+      "source_file": "src/components/PropertyCard.tsx",
+      "source_location": "L25"
+    },
+    {
+      "id": "src_components_propertydetailmodal_propertydetailmodalprops",
+      "label": "PropertyDetailModalProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propertydetailmodalprops",
+      "source_file": "src/components/PropertyDetailModal.tsx",
+      "source_location": "L31"
+    },
+    {
       "id": "src_context_datacontext_datacontexttype",
       "label": "DataContextType",
       "_callable": true,
@@ -56,6 +82,45 @@
       "source_location": "L57"
     },
     {
+      "id": "src_lib_types_operationtype",
+      "label": "OperationType",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "operationtype",
+      "source_file": "src/lib/types.ts",
+      "source_location": "L2"
+    },
+    {
+      "id": "src_lib_types_property",
+      "label": "Property",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "property",
+      "source_file": "src/lib/types.ts",
+      "source_location": "L5"
+    },
+    {
+      "id": "src_lib_types_propertytype",
+      "label": "PropertyType",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propertytype",
+      "source_file": "src/lib/types.ts",
+      "source_location": "L1"
+    },
+    {
       "id": "src_lib_auth_sessionpayload",
       "label": "SessionPayload",
       "_callable": true,
@@ -67,45 +132,6 @@
       "norm_label": "sessionpayload",
       "source_file": "src/lib/auth.ts",
       "source_location": "L47"
-    },
-    {
-      "id": "src_components_propertycard_propertycardprops",
-      "label": "PropertyCardProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "propertycardprops",
-      "source_file": "src/components/PropertyCard.tsx",
-      "source_location": "L25"
-    },
-    {
-      "id": "src_components_propertydetailmodal_propertydetailmodalprops",
-      "label": "PropertyDetailModalProps",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "propertydetailmodalprops",
-      "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L31"
-    },
-    {
-      "id": "src_lib_types_property",
-      "label": "Property",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "property",
-      "source_file": "src/lib/types.ts",
-      "source_location": "L5"
     },
     {
       "id": "src_app_99propiedades_page_adminmodule",
@@ -173,17 +199,17 @@
       "source_location": "L52"
     },
     {
-      "id": "src_lib_smartframes_framecandidate",
-      "label": "FrameCandidate",
+      "id": "src_lib_smartframes_extractedframe",
+      "label": "ExtractedFrame",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 3,
       "community_name": "99propiedades/page.tsx",
       "file_type": "code",
-      "norm_label": "framecandidate",
+      "norm_label": "extractedframe",
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L15"
+      "source_location": "L13"
     },
     {
       "id": "src_lib_types_appmonthlypayment",
@@ -199,19 +225,6 @@
       "source_location": "L99"
     },
     {
-      "id": "src_lib_types_operationtype",
-      "label": "OperationType",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "file_type": "code",
-      "norm_label": "operationtype",
-      "source_file": "src/lib/types.ts",
-      "source_location": "L2"
-    },
-    {
       "id": "src_lib_types_propertystatus",
       "label": "PropertyStatus",
       "_callable": true,
@@ -223,19 +236,6 @@
       "norm_label": "propertystatus",
       "source_file": "src/lib/types.ts",
       "source_location": "L3"
-    },
-    {
-      "id": "src_lib_types_propertytype",
-      "label": "PropertyType",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "file_type": "code",
-      "norm_label": "propertytype",
-      "source_file": "src/lib/types.ts",
-      "source_location": "L1"
     },
     {
       "id": "src_components_brandlogo_brandlogoprops",
@@ -315,6 +315,30 @@
       "source_location": "L89"
     },
     {
+      "id": "src_app_propiedades_page_propiedadescontent",
+      "label": "PropiedadesContent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propiedadescontent()",
+      "source_file": "src/app/propiedades/page.tsx",
+      "source_location": "L27"
+    },
+    {
+      "id": "src_app_propiedades_page_propiedadespage",
+      "label": "PropiedadesPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propiedadespage()",
+      "source_file": "src/app/propiedades/page.tsx",
+      "source_location": "L519"
+    },
+    {
       "id": "src_app_sitemap_sitemap",
       "label": "sitemap()",
       "_callable": true,
@@ -325,6 +349,54 @@
       "norm_label": "sitemap()",
       "source_file": "src/app/sitemap.ts",
       "source_location": "L4"
+    },
+    {
+      "id": "src_components_propertycard_propertycard",
+      "label": "PropertyCard()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propertycard()",
+      "source_file": "src/components/PropertyCard.tsx",
+      "source_location": "L30"
+    },
+    {
+      "id": "src_components_propertycard_propertycard_handleclickoutside",
+      "label": "handleClickOutside()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "handleclickoutside()",
+      "source_file": "src/components/PropertyCard.tsx",
+      "source_location": "L40"
+    },
+    {
+      "id": "src_components_propertydetailmodal_propertydetailmodal",
+      "label": "PropertyDetailModal()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propertydetailmodal()",
+      "source_file": "src/components/PropertyDetailModal.tsx",
+      "source_location": "L36"
+    },
+    {
+      "id": "src_components_propertydetailmodal_propertydetailmodal_handleclickoutside",
+      "label": "handleClickOutside()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "handleclickoutside()",
+      "source_file": "src/components/PropertyDetailModal.tsx",
+      "source_location": "L56"
     },
     {
       "id": "src_context_datacontext_dataprovider",
@@ -339,12 +411,48 @@
       "source_location": "L42"
     },
     {
+      "id": "src_lib_formatters_formatcurrencyprice",
+      "label": "formatCurrencyPrice()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "formatcurrencyprice()",
+      "source_file": "src/lib/formatters.ts",
+      "source_location": "L29"
+    },
+    {
+      "id": "src_lib_formatters_formatpropertyref",
+      "label": "formatPropertyRef()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "formatpropertyref()",
+      "source_file": "src/lib/formatters.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_app_admin_page_adminpage",
+      "label": "AdminPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "admin/page.tsx",
+      "file_type": "code",
+      "norm_label": "adminpage()",
+      "source_file": "src/app/admin/page.tsx",
+      "source_location": "L3"
+    },
+    {
       "id": "src_app_api_admin_logout_route_post",
       "label": "POST()",
       "_callable": true,
       "_origin": "ast",
       "community": 13,
-      "community_name": "logout/route.ts",
+      "community_name": "admin/page.tsx",
       "file_type": "code",
       "norm_label": "post()",
       "source_file": "src/app/api/admin/logout/route.ts",
@@ -356,7 +464,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 13,
-      "community_name": "logout/route.ts",
+      "community_name": "admin/page.tsx",
       "file_type": "code",
       "norm_label": "robots()",
       "source_file": "src/app/robots.ts",
@@ -603,114 +711,6 @@
       "source_location": "L4"
     },
     {
-      "id": "src_app_admin_page_adminpage",
-      "label": "AdminPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "admin/page.tsx",
-      "file_type": "code",
-      "norm_label": "adminpage()",
-      "source_file": "src/app/admin/page.tsx",
-      "source_location": "L3"
-    },
-    {
-      "id": "src_app_propiedades_page_propiedadescontent",
-      "label": "PropiedadesContent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "propiedadescontent()",
-      "source_file": "src/app/propiedades/page.tsx",
-      "source_location": "L27"
-    },
-    {
-      "id": "src_app_propiedades_page_propiedadespage",
-      "label": "PropiedadesPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "propiedadespage()",
-      "source_file": "src/app/propiedades/page.tsx",
-      "source_location": "L519"
-    },
-    {
-      "id": "src_components_propertycard_propertycard",
-      "label": "PropertyCard()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "propertycard()",
-      "source_file": "src/components/PropertyCard.tsx",
-      "source_location": "L30"
-    },
-    {
-      "id": "src_components_propertycard_propertycard_handleclickoutside",
-      "label": "handleClickOutside()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "handleclickoutside()",
-      "source_file": "src/components/PropertyCard.tsx",
-      "source_location": "L40"
-    },
-    {
-      "id": "src_components_propertydetailmodal_propertydetailmodal",
-      "label": "PropertyDetailModal()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "propertydetailmodal()",
-      "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L36"
-    },
-    {
-      "id": "src_components_propertydetailmodal_propertydetailmodal_handleclickoutside",
-      "label": "handleClickOutside()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "handleclickoutside()",
-      "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L56"
-    },
-    {
-      "id": "src_lib_formatters_formatcurrencyprice",
-      "label": "formatCurrencyPrice()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "formatcurrencyprice()",
-      "source_file": "src/lib/formatters.ts",
-      "source_location": "L29"
-    },
-    {
-      "id": "src_lib_formatters_formatpropertyref",
-      "label": "formatPropertyRef()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "formatpropertyref()",
-      "source_file": "src/lib/formatters.ts",
-      "source_location": "L6"
-    },
-    {
       "id": "src_app_99propiedades_page_adminsecretpage",
       "label": "AdminSecretPage()",
       "_callable": true,
@@ -831,18 +831,6 @@
       "source_location": "L158"
     },
     {
-      "id": "src_lib_smartframes_calculatesharpness",
-      "label": "calculateSharpness()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "file_type": "code",
-      "norm_label": "calculatesharpness()",
-      "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L58"
-    },
-    {
       "id": "src_lib_smartframes_capturenativeframe",
       "label": "captureNativeFrame()",
       "_callable": true,
@@ -852,7 +840,19 @@
       "file_type": "code",
       "norm_label": "capturenativeframe()",
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L169"
+      "source_location": "L97"
+    },
+    {
+      "id": "src_lib_smartframes_computedhash",
+      "label": "computeDHash()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "computedhash()",
+      "source_file": "src/lib/smartFrames.ts",
+      "source_location": "L25"
     },
     {
       "id": "src_lib_smartframes_cropframehighres",
@@ -864,7 +864,19 @@
       "file_type": "code",
       "norm_label": "cropframehighres()",
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L190"
+      "source_location": "L213"
+    },
+    {
+      "id": "src_lib_smartframes_evaluateframeclarity",
+      "label": "evaluateFrameClarity()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "evaluateframeclarity()",
+      "source_file": "src/lib/smartFrames.ts",
+      "source_location": "L117"
     },
     {
       "id": "src_lib_smartframes_extractsmartbestframes",
@@ -876,19 +888,31 @@
       "file_type": "code",
       "norm_label": "extractsmartbestframes()",
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L270"
+      "source_location": "L290"
     },
     {
-      "id": "src_lib_smartframes_seekvideoframe",
-      "label": "seekVideoFrame()",
+      "id": "src_lib_smartframes_hammingdistance",
+      "label": "hammingDistance()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
       "community_name": "99propiedades/page.tsx",
       "file_type": "code",
-      "norm_label": "seekvideoframe()",
+      "norm_label": "hammingdistance()",
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L28"
+      "source_location": "L48"
+    },
+    {
+      "id": "src_lib_smartframes_seekvideodeterministic",
+      "label": "seekVideoDeterministic()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "99propiedades/page.tsx",
+      "file_type": "code",
+      "norm_label": "seekvideodeterministic()",
+      "source_file": "src/lib/smartFrames.ts",
+      "source_location": "L61"
     },
     {
       "id": "src_lib_supabase_compressvideoinbrowser",
@@ -1617,6 +1641,17 @@
       "source_location": "L6"
     },
     {
+      "id": "src_app_propiedades_page",
+      "label": "propiedades/page.tsx",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propiedades/page.tsx",
+      "source_file": "src/app/propiedades/page.tsx",
+      "source_location": "L1"
+    },
+    {
       "id": "src_app_sitemap",
       "label": "sitemap.ts",
       "_origin": "ast",
@@ -1625,6 +1660,28 @@
       "file_type": "code",
       "norm_label": "sitemap.ts",
       "source_file": "src/app/sitemap.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_propertycard",
+      "label": "PropertyCard.tsx",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propertycard.tsx",
+      "source_file": "src/components/PropertyCard.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_propertydetailmodal",
+      "label": "PropertyDetailModal.tsx",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "propertydetailmodal.tsx",
+      "source_file": "src/components/PropertyDetailModal.tsx",
       "source_location": "L1"
     },
     {
@@ -1648,6 +1705,17 @@
       "norm_label": "datacontext",
       "source_file": "src/context/DataContext.tsx",
       "source_location": "L40"
+    },
+    {
+      "id": "src_lib_formatters",
+      "label": "formatters.ts",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "formatters.ts",
+      "source_file": "src/lib/formatters.ts",
+      "source_location": "L1"
     },
     {
       "id": "src_lib_initialdata",
@@ -1705,6 +1773,28 @@
       "source_location": "L60"
     },
     {
+      "id": "src_lib_supabase_supabase",
+      "label": "supabase",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "supabase",
+      "source_file": "src/lib/supabase.ts",
+      "source_location": "L9"
+    },
+    {
+      "id": "src_lib_types",
+      "label": "types.ts",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "DataContext.tsx",
+      "file_type": "code",
+      "norm_label": "types.ts",
+      "source_file": "src/lib/types.ts",
+      "source_location": "L1"
+    },
+    {
       "id": "readme",
       "label": "README.md",
       "_origin": "ast",
@@ -1753,11 +1843,22 @@
       "source_location": "L1"
     },
     {
+      "id": "src_app_admin_page",
+      "label": "admin/page.tsx",
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "admin/page.tsx",
+      "file_type": "code",
+      "norm_label": "admin/page.tsx",
+      "source_file": "src/app/admin/page.tsx",
+      "source_location": "L1"
+    },
+    {
       "id": "src_app_api_admin_logout_route",
       "label": "logout/route.ts",
       "_origin": "ast",
       "community": 13,
-      "community_name": "logout/route.ts",
+      "community_name": "admin/page.tsx",
       "file_type": "code",
       "norm_label": "logout/route.ts",
       "source_file": "src/app/api/admin/logout/route.ts",
@@ -1768,7 +1869,7 @@
       "label": "robots.ts",
       "_origin": "ast",
       "community": 13,
-      "community_name": "logout/route.ts",
+      "community_name": "admin/page.tsx",
       "file_type": "code",
       "norm_label": "robots.ts",
       "source_file": "src/app/robots.ts",
@@ -1929,61 +2030,6 @@
       "source_location": "L12"
     },
     {
-      "id": "src_app_admin_page",
-      "label": "admin/page.tsx",
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "admin/page.tsx",
-      "file_type": "code",
-      "norm_label": "admin/page.tsx",
-      "source_file": "src/app/admin/page.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_app_propiedades_page",
-      "label": "propiedades/page.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "propiedades/page.tsx",
-      "source_file": "src/app/propiedades/page.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_propertycard",
-      "label": "PropertyCard.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "propertycard.tsx",
-      "source_file": "src/components/PropertyCard.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_propertydetailmodal",
-      "label": "PropertyDetailModal.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "propertydetailmodal.tsx",
-      "source_file": "src/components/PropertyDetailModal.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_formatters",
-      "label": "formatters.ts",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "PropertyCard.tsx",
-      "file_type": "code",
-      "norm_label": "formatters.ts",
-      "source_file": "src/lib/formatters.ts",
-      "source_location": "L1"
-    },
-    {
       "id": "src_app_99propiedades_page",
       "label": "99propiedades/page.tsx",
       "_origin": "ast",
@@ -2091,28 +2137,6 @@
       "file_type": "code",
       "norm_label": "supabase.ts",
       "source_file": "src/lib/supabase.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_lib_supabase_supabase",
-      "label": "supabase",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "file_type": "code",
-      "norm_label": "supabase",
-      "source_file": "src/lib/supabase.ts",
-      "source_location": "L9"
-    },
-    {
-      "id": "src_lib_types",
-      "label": "types.ts",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "99propiedades/page.tsx",
-      "file_type": "code",
-      "norm_label": "types.ts",
-      "source_file": "src/lib/types.ts",
       "source_location": "L1"
     },
     {
@@ -2662,7 +2686,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L1451",
+      "source_location": "L1468",
       "weight": 1.0
     },
     {
@@ -2686,7 +2710,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L2019",
+      "source_location": "L2036",
       "weight": 1.0
     },
     {
@@ -2734,7 +2758,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/99propiedades/page.tsx",
-      "source_location": "L4385",
+      "source_location": "L4413",
       "weight": 1.0
     },
     {
@@ -3202,7 +3226,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L503",
+      "source_location": "L510",
       "weight": 1.0
     },
     {
@@ -3214,7 +3238,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L514",
+      "source_location": "L521",
       "weight": 1.0
     },
     {
@@ -3226,7 +3250,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L639",
+      "source_location": "L646",
       "weight": 1.0
     },
     {
@@ -3238,7 +3262,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/propiedades/[id]/page.tsx",
-      "source_location": "L644",
+      "source_location": "L651",
       "weight": 1.0
     },
     {
@@ -3831,14 +3855,14 @@
     },
     {
       "source": "src_lib_smartframes_extractsmartbestframes",
-      "target": "src_lib_smartframes_seekvideoframe",
+      "target": "src_lib_smartframes_seekvideodeterministic",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L291",
+      "source_location": "L348",
       "weight": 1.0
     },
     {
@@ -3850,19 +3874,43 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L293",
+      "source_location": "L350",
       "weight": 1.0
     },
     {
       "source": "src_lib_smartframes_extractsmartbestframes",
-      "target": "src_lib_smartframes_calculatesharpness",
+      "target": "src_lib_smartframes_evaluateframeclarity",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L297",
+      "source_location": "L351",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_smartframes_extractsmartbestframes",
+      "target": "src_lib_smartframes_computedhash",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/smartFrames.ts",
+      "source_location": "L354",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_smartframes_extractsmartbestframes",
+      "target": "src_lib_smartframes_hammingdistance",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/smartFrames.ts",
+      "source_location": "L389",
       "weight": 1.0
     },
     {
@@ -3874,7 +3922,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L372",
+      "source_location": "L435",
       "weight": 1.0
     },
     {
@@ -8768,24 +8816,24 @@
     },
     {
       "source": "src_lib_smartframes",
-      "target": "src_lib_smartframes_framecandidate",
+      "target": "src_lib_smartframes_evaluateframeclarity",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L15",
+      "source_location": "L117",
       "weight": 1.0
     },
     {
       "source": "src_lib_smartframes",
-      "target": "src_lib_smartframes_capturenativeframe",
+      "target": "src_lib_smartframes_extractedframe",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L169",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -8796,7 +8844,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L190",
+      "source_location": "L213",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_smartframes",
+      "target": "src_lib_smartframes_computedhash",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/smartFrames.ts",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -8807,29 +8866,40 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L270",
+      "source_location": "L290",
       "weight": 1.0
     },
     {
       "source": "src_lib_smartframes",
-      "target": "src_lib_smartframes_seekvideoframe",
+      "target": "src_lib_smartframes_hammingdistance",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L28",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
       "source": "src_lib_smartframes",
-      "target": "src_lib_smartframes_calculatesharpness",
+      "target": "src_lib_smartframes_seekvideodeterministic",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/smartFrames.ts",
-      "source_location": "L58",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_smartframes",
+      "target": "src_lib_smartframes_capturenativeframe",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/smartFrames.ts",
+      "source_location": "L97",
       "weight": 1.0
     },
     {
@@ -9262,5 +9332,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d52f724b083a80febb8f6c380975f3e9f7c1297c"
+  "built_at_commit": "1d62a0aaf30fe0e6ddb65c0d812c93b1d4dff57e"
 }

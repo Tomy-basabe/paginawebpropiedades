@@ -579,7 +579,7 @@ export default function AdminSecretPage() {
   const [cropZoom, setCropZoom] = useState<number>(1);
   const [cropOffsetX, setCropOffsetX] = useState<number>(0);
   const [cropOffsetY, setCropOffsetY] = useState<number>(0);
-  const [cropAspectRatio, setCropAspectRatio] = useState<"16:9" | "4:3" | "1:1">("16:9");
+  const [cropAspectRatio, setCropAspectRatio] = useState<"16:9" | "4:3" | "1:1" | "9:16">("16:9");
   const [isSavingCrop, setIsSavingCrop] = useState<boolean>(false);
   const [isDraggingCrop, setIsDraggingCrop] = useState<boolean>(false);
   const dragStartRef = useRef<{ x: number; y: number; startOffX: number; startOffY: number }>({
@@ -725,7 +725,24 @@ export default function AdminSecretPage() {
     setCropZoom(1);
     setCropOffsetX(0);
     setCropOffsetY(0);
-    setCropAspectRatio("16:9");
+
+    const imgUrl = propForm.images?.[index];
+    if (imgUrl) {
+      const probe = new window.Image();
+      probe.src = imgUrl;
+      probe.onload = () => {
+        if (probe.naturalHeight > probe.naturalWidth) {
+          setCropAspectRatio("9:16");
+        } else {
+          setCropAspectRatio("16:9");
+        }
+      };
+      probe.onerror = () => {
+        setCropAspectRatio("16:9");
+      };
+    } else {
+      setCropAspectRatio("16:9");
+    }
   };
 
   // Procesar y guardar la imagen encuadrada
@@ -2229,7 +2246,7 @@ export default function AdminSecretPage() {
                     {propForm.images.map((imgUrl, idx) => (
                       <div
                         key={idx}
-                        className={`relative rounded-sm overflow-hidden border-2 group aspect-video bg-neutral-100 ${
+                        className={`relative rounded-sm overflow-hidden border-2 group aspect-video bg-neutral-950 ${
                           idx === 0 ? "border-gold-500 ring-2 ring-gold-400/40" : "border-neutral-200"
                         }`}
                       >
@@ -2237,7 +2254,7 @@ export default function AdminSecretPage() {
                           src={imgUrl || "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80"}
                           alt={`Foto ${idx + 1}`}
                           fill
-                          className="object-cover"
+                          className="object-contain"
                         />
                         {idx === 0 && (
                           <span className="absolute top-1 left-1 bg-gold-500 text-luxury-black text-[9px] font-bold px-1.5 py-0.5 rounded-xs shadow-xs z-10">
@@ -2504,6 +2521,8 @@ export default function AdminSecretPage() {
                     className={`relative overflow-hidden border-2 border-gold-500/80 shadow-2xl bg-black cursor-grab active:cursor-grabbing rounded-sm transition-all ${
                       cropAspectRatio === "16:9"
                         ? "w-full max-w-lg aspect-video"
+                        : cropAspectRatio === "9:16"
+                        ? "w-full max-w-[260px] aspect-[9/16]"
                         : cropAspectRatio === "4:3"
                         ? "w-full max-w-md aspect-[4/3]"
                         : "w-full max-w-sm aspect-square"
@@ -2593,7 +2612,16 @@ export default function AdminSecretPage() {
                             cropAspectRatio === "16:9" ? "bg-gold-500 text-luxury-black" : "text-neutral-300 hover:text-white"
                           }`}
                         >
-                          16:9 (Recomendado Portada)
+                          16:9 (Horizontal)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setCropAspectRatio("9:16")}
+                          className={`px-2.5 py-1 rounded text-xs font-semibold cursor-pointer transition-colors ${
+                            cropAspectRatio === "9:16" ? "bg-gold-500 text-luxury-black" : "text-neutral-300 hover:text-white"
+                          }`}
+                        >
+                          9:16 (Vertical)
                         </button>
                         <button
                           type="button"
@@ -2602,7 +2630,7 @@ export default function AdminSecretPage() {
                             cropAspectRatio === "4:3" ? "bg-gold-500 text-luxury-black" : "text-neutral-300 hover:text-white"
                           }`}
                         >
-                          4:3 Clásico
+                          4:3
                         </button>
                         <button
                           type="button"
@@ -2611,7 +2639,7 @@ export default function AdminSecretPage() {
                             cropAspectRatio === "1:1" ? "bg-gold-500 text-luxury-black" : "text-neutral-300 hover:text-white"
                           }`}
                         >
-                          1:1 Cuadrado
+                          1:1
                         </button>
                       </div>
                     </div>

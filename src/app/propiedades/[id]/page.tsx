@@ -300,14 +300,21 @@ export default function PropertyDetailPage() {
             </div>
           ) : (
             /* Galería de Fotografías con Navegación Táctil */
-            <div className="relative aspect-[16/10] sm:h-[480px] w-full group">
+            <div className="relative aspect-[16/10] sm:h-[480px] w-full group bg-neutral-950 flex items-center justify-center overflow-hidden">
+              {/* Fondo difuminado para dar profundidad a fotos verticales u horizontales */}
+              <div
+                className="absolute inset-0 bg-cover bg-center blur-2xl opacity-30 scale-110 pointer-events-none"
+                style={{
+                  backgroundImage: `url(${property.images[activeImageIndex] || property.images[0]})`,
+                }}
+              />
               <Image
                 src={property.images[activeImageIndex] || property.images[0]}
                 alt={property.title}
                 fill
                 priority
-                unoptimized={(property.images[activeImageIndex] || property.images[0])?.startsWith('data:')}
-                className="object-cover"
+                unoptimized
+                className="object-contain z-0"
               />
 
               {property.images.length > 1 && (
@@ -375,7 +382,7 @@ export default function PropertyDetailPage() {
                 setActiveMediaTab('photos');
                 setActiveImageIndex(idx);
               }}
-              className={`relative w-20 h-14 shrink-0 rounded-lg overflow-hidden border-2 transition-all cursor-pointer btn-tactile-pop ${
+              className={`relative w-20 h-14 shrink-0 rounded-lg overflow-hidden border-2 bg-neutral-950 transition-all cursor-pointer btn-tactile-pop ${
                 effectiveTab === 'photos' && activeImageIndex === idx
                   ? 'border-gold-500 scale-95 shadow-md'
                   : 'border-transparent opacity-70 hover:opacity-100'
@@ -385,7 +392,7 @@ export default function PropertyDetailPage() {
                 src={img}
                 alt={`Miniatura ${idx + 1}`}
                 fill
-                unoptimized={img.startsWith('data:')}
+                unoptimized
                 className="object-cover"
               />
             </button>
