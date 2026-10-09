@@ -7,7 +7,7 @@ import { useData } from "@/context/DataContext";
 import BrandLogo from "@/components/BrandLogo";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { uploadPropertyImage, uploadPropertyVideo } from "@/lib/supabase";
-import { extractSmartBestFrames, autoSmartFrame } from "@/lib/smartFrames";
+import { extractSmartBestFrames, captureNativeFrame, cropFrameHighRes } from "@/lib/smartFrames";
 import { cleanWhatsAppNumber, getWhatsAppUrl } from "@/lib/whatsapp";
 import { Property, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus } from "@/lib/types";
 import { 
@@ -603,7 +603,7 @@ export default function AdminSecretPage() {
     });
   };
 
-  // Capturar el fotograma actual y subirlo directamente al CDN de Supabase
+  // Capturar el fotograma actual en resolución nativa pura (1080p/4K)
   const handleCaptureCurrentFrame = async (asCover = false) => {
     if (!ensureNotPaymentLocked("Capturar fotograma de video")) return;
     const video = videoExtractRef.current;
@@ -611,30 +611,27 @@ export default function AdminSecretPage() {
 
     setIsExtractingFrames(true);
     try {
-      const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth || 1280;
-      canvas.height = video.videoHeight || 720;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) throw new Error("No se pudo iniciar el canvas.");
+      // Captura en la máxima resolución nativa del archivo de video
+      const rawCanvas = captureNativeFrame(video);
+      const isVertical = rawCanvas.height > rawCanvas.width;
 
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      // Aplicar encuadre inteligente automático en 16:9 si se captura como portada
-      const finalCanvas = asCover ? autoSmartFrame(canvas, 1600, 900) : canvas;
-      const blob = await canvasToBlob(finalCanvas, 0.93);
+      // Si es portada y video apaisado, aplica encuadre 16:9 nítido; si es vertical conserva la proporción de Reel
+      const finalCanvas = asCover && !isVertical ? cropFrameHighRes(rawCanvas, "16:9") : rawCanvas;
+      const blob = await canvasToBlob(finalCanvas, 0.96);
 
-      // Subida garantizada a Supabase Storage (evita error 413 y cuota de localStorage)
+      // Subida garantizada al CDN de Supabase Storage
       let publicUrl: string;
       try {
         publicUrl = await uploadPropertyImage(blob);
       } catch (uploadErr) {
         console.warn("Fallo en Storage, fallback a URL local:", uploadErr);
-        publicUrl = finalCanvas.toDataURL("image/jpeg", 0.9);
+        publicUrl = finalCanvas.toDataURL("image/jpeg", 0.92);
       }
 
       setPropForm((prev) => {
         const currentImages = prev.images || [];
         if (asCover) {
-          // Si es como portada, ubicar en la primera posición [0]
+          // Ubicar al inicio como portada
           return {
             ...prev,
             images: [publicUrl, ...currentImages.filter((img) => img !== publicUrl)],
@@ -750,55 +747,32 @@ export default function AdminSecretPage() {
       });
 
       // Dimensiones de salida en alta definición según relación de aspecto
-      let outputW = 1600;
-      let outputH = 900; // 16:9 por defecto
-      if (cropAspectRatio === "4:3") {
-        outputW = 1600;
-        outputH = 1200;
-      } else if (cropAspectRatio === "1:1") {
-        outputW = 1200;
-        outputH = 1200;
-      }
+      // Usar canvas temporal con la imagen nativa en su tamaño real original
+      const sourceCanvas = document.createElement("canvas");
+      sourceCanvas.width = img.naturalWidth || 1920;
+      sourceCanvas.height = img.naturalHeight || 1080;
+      const sCtx = sourceCanvas.getContext("2d", { alpha: false });
+      if (!sCtx) throw new Error("No se pudo iniciar el canvas de origen");
+      sCtx.imageSmoothingEnabled = true;
+      sCtx.imageSmoothingQuality = "high";
+      sCtx.drawImage(img, 0, 0, sourceCanvas.width, sourceCanvas.height);
 
-      const canvas = document.createElement("canvas");
-      canvas.width = outputW;
-      canvas.height = outputH;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) throw new Error("No se pudo iniciar el canvas de encuadre");
+      // Aplicar encuadre de alta resolución sin pixelación
+      const framedCanvas = cropFrameHighRes(
+        sourceCanvas,
+        cropAspectRatio,
+        cropZoom,
+        cropOffsetX,
+        cropOffsetY
+      );
 
-      // Pintar fondo limpio
-      ctx.fillStyle = "#000000";
-      ctx.fillRect(0, 0, outputW, outputH);
-
-      // Calcular proporción de imagen vs contenedor
-      const targetAspect = outputW / outputH;
-      const imgAspect = img.naturalWidth / img.naturalHeight;
-
-      let drawW: number;
-      let drawH: number;
-
-      // Object-cover base
-      if (imgAspect > targetAspect) {
-        drawH = outputH * cropZoom;
-        drawW = drawH * imgAspect;
-      } else {
-        drawW = outputW * cropZoom;
-        drawH = drawW / imgAspect;
-      }
-
-      // Desplazamiento proporcional (offset en %)
-      const posX = (outputW - drawW) / 2 + (cropOffsetX / 100) * outputW;
-      const posY = (outputH - drawH) / 2 + (cropOffsetY / 100) * outputH;
-
-      ctx.drawImage(img, posX, posY, drawW, drawH);
-
-      const blob = await canvasToBlob(canvas, 0.93);
+      const blob = await canvasToBlob(framedCanvas, 0.96);
       let newPublicUrl: string;
       try {
         newPublicUrl = await uploadPropertyImage(blob);
       } catch (e) {
         console.warn("Fallo subiendo recorte a Storage:", e);
-        newPublicUrl = canvas.toDataURL("image/jpeg", 0.9);
+        newPublicUrl = framedCanvas.toDataURL("image/jpeg", 0.92);
       }
 
       // Reemplazar imagen encuadrada en la galería

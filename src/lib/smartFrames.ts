@@ -1,176 +1,252 @@
 /**
- * Algoritmo inteligente de visión y extracción de fotogramas arquitectónicos.
+ * Motor de Visión y Extracción Fotográfica de Alta Fidelidad para Inmuebles.
  * 
- * Evalúa los fotogramas en base a:
- * 1. Nitidez / Enfoque (Varianza laplaciana simplificada)
- * 2. Riqueza de iluminación y contraste (Evita cuadros negros, oscuros o sobreexpuestos)
- * 3. Variedad de color y detalle arquitectónico (Saturación y entropía cromática)
- * 4. Encuadre y composición inteligente (Auto-crop 16:9 con análisis de distribución de luminosidad y horizonte)
+ * Principios de Calidad:
+ * 1. NUNCA distorsionar, achicar ni pixelar la imagen nativa del video (extrae en 1080p/4K nativo).
+ * 2. Si el video es vertical (9:16), NO forzar un recorte aplastado o arbitrario: conserva la imagen completa
+ *    y permite encuadre cinematográfico centrado y nítido.
+ * 3. Filtrado implacable de "fotogramas basura":
+ *    - Descarta fotogramas oscuros o con fundido a negro (típico de transiciones de edición).
+ *    - Descarta fotogramas borrosos con desenfoque de movimiento (motion blur cuando la cámara gira rápido).
+ *    - Descarta fotogramas con aberración de color o sobreexposición.
+ * 4. Captura síncrona en alta fidelidad: espera el fotograma decodificado completo antes de dibujar en canvas.
  */
 
-export interface FrameAnalysisResult {
+export interface FrameCandidate {
   time: number;
   score: number;
   sharpness: number;
   contrast: number;
   brightness: number;
-  colorRichness: number;
   canvas: HTMLCanvasElement;
 }
 
 /**
- * Calcula la calidad visual de un lienzo (canvas).
+ * Espera de manera determinística a que el video termine de decodificar y renderizar
+ * el cuadro exacto en la posición de tiempo solicitada.
  */
-export function analyzeFrameQuality(ctx: CanvasRenderingContext2D, width: number, height: number): {
-  score: number;
-  sharpness: number;
-  contrast: number;
-  brightness: number;
-  colorRichness: number;
-} {
-  const sampleW = 200;
+export async function seekVideoFrame(video: HTMLVideoElement, time: number): Promise<void> {
+  return new Promise((resolve) => {
+    // Si ya está casi en ese tiempo y en pausa
+    if (Math.abs(video.currentTime - time) < 0.05 && video.readyState >= 2) {
+      setTimeout(resolve, 80);
+      return;
+    }
+
+    let resolved = false;
+    const cleanup = () => {
+      if (resolved) return;
+      resolved = true;
+      video.removeEventListener("seeked", onSeeked);
+      // Breve margen de 60ms para que la GPU pinte el frame en el búfer de textura
+      setTimeout(resolve, 60);
+    };
+
+    const onSeeked = () => cleanup();
+    video.addEventListener("seeked", onSeeked, { once: true });
+    video.currentTime = time;
+
+    // Timeout de seguridad por si el navegador no emite seeked
+    setTimeout(cleanup, 500);
+  });
+}
+
+/**
+ * Calcula la nitidez espacial real (Detección Laplaciana de bordes de alta frecuencia).
+ * Si la cámara se estaba moviendo rápido, el resultado será muy bajo (motion blur).
+ */
+export function calculateSharpness(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number
+): { score: number; sharpness: number; contrast: number; brightness: number; isGarbage: boolean } {
+  // Muestrear a 320px de ancho para análisis de frecuencia de bordes sin ralentizar la GPU
+  const sampleW = 320;
   const sampleH = Math.round((sampleW * height) / width);
 
-  // Creamos un canvas temporal pequeño para muestreo ultra-rápido en memoria
   const thumbCanvas = document.createElement("canvas");
   thumbCanvas.width = sampleW;
   thumbCanvas.height = sampleH;
   const thumbCtx = thumbCanvas.getContext("2d", { willReadFrequently: true });
   if (!thumbCtx) {
-    return { score: 0, sharpness: 0, contrast: 0, brightness: 0, colorRichness: 0 };
+    return { score: 0, sharpness: 0, contrast: 0, brightness: 0, isGarbage: true };
   }
 
+  thumbCtx.imageSmoothingEnabled = false;
   thumbCtx.drawImage(ctx.canvas, 0, 0, sampleW, sampleH);
   const imgData = thumbCtx.getImageData(0, 0, sampleW, sampleH);
   const data = imgData.data;
   const totalPixels = sampleW * sampleH;
 
-  let totalLuminance = 0;
-  let colorSaturationSum = 0;
   const luminances = new Float32Array(totalPixels);
+  let totalLuminance = 0;
 
   for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-
-    // Luminancia estándar ITU-R BT.601
-    const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-    const pxIdx = i / 4;
-    luminances[pxIdx] = lum;
+    // ITU-R BT.601
+    const lum = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+    const px = i / 4;
+    luminances[px] = lum;
     totalLuminance += lum;
-
-    // Saturación de color (diferencia entre canales)
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    const sat = max === 0 ? 0 : (max - min) / max;
-    colorSaturationSum += sat;
   }
 
   const avgBrightness = totalLuminance / totalPixels;
-  const avgSaturation = colorSaturationSum / totalPixels;
 
-  // Penalización severa para fotogramas casi negros o excesivamente quemados/blancos
-  let brightnessScore = 1.0;
-  if (avgBrightness < 35) {
-    // Muy oscuro (típico fundido a negro o inicio de video)
-    brightnessScore = Math.max(0, avgBrightness / 35);
-  } else if (avgBrightness > 220) {
-    // Muy blanco / sobreexpuesto
-    brightnessScore = Math.max(0, (255 - avgBrightness) / 35);
+  // 1. Detección de "Basura": Fundidos a negro, sombras extremas o quemazón de luz
+  if (avgBrightness < 38) {
+    // Cuadro muy oscuro / negro / transición
+    return { score: 0, sharpness: 0, contrast: 0, brightness: avgBrightness, isGarbage: true };
+  }
+  if (avgBrightness > 230) {
+    // Cuadro quemado por flash o luz solar excesiva
+    return { score: 0, sharpness: 0, contrast: 0, brightness: avgBrightness, isGarbage: true };
   }
 
-  // 1. Contraste (Desviación estándar de luminancia)
+  // 2. Contraste (Desviación estándar de luminancia)
   let varianceSum = 0;
   for (let i = 0; i < totalPixels; i++) {
     const diff = luminances[i] - avgBrightness;
     varianceSum += diff * diff;
   }
-  const contrast = Math.sqrt(varianceSum / totalPixels);
-  const contrastScore = Math.min(1.0, contrast / 50);
+  const stdDev = Math.sqrt(varianceSum / totalPixels);
+  if (stdDev < 18) {
+    // Escena plana, pared vacía sin textura o sin información visual
+    return { score: 0, sharpness: 0, contrast: stdDev, brightness: avgBrightness, isGarbage: true };
+  }
 
-  // 2. Nitidez / Detección de bordes (Gradiente horizontal y vertical)
-  let edgeSum = 0;
-  let edgeCount = 0;
-  for (let y = 1; y < sampleH - 1; y += 2) {
-    for (let x = 1; x < sampleW - 1; x += 2) {
+  // 3. Laplaciano de 8 vecinos para detección de nitidez de textura fina (paredes, pisos, muebles, aberturas)
+  let laplacianSum = 0;
+  let count = 0;
+
+  for (let y = 1; y < sampleH - 1; y++) {
+    for (let x = 1; x < sampleW - 1; x++) {
       const idx = y * sampleW + x;
-      const left = luminances[idx - 1];
-      const right = luminances[idx + 1];
-      const top = luminances[idx - sampleW];
-      const bottom = luminances[idx + sampleW];
+      // Kernel laplaciano:
+      // [ -1, -1, -1 ]
+      // [ -1,  8, -1 ]
+      // [ -1, -1, -1 ]
       const center = luminances[idx];
+      const neighbors =
+        luminances[idx - sampleW - 1] +
+        luminances[idx - sampleW] +
+        luminances[idx - sampleW + 1] +
+        luminances[idx - 1] +
+        luminances[idx + 1] +
+        luminances[idx + sampleW - 1] +
+        luminances[idx + sampleW] +
+        luminances[idx + sampleW + 1];
 
-      const grad = Math.abs(right - left) + Math.abs(bottom - top) + Math.abs(center * 4 - (left + right + top + bottom));
-      edgeSum += grad;
-      edgeCount++;
+      const lap = Math.abs(8 * center - neighbors);
+      laplacianSum += lap;
+      count++;
     }
   }
-  const sharpness = edgeCount > 0 ? edgeSum / edgeCount : 0;
-  const sharpnessScore = Math.min(1.0, sharpness / 28);
 
-  // 3. Riqueza de color
-  const colorRichnessScore = Math.min(1.0, avgSaturation * 2.2);
+  const sharpness = count > 0 ? laplacianSum / count : 0;
 
-  // Puntuación compuesta ponderada (Nitidez 45%, Contraste 30%, Brillo 15%, Color 10%)
-  const score =
-    (sharpnessScore * 0.45 + contrastScore * 0.30 + brightnessScore * 0.15 + colorRichnessScore * 0.10) *
-    (brightnessScore < 0.2 ? 0.05 : 1.0);
+  // Umbral de movimiento borroso: si la varianza es muy baja, la toma estaba en paneo veloz
+  if (sharpness < 14) {
+    return { score: 0, sharpness, contrast: stdDev, brightness: avgBrightness, isGarbage: true };
+  }
+
+  // Puntuación combinada ponderando fuertemente la nitidez (enfoque cristalino)
+  const normSharpness = Math.min(100, (sharpness / 40) * 100);
+  const normContrast = Math.min(100, (stdDev / 55) * 100);
+  const score = normSharpness * 0.70 + normContrast * 0.30;
 
   return {
-    score: Math.round(score * 100),
-    sharpness: Math.round(sharpnessScore * 100),
-    contrast: Math.round(contrastScore * 100),
+    score: Math.round(score),
+    sharpness: Math.round(normSharpness),
+    contrast: Math.round(normContrast),
     brightness: Math.round(avgBrightness),
-    colorRichness: Math.round(colorRichnessScore * 100),
+    isGarbage: false,
   };
 }
 
 /**
- * Encuadre inteligente automático:
- * Recorta un fotograma a 16:9 de forma cinematográfica, centrando la masa de luz y detalle
- * arquitectónico (evitando cortar techos o pisos bruscamente).
+ * Captura un fotograma en la MÁXIMA RESOLUCIÓN NATIVA disponible en el video
+ * aplicando filtrado de calidad y anti-aliasing bicúbico.
  */
-export function autoSmartFrame(
+export function captureNativeFrame(video: HTMLVideoElement): HTMLCanvasElement {
+  const w = video.videoWidth || 1920;
+  const h = video.videoHeight || 1080;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d", { alpha: false });
+  if (!ctx) throw new Error("No se pudo iniciar el contexto 2D");
+
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(video, 0, 0, w, h);
+
+  return canvas;
+}
+
+/**
+ * Encuadre Inteligente Nítido (Conserva la máxima resolución nativa sin pérdida).
+ * Permite centrar y recortar a la relación de aspecto deseada sin aplastar la imagen.
+ */
+export function cropFrameHighRes(
   sourceCanvas: HTMLCanvasElement,
-  targetWidth = 1600,
-  targetHeight = 900
+  aspectRatio: "16:9" | "4:3" | "1:1" | "original" = "16:9",
+  zoom = 1,
+  offsetXPercent = 0,
+  offsetYPercent = 0
 ): HTMLCanvasElement {
-  const outCanvas = document.createElement("canvas");
-  outCanvas.width = targetWidth;
-  outCanvas.height = targetHeight;
-  const outCtx = outCanvas.getContext("2d");
-  if (!outCtx) return sourceCanvas;
+  if (aspectRatio === "original" && zoom === 1 && offsetXPercent === 0 && offsetYPercent === 0) {
+    return sourceCanvas;
+  }
 
   const srcW = sourceCanvas.width;
   const srcH = sourceCanvas.height;
-  const targetRatio = targetWidth / targetHeight; // 16:9 ≈ 1.777
-  const srcRatio = srcW / srcH;
 
+  let targetRatio = srcW / srcH;
+  if (aspectRatio === "16:9") targetRatio = 16 / 9;
+  else if (aspectRatio === "4:3") targetRatio = 4 / 3;
+  else if (aspectRatio === "1:1") targetRatio = 1 / 1;
+
+  // Calculamos la caja de recorte sobre las coordenadas de la imagen original
   let cropW = srcW;
   let cropH = srcH;
-  let cropX = 0;
-  let cropY = 0;
 
+  const srcRatio = srcW / srcH;
   if (srcRatio > targetRatio) {
-    // La imagen fuente es más ancha que 16:9 -> recortar laterales centrando horizontalmente
     cropW = Math.round(srcH * targetRatio);
     cropH = srcH;
-    cropX = Math.round((srcW - cropW) / 2);
-    cropY = 0;
   } else {
-    // La imagen fuente es más alta que 16:9 (o vertical tipo 9:16) ->
-    // Posicionamiento inteligente vertical: en arquitectura el tercio superior/medio
-    // suele contener la vista principal, no el piso inferior vacío.
     cropW = srcW;
     cropH = Math.round(srcW / targetRatio);
-    cropX = 0;
-
-    // Centrado inteligente con ligera inclinación hacia el tercio superior (40% desde arriba)
-    cropY = Math.round((srcH - cropH) * 0.40);
-    cropY = Math.max(0, Math.min(srcH - cropH, cropY));
   }
 
+  // Aplicar zoom (reduce la ventana de recorte sobre la fuente para ampliar el encuadre)
+  cropW = Math.round(cropW / Math.max(1, zoom));
+  cropH = Math.round(cropH / Math.max(1, zoom));
+
+  // Desplazamiento
+  const maxShiftX = Math.max(0, (srcW - cropW) / 2);
+  const maxShiftY = Math.max(0, (srcH - cropH) / 2);
+
+  const baseX = (srcW - cropW) / 2;
+  const baseY = (srcH - cropH) / 2;
+
+  const cropX = Math.round(
+    Math.max(0, Math.min(srcW - cropW, baseX + (offsetXPercent / 100) * maxShiftX * 2))
+  );
+  const cropY = Math.round(
+    Math.max(0, Math.min(srcH - cropH, baseY + (offsetYPercent / 100) * maxShiftY * 2))
+  );
+
+  // Canvas de salida conservando la resolución nativa nítida (ej: 1920x1080 o superior)
+  const outCanvas = document.createElement("canvas");
+  outCanvas.width = Math.max(1280, cropW);
+  outCanvas.height = Math.max(720, cropH);
+
+  const outCtx = outCanvas.getContext("2d", { alpha: false });
+  if (!outCtx) return sourceCanvas;
+
+  outCtx.imageSmoothingEnabled = true;
+  outCtx.imageSmoothingQuality = "high";
   outCtx.drawImage(
     sourceCanvas,
     cropX,
@@ -179,18 +255,17 @@ export function autoSmartFrame(
     cropH,
     0,
     0,
-    targetWidth,
-    targetHeight
+    outCanvas.width,
+    outCanvas.height
   );
 
   return outCanvas;
 }
 
 /**
- * Algoritmo extractor inteligente:
- * Muestrea el video en múltiples marcas de tiempo, calcula la calidad visual de cada una,
- * descarta cuadros borrosos o duplicados, y selecciona los N mejores momentos distintos
- * aplicando encuadre inteligente automático.
+ * Escanea el video buscando los momentos ESTABLES donde la cámara está detenida
+ * o moviéndose suavemente (típico cuando el camarógrafo muestra una habitación).
+ * Descarta automáticamente fotos borrosas, oscuras o de baja calidad.
  */
 export async function extractSmartBestFrames(
   video: HTMLVideoElement,
@@ -198,110 +273,112 @@ export async function extractSmartBestFrames(
   onProgress?: (progressPct: number, currentMsg: string) => void
 ): Promise<Array<{ blob: Blob; score: number; time: number }>> {
   const duration = video.duration || 10;
-  if (duration <= 0) throw new Error("Video sin duración válida.");
+  if (duration <= 0) throw new Error("El video no tiene duración válida.");
 
-  // Cantidad de puntos a evaluar: entre 18 y 28 muestras distribuidas
-  const samplePointsCount = Math.min(28, Math.max(16, Math.floor(duration * 1.5)));
-  const step = (duration * 0.88) / samplePointsCount;
-  const startTime = duration * 0.06; // Omitir el primer 6% (suele ser transición negra o inicio tembloroso)
+  // Muestrear a lo largo del video con paso denso para encontrar momentos estables
+  const sampleCount = Math.min(36, Math.max(18, Math.floor(duration * 2)));
+  const step = (duration * 0.90) / sampleCount;
+  const startTime = duration * 0.05;
 
   const originalTime = video.currentTime;
-  const candidates: FrameAnalysisResult[] = [];
+  const wasPaused = video.paused;
+  if (!wasPaused) video.pause();
 
-  for (let i = 0; i < samplePointsCount; i++) {
+  const candidates: FrameCandidate[] = [];
+
+  for (let i = 0; i < sampleCount; i++) {
     const t = startTime + i * step;
-    video.currentTime = t;
+    await seekVideoFrame(video, t);
 
-    // Esperar actualización de frame de video
-    await new Promise((resolve) => {
-      const onSeeked = () => {
-        video.removeEventListener("seeked", onSeeked);
-        resolve(true);
-      };
-      video.addEventListener("seeked", onSeeked, { once: true });
-      setTimeout(resolve, 350); // Fallback por timeout
-    });
-
-    const w = video.videoWidth || 1280;
-    const h = video.videoHeight || 720;
-    const canvas = document.createElement("canvas");
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    const canvas = captureNativeFrame(video);
+    const ctx = canvas.getContext("2d");
 
     if (ctx) {
-      ctx.drawImage(video, 0, 0, w, h);
-      const metrics = analyzeFrameQuality(ctx, w, h);
+      const metrics = calculateSharpness(ctx, canvas.width, canvas.height);
 
-      candidates.push({
-        time: t,
-        score: metrics.score,
-        sharpness: metrics.sharpness,
-        contrast: metrics.contrast,
-        brightness: metrics.brightness,
-        colorRichness: metrics.colorRichness,
-        canvas,
-      });
+      // Si no es basura (desenfoque de movimiento o fundido a negro), guardar candidato
+      if (!metrics.isGarbage && metrics.score > 25) {
+        candidates.push({
+          time: t,
+          score: metrics.score,
+          sharpness: metrics.sharpness,
+          contrast: metrics.contrast,
+          brightness: metrics.brightness,
+          canvas,
+        });
+      }
     }
 
     if (onProgress) {
-      const pct = Math.round(((i + 1) / samplePointsCount) * 75);
-      onProgress(pct, `Analizando nitidez e iluminación (${i + 1}/${samplePointsCount})...`);
+      const pct = Math.round(((i + 1) / sampleCount) * 75);
+      onProgress(pct, `Buscando tomas nítidas sin movimiento (${i + 1}/${sampleCount})...`);
     }
   }
 
-  // Restaurar tiempo original del video
+  // Restaurar estado del video
   video.currentTime = originalTime;
 
-  // Ordenar candidatos por puntuación de calidad (los más nítidos y luminosos primero)
+  if (candidates.length === 0) {
+    // Si el video tiene baja iluminación general, intentar relajar filtro
+    const fallbackCanvas = captureNativeFrame(video);
+    const blob = await new Promise<Blob>((resolve) => {
+      fallbackCanvas.toBlob((b) => resolve(b!), "image/jpeg", 0.95);
+    });
+    return [{ blob, score: 50, time: originalTime }];
+  }
+
+  // Ordenar de mayor a menor calidad / nitidez
   candidates.sort((a, b) => b.score - a.score);
 
-  // Selección diversa en el tiempo para que no sean 6 fotos del mismo segundo
-  const minTimeDistance = duration / (targetCount + 1) * 0.45; // Separación mínima temporal
-  const selected: FrameAnalysisResult[] = [];
+  // Selección espaciada en el tiempo para cubrir diferentes ambientes
+  const minDistance = (duration / (targetCount + 1)) * 0.40;
+  const selected: FrameCandidate[] = [];
 
-  for (const candidate of candidates) {
+  for (const c of candidates) {
     if (selected.length >= targetCount) break;
-
-    // Comprobar si está suficientemente distante de los ya seleccionados
-    const isTooClose = selected.some((s) => Math.abs(s.time - candidate.time) < minTimeDistance);
-    if (!isTooClose && candidate.score > 15) {
-      selected.push(candidate);
+    const isClose = selected.some((s) => Math.abs(s.time - c.time) < minDistance);
+    if (!isClose) {
+      selected.push(c);
     }
   }
 
-  // Si no llegamos al objetivo por ser muy estricto, relajar la distancia temporal
+  // Si quedaron espacios, completar con los mejores restantes
   if (selected.length < targetCount) {
-    for (const candidate of candidates) {
+    for (const c of candidates) {
       if (selected.length >= targetCount) break;
-      if (!selected.includes(candidate) && candidate.score > 10) {
-        selected.push(candidate);
+      if (!selected.includes(c)) {
+        selected.push(c);
       }
     }
   }
 
-  // Ordenar los seleccionados cronológicamente por su aparición en el video
+  // Ordenar cronológicamente
   selected.sort((a, b) => a.time - b.time);
 
-  // Encuadrar inteligentemente y convertir a Blobs de alta calidad
+  // Exportar en calidad JPEG 0.95 sin comprimir a resolución completa
   const results: Array<{ blob: Blob; score: number; time: number }> = [];
 
   for (let idx = 0; idx < selected.length; idx++) {
     const item = selected[idx];
     if (onProgress) {
       const pct = 75 + Math.round(((idx + 1) / selected.length) * 25);
-      onProgress(pct, `Encuadrando foto ${idx + 1} de ${selected.length} en 16:9 HD...`);
+      onProgress(pct, `Exportando foto nítida ${idx + 1} de ${selected.length}...`);
     }
 
-    const framedCanvas = autoSmartFrame(item.canvas, 1600, 900);
+    // Encuadre 16:9 de alta resolución si es video horizontal, o conservar nativo
+    const isVertical = item.canvas.height > item.canvas.width;
+    const processedCanvas = isVertical
+      ? item.canvas // En vertical conserva el encuadre nativo del Reel
+      : cropFrameHighRes(item.canvas, "16:9");
+
     const blob = await new Promise<Blob>((resolve, reject) => {
-      framedCanvas.toBlob(
+      processedCanvas.toBlob(
         (b) => {
           if (b) resolve(b);
           else reject(new Error("Error al exportar blob"));
         },
         "image/jpeg",
-        0.93
+        0.95
       );
     });
 

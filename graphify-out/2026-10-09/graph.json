@@ -1104,7 +1104,7 @@
       "file_type": "code",
       "norm_label": "usedata()",
       "source_file": "src/context/DataContext.tsx",
-      "source_location": "L525"
+      "source_location": "L522"
     },
     {
       "id": "src_lib_whatsapp_cleanwhatsappnumber",
@@ -1656,7 +1656,7 @@
       "file_type": "code",
       "norm_label": "initial_bank_rates",
       "source_file": "src/lib/initialData.ts",
-      "source_location": "L704"
+      "source_location": "L680"
     },
     {
       "id": "src_lib_initialdata_initial_featured_banners",
@@ -1678,7 +1678,7 @@
       "file_type": "code",
       "norm_label": "initial_properties",
       "source_file": "src/lib/initialData.ts",
-      "source_location": "L84"
+      "source_location": "L60"
     },
     {
       "id": "src_lib_types",
@@ -8416,7 +8416,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/context/DataContext.tsx",
-      "source_location": "L525",
+      "source_location": "L522",
       "weight": 1.0
     },
     {
@@ -8553,24 +8553,24 @@
     },
     {
       "source": "src_lib_initialdata",
-      "target": "src_lib_initialdata_initial_bank_rates",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/initialData.ts",
-      "source_location": "L704",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_initialdata",
       "target": "src_lib_initialdata_initial_properties",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/initialData.ts",
-      "source_location": "L84",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_initialdata",
+      "target": "src_lib_initialdata_initial_bank_rates",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/initialData.ts",
+      "source_location": "L680",
       "weight": 1.0
     },
     {
@@ -9168,5 +9168,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "69d3abba92b6ab0dd46c4fb374a0a7f7f74dd045"
+  "built_at_commit": "73ddd8ecc08db5f38db90823c1bee2edc0e55a6f"
 }
