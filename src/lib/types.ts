@@ -107,3 +107,16 @@ export interface AppMonthlyPayment {
   amount?: number;
   notes?: string;
 }
+
+export type AdminModule = "propiedades" | "banners" | "tasas" | "perfil" | "usuarios" | "pagos";
+
+export interface AdminUser {
+  id: string;
+  username: string;
+  password?: string;
+  name: string;
+  role: "admin" | "asesor";
+  permissions: AdminModule[];
+  createdAt: string;
+}
+

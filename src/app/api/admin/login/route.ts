@@ -70,29 +70,60 @@ export async function POST(req: NextRequest) {
 
     let authenticatedUser: { username: string; name: string; role: "admin" | "asesor" } | null = null;
 
-    // 1. Usuario Administrador general (encargado de validar pagos del sistema)
-    const envAdminUser = (process.env.ADMIN_USER || "admin").toLowerCase();
-    const envAdminPass = process.env.ADMIN_PASSWORD || "Tomas2812";
+    // 1. Consultar usuarios almacenados de forma persistente en Supabase
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://mjxywapawhtcrdenslma.supabase.co";
+      const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+      if (supabaseUrl && supabaseKey) {
+        const { createClient } = await import("@supabase/supabase-js");
+        const client = createClient(supabaseUrl, supabaseKey);
+        const { data: configRow } = await client
+          .from("bank_rates")
+          .select("data")
+          .eq("id", "__sys_admin_users_config__")
+          .maybeSingle();
 
-    const isAdminUser = safeCompare(username, envAdminUser);
-    const isAdminPassValid =
-      safeCompare(password, "Tomas2812") ||
-      safeCompare(password, "TOMAS2812") ||
-      safeCompare(password, envAdminPass);
+        if (configRow?.data?.users && Array.isArray(configRow.data.users)) {
+          const matched = configRow.data.users.find(
+            (u: any) => u.username && safeCompare(u.username.toLowerCase(), username)
+          );
+          if (matched && matched.password && safeCompare(password, matched.password)) {
+            authenticatedUser = {
+              username: matched.username,
+              name: matched.name || matched.username,
+              role: matched.role === "admin" ? "admin" : "asesor",
+            };
+          }
+        }
+      }
+    } catch (err) {
+      console.warn("Aviso al consultar usuarios en Supabase para login:", err);
+    }
 
-    if (isAdminUser && isAdminPassValid) {
-      authenticatedUser = {
-        username: "admin",
-        name: "Administrador",
-        role: "admin",
-      };
-    } else if (username === "99propiedades" && safeCompare(password, "123456")) {
-      // 2. Usuario Cliente 99propiedades
-      authenticatedUser = {
-        username: "99propiedades",
-        name: "99 Propiedades",
-        role: "asesor",
-      };
+    // 2. Si no autenticó por Supabase, verificar credenciales base del sistema
+    if (!authenticatedUser) {
+      const envAdminUser = (process.env.ADMIN_USER || "admin").toLowerCase();
+      const envAdminPass = process.env.ADMIN_PASSWORD || "Tomas2812";
+
+      const isAdminUser = safeCompare(username, envAdminUser);
+      const isAdminPassValid =
+        safeCompare(password, "Tomas2812") ||
+        safeCompare(password, "TOMAS2812") ||
+        safeCompare(password, envAdminPass);
+
+      if (isAdminUser && isAdminPassValid) {
+        authenticatedUser = {
+          username: "admin",
+          name: "Administrador",
+          role: "admin",
+        };
+      } else if (username === "99propiedades" && safeCompare(password, "123456")) {
+        authenticatedUser = {
+          username: "99propiedades",
+          name: "99 Propiedades",
+          role: "asesor",
+        };
+      }
     }
 
     if (!authenticatedUser) {

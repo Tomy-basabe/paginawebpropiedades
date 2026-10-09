@@ -67,6 +67,26 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // ignore
     }
+
+    // Persistir de inmediato en Supabase para que aplique a todos los visitantes públicos
+    (async () => {
+      try {
+        const { error } = await supabase
+          .from("agent_profile")
+          .upsert({
+            id: "primary_agent",
+            name: agentProfile.name || "Juan Pablo Pino",
+            data: {
+              ...(agentProfile as any),
+              hideSoldProperties: hide,
+            },
+            updated_at: new Date().toISOString(),
+          });
+        if (error) console.warn("Aviso al guardar preferencia de vendidas en Supabase:", error.message);
+      } catch (err) {
+        console.warn("Aviso al guardar preferencia de vendidas:", err);
+      }
+    })();
   };
 
   // 1. Cargar datos locales de inmediato (para evitar parpadeo)
@@ -146,13 +166,20 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (ratesData && ratesData.length > 0) {
-        const parsedRates: BankRate[] = ratesData.map((row) => (row.data as BankRate) || row);
+        // Filtrar registros internos del sistema para que no se muestren como bancos
+        const parsedRates: BankRate[] = ratesData
+          .filter((row) => !String(row.id).startsWith("__sys_"))
+          .map((row) => (row.data as BankRate) || row);
         setBankRates(parsedRates);
       }
 
       if (profileData && profileData.length > 0) {
-        const parsedProfile: AgentProfile = (profileData[0].data as AgentProfile) || profileData[0];
+        const rawProfile = profileData[0];
+        const parsedProfile: AgentProfile = (rawProfile.data as AgentProfile) || rawProfile;
         setAgentProfile(parsedProfile);
+        if (rawProfile.data?.hideSoldProperties !== undefined) {
+          setHideSoldPropertiesState(Boolean(rawProfile.data.hideSoldProperties));
+        }
       }
     } catch (err) {
       console.error("Error conectando con Supabase:", err);
@@ -456,6 +483,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         data: {
           ...merged,
           whatsappNumber: cleanWa,
+          hideSoldProperties,
         },
         updated_at: new Date().toISOString(),
       });

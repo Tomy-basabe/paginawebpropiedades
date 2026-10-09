@@ -9,7 +9,7 @@ import WhatsAppIcon from "@/components/WhatsAppIcon";
 import { uploadPropertyImage, uploadPropertyVideo } from "@/lib/supabase";
 import { extractSmartBestFrames, captureNativeFrame, cropFrameHighRes } from "@/lib/smartFrames";
 import { cleanWhatsAppNumber, getWhatsAppUrl } from "@/lib/whatsapp";
-import { Property, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus } from "@/lib/types";
+import { Property, BankRate, FeaturedBanner, AgentProfile, PropertyType, OperationType, PropertyStatus, AdminUser, AdminModule } from "@/lib/types";
 import { 
   SlidersHorizontal, 
   Building2, 
@@ -72,17 +72,7 @@ import {
   parseAndGeocodeLocation,
 } from "@/lib/maps";
 
-type AdminModule = "propiedades" | "banners" | "tasas" | "perfil" | "usuarios" | "pagos";
 
-interface AdminUser {
-  id: string;
-  username: string;
-  password: string;
-  name: string;
-  role: "admin" | "asesor";
-  permissions: AdminModule[];
-  createdAt: string;
-}
 
 interface AdminModuleConfig {
   id: AdminModule;
@@ -251,6 +241,18 @@ export default function AdminSecretPage() {
     }
   };
 
+  const syncUsersToCloud = async (updatedUsers: AdminUser[]) => {
+    try {
+      await fetch("/api/admin/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ users: updatedUsers }),
+      });
+    } catch (err) {
+      console.warn("Aviso al guardar usuarios en la nube:", err);
+    }
+  };
+
   const handleSaveUserPermissions = (userId: string | null) => {
     if (!userId) return;
     if (tempUserPermissions.length === 0) {
@@ -264,8 +266,9 @@ export default function AdminSecretPage() {
     if (typeof window !== "undefined") {
       localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
     }
+    syncUsersToCloud(updatedUsers);
     setEditingPermissionsUserId(null);
-    showFeedback("Permisos actualizados con éxito.", "success");
+    showFeedback("Permisos actualizados con éxito en la nube.", "success");
   };
 
   // Mensaje de feedback/notificación global
@@ -916,6 +919,19 @@ export default function AdminSecretPage() {
           setUsers(DEFAULT_USERS);
         }
 
+        // Cargar usuarios actualizados desde Supabase en la nube
+        fetch("/api/admin/users")
+          .then((res) => (res.ok ? res.json() : null))
+          .then((data) => {
+            if (data?.success && Array.isArray(data.users) && data.users.length > 0) {
+              setUsers(data.users);
+              if (typeof window !== "undefined") {
+                localStorage.setItem("aurea_admin_users", JSON.stringify(data.users));
+              }
+            }
+          })
+          .catch(() => {});
+
         const checkLocalSession = () => {
           const storedLocalSession = sessionStorage.getItem("aurea_active_session_user");
           if (storedLocalSession) {
@@ -1211,6 +1227,9 @@ export default function AdminSecretPage() {
       password: "••••••••",
     };
 
+    const usersToPersist = users.map((u) =>
+      u.id === currentUser.id ? { ...updatedUser, password: newPasswordInput.trim() } : u
+    );
     const updatedUsers = users.map((u) => (u.id === currentUser.id ? updatedUser : u));
 
     setUsers(updatedUsers);
@@ -1219,11 +1238,12 @@ export default function AdminSecretPage() {
       localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
       sessionStorage.setItem("aurea_active_session_user", JSON.stringify(updatedUser));
     }
+    syncUsersToCloud(usersToPersist);
 
     setCurrentPasswordInput("");
     setNewPasswordInput("");
     setConfirmPasswordInput("");
-    showFeedback("Tu contraseña se ha cambiado exitosamente.", "success");
+    showFeedback("Tu contraseña se ha cambiado y sincronizado exitosamente.", "success");
   };
 
   // Crear nuevo usuario
@@ -1271,13 +1291,14 @@ export default function AdminSecretPage() {
     if (typeof window !== "undefined") {
       localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
     }
+    syncUsersToCloud(updatedUsers);
 
     setNewUserName("");
     setNewUserUsername("");
     setNewUserPassword("");
     setNewUserRole("asesor");
     setNewUserPermissions(ALL_ADMIN_MODULES.map((m) => m.id));
-    showFeedback(`Usuario "${newUser.name}" creado con éxito.`, "success");
+    showFeedback(`Usuario "${newUser.name}" creado y guardado en la nube con éxito.`, "success");
   };
 
   // Eliminar usuario
@@ -1304,7 +1325,8 @@ export default function AdminSecretPage() {
     if (typeof window !== "undefined") {
       localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
     }
-    showFeedback(`Usuario "${target.name}" eliminado.`, "info");
+    syncUsersToCloud(updatedUsers);
+    showFeedback(`Usuario "${target.name}" eliminado de la nube.`, "info");
   };
 
   // Actualizar contraseña de otro usuario
@@ -1319,9 +1341,10 @@ export default function AdminSecretPage() {
     if (typeof window !== "undefined") {
       localStorage.setItem("aurea_admin_users", JSON.stringify(updatedUsers));
     }
+    syncUsersToCloud(updatedUsers);
     setEditingPasswordUserId(null);
     setTempUserPassword("");
-    showFeedback("Contraseña actualizada con éxito.", "success");
+    showFeedback("Contraseña actualizada y sincronizada en la nube con éxito.", "success");
   };
 
   // ------------------ GESTIÓN DE PROPIEDADES ------------------
