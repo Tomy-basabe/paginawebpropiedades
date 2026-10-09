@@ -9,7 +9,9 @@ const serverSupabase = createClient(supabaseUrl, supabaseKey);
 
 // Helper para verificar sesión en el servidor
 async function checkAuth(req: NextRequest) {
-  const token = req.cookies.get("aurea_admin_session")?.value;
+  const cookieToken = req.cookies.get("aurea_admin_session")?.value;
+  const headerToken = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+  const token = cookieToken || headerToken;
   if (!token) return null;
   return await verifySessionToken(token);
 }

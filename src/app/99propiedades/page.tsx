@@ -406,6 +406,7 @@ export default function AdminSecretPage() {
   const [editingPropId, setEditingPropId] = useState<string | null>(null);
   const [propForm, setPropForm] = useState<Partial<Property>>({});
   const [isCreatingProp, setIsCreatingProp] = useState(false);
+  const [isSavingProperty, setIsSavingProperty] = useState(false);
 
   // Estado para formulario de banner
   const [editingBannerId, setEditingBannerId] = useState<string | null>(null);
@@ -1311,7 +1312,7 @@ export default function AdminSecretPage() {
     });
   };
 
-  const saveProperty = () => {
+  const saveProperty = async () => {
     if (!ensureNotPaymentLocked("Guardar propiedades")) return;
     if (!propForm.title || !propForm.price) {
       alert("Por favor completa al menos título y precio.");
@@ -1359,14 +1360,22 @@ export default function AdminSecretPage() {
       currency: propForm.currency || "USD",
     };
 
-    if (isCreatingProp) {
-      addProperty(finalForm as Omit<Property, "id" | "createdAt">);
-      setIsCreatingProp(false);
-      showFeedback(`Propiedad "${finalForm.title}" creada y guardada con éxito.`, "success");
-    } else if (editingPropId) {
-      updateProperty(editingPropId, finalForm);
-      setEditingPropId(null);
-      showFeedback(`Propiedad "${finalForm.title}" actualizada con éxito.`, "success");
+    setIsSavingProperty(true);
+    try {
+      if (isCreatingProp) {
+        await addProperty(finalForm as Omit<Property, "id" | "createdAt">);
+        setIsCreatingProp(false);
+        showFeedback(`Propiedad "${finalForm.title}" creada y guardada con éxito.`, "success");
+      } else if (editingPropId) {
+        await updateProperty(editingPropId, finalForm);
+        setEditingPropId(null);
+        showFeedback(`Propiedad "${finalForm.title}" actualizada con éxito.`, "success");
+      }
+    } catch (err) {
+      console.error("Error al guardar propiedad:", err);
+      showFeedback("Error al guardar en el servidor. Por favor reintenta.", "error");
+    } finally {
+      setIsSavingProperty(false);
     }
   };
 
@@ -1394,15 +1403,15 @@ export default function AdminSecretPage() {
     });
   };
 
-  const saveBanner = () => {
+  const saveBanner = async () => {
     if (!ensureNotPaymentLocked("Guardar banners")) return;
     if (!bannerForm.title) return;
     if (isCreatingBanner) {
-      addBanner(bannerForm as Omit<FeaturedBanner, "id">);
+      await addBanner(bannerForm as Omit<FeaturedBanner, "id">);
       setIsCreatingBanner(false);
       showFeedback(`Banner "${bannerForm.title}" publicado con éxito.`, "success");
     } else if (editingBannerId) {
-      updateBanner(editingBannerId, bannerForm);
+      await updateBanner(editingBannerId, bannerForm);
       setEditingBannerId(null);
       showFeedback(`Banner "${bannerForm.title}" actualizado con éxito.`, "success");
     }
@@ -1434,25 +1443,25 @@ export default function AdminSecretPage() {
     });
   };
 
-  const saveBank = () => {
+  const saveBank = async () => {
     if (!ensureNotPaymentLocked("Guardar tasas bancarias")) return;
     if (!bankForm.bankName) return;
     if (isCreatingBank) {
-      addBankRate(bankForm as Omit<BankRate, "id" | "updatedAt">);
+      await addBankRate(bankForm as Omit<BankRate, "id" | "updatedAt">);
       setIsCreatingBank(false);
       showFeedback(`Tasa bancaria de "${bankForm.bankName}" agregada.`, "success");
     } else if (editingBankId) {
-      updateBankRate(editingBankId, bankForm);
+      await updateBankRate(editingBankId, bankForm);
       setEditingBankId(null);
       showFeedback(`Tasa bancaria de "${bankForm.bankName}" actualizada.`, "success");
     }
   };
 
   // ------------------ GUARDAR PERFIL DEL AGENTE ------------------
-  const saveProfile = (e: React.FormEvent) => {
+  const saveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ensureNotPaymentLocked("Guardar perfil")) return;
-    updateAgentProfile(profileForm);
+    await updateAgentProfile(profileForm);
     setProfileSaved(true);
     showFeedback("Perfil y datos de contacto actualizados.", "success");
     setTimeout(() => setProfileSaved(false), 3000);
@@ -2479,10 +2488,20 @@ export default function AdminSecretPage() {
                 <button
                   type="button"
                   onClick={saveProperty}
-                  className="bg-neutral-900 text-white font-semibold px-6 py-2 rounded-sm hover:bg-neutral-800 flex items-center gap-1.5 cursor-pointer"
+                  disabled={isSavingProperty}
+                  className="bg-neutral-900 text-white font-semibold px-6 py-2 rounded-sm hover:bg-neutral-800 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                 >
-                  <Save className="w-4 h-4" />
-                  <span>Guardar Propiedad</span>
+                  {isSavingProperty ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-gold-400" />
+                      <span>Guardando en Servidor...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4" />
+                      <span>Guardar Propiedad</span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>

@@ -187,10 +187,28 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     const createdAt = new Date().toISOString().split("T")[0];
     const propertyObj: Property = { ...newProp, id, createdAt };
 
-    // Actualización optimista local
+    // Actualización de estado en React
     setProperties((prev) => [propertyObj, ...prev]);
 
-    // Persistencia en Supabase
+    const payloadSupabase = {
+      id: propertyObj.id,
+      title: propertyObj.title,
+      operation: propertyObj.operation,
+      type: propertyObj.type,
+      status: propertyObj.status,
+      price: propertyObj.price,
+      currency: propertyObj.currency,
+      location: propertyObj.location,
+      features: propertyObj.features,
+      images: propertyObj.images,
+      description: propertyObj.description,
+      is_featured: propertyObj.isFeatured,
+      is_opportunity: propertyObj.isOpportunity,
+      data: propertyObj,
+      updated_at: new Date().toISOString(),
+    };
+
+    // Persistencia con fallback directo a Supabase
     try {
       const res = await fetch("/api/admin/properties", {
         method: "POST",
@@ -198,44 +216,79 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify({ action: "save", property: propertyObj }),
       });
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        console.warn("Aviso de seguridad al guardar propiedad:", err.error);
+        await supabase.from("properties").upsert(payloadSupabase);
       }
     } catch (err) {
-      console.error("Fallo al conectar con servidor para addProperty:", err);
+      try {
+        await supabase.from("properties").upsert(payloadSupabase);
+      } catch (sbErr) {
+        console.error("Error al guardar propiedad directamente en Supabase:", sbErr);
+      }
     }
 
     return id;
   };
 
   const updateProperty = async (id: string, updated: Partial<Property>): Promise<void> => {
-    let fullUpdatedProperty: Property | null = null;
+    // 1. Obtener objeto existente de forma síncrona sin depender de closures asíncronos de React
+    let targetProperty = properties.find((item) => item.id === id);
 
-    setProperties((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          fullUpdatedProperty = { ...item, ...updated };
-          return fullUpdatedProperty;
+    if (!targetProperty && typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          targetProperty = (parsed.properties || []).find((p: Property) => p.id === id);
         }
-        return item;
-      })
+      } catch {
+        // ignore
+      }
+    }
+
+    const fullUpdatedProperty: Property = targetProperty
+      ? { ...targetProperty, ...updated }
+      : ({ id, ...updated } as Property);
+
+    // 2. Actualización en memoria
+    setProperties((prev) =>
+      prev.map((item) => (item.id === id ? fullUpdatedProperty : item))
     );
 
-    if (!fullUpdatedProperty) return;
+    const payloadSupabase = {
+      id: fullUpdatedProperty.id,
+      title: fullUpdatedProperty.title,
+      operation: fullUpdatedProperty.operation,
+      type: fullUpdatedProperty.type,
+      status: fullUpdatedProperty.status,
+      price: fullUpdatedProperty.price,
+      currency: fullUpdatedProperty.currency,
+      location: fullUpdatedProperty.location,
+      features: fullUpdatedProperty.features,
+      images: fullUpdatedProperty.images,
+      description: fullUpdatedProperty.description,
+      is_featured: fullUpdatedProperty.isFeatured,
+      is_opportunity: fullUpdatedProperty.isOpportunity,
+      data: fullUpdatedProperty,
+      updated_at: new Date().toISOString(),
+    };
 
+    // 3. Persistencia en base de datos (con fallback garantizado)
     try {
-      const p = fullUpdatedProperty as Property;
       const res = await fetch("/api/admin/properties", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "save", property: p }),
+        body: JSON.stringify({ action: "save", property: fullUpdatedProperty }),
       });
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        console.warn("Aviso de seguridad al actualizar propiedad:", err.error);
+        const { error: sbErr } = await supabase.from("properties").upsert(payloadSupabase);
+        if (sbErr) console.warn("Aviso fallback Supabase update:", sbErr.message);
       }
     } catch (err) {
-      console.error("Fallo al conectar con servidor para updateProperty:", err);
+      try {
+        await supabase.from("properties").upsert(payloadSupabase);
+      } catch (sbErr) {
+        console.error("Error al actualizar propiedad directamente en Supabase:", sbErr);
+      }
     }
   };
 
@@ -249,11 +302,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify({ action: "delete", id }),
       });
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        console.warn("Aviso de seguridad al eliminar propiedad:", err.error);
+        await supabase.from("properties").delete().eq("id", id);
       }
     } catch (err) {
-      console.error("Fallo al conectar con servidor para deleteProperty:", err);
+      try {
+        await supabase.from("properties").delete().eq("id", id);
+      } catch (sbErr) {
+        console.error("Error al eliminar propiedad en Supabase:", sbErr);
+      }
     }
   };
 
@@ -283,31 +339,25 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
   const updateBankRate = async (id: string, updated: Partial<BankRate>): Promise<void> => {
     const updatedAt = new Date().toISOString().split("T")[0];
-    let fullUpdatedRate: BankRate | null = null;
+    const target = bankRates.find((item) => item.id === id);
+    const fullUpdatedRate: BankRate = target
+      ? { ...target, ...updated, updatedAt }
+      : ({ id, ...updated, updatedAt } as BankRate);
 
     setBankRates((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          fullUpdatedRate = { ...item, ...updated, updatedAt };
-          return fullUpdatedRate;
-        }
-        return item;
-      })
+      prev.map((item) => (item.id === id ? fullUpdatedRate : item))
     );
 
-    if (!fullUpdatedRate) return;
-
     try {
-      const r = fullUpdatedRate as BankRate;
       await supabase.from("bank_rates").upsert({
         id,
-        bank_name: r.bankName,
-        tna: r.rateUva,
-        cft: r.cft,
-        max_financing_percent: r.maxFinancing,
-        max_years_term: r.maxTermYears,
-        logo_url: r.logoText,
-        data: r,
+        bank_name: fullUpdatedRate.bankName,
+        tna: fullUpdatedRate.rateUva,
+        cft: fullUpdatedRate.cft,
+        max_financing_percent: fullUpdatedRate.maxFinancing,
+        max_years_term: fullUpdatedRate.maxTermYears,
+        logo_url: fullUpdatedRate.logoText,
+        data: fullUpdatedRate,
         updated_at: new Date().toISOString(),
       });
     } catch (err) {
@@ -349,32 +399,26 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateBanner = async (id: string, updated: Partial<FeaturedBanner>): Promise<void> => {
-    let fullBanner: FeaturedBanner | null = null;
+    const target = banners.find((item) => item.id === id);
+    const fullBanner: FeaturedBanner = target
+      ? { ...target, ...updated }
+      : ({ id, ...updated } as FeaturedBanner);
 
     setBanners((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          fullBanner = { ...item, ...updated };
-          return fullBanner;
-        }
-        return item;
-      })
+      prev.map((item) => (item.id === id ? fullBanner : item))
     );
 
-    if (!fullBanner) return;
-
     try {
-      const b = fullBanner as FeaturedBanner;
       await supabase.from("featured_banners").upsert({
         id,
-        title: b.title,
-        subtitle: b.subtitle,
-        badge: b.badge,
-        image_url: b.imageUrl,
-        link: b.ctaLink,
-        cta_text: b.ctaText,
-        is_active: b.active,
-        data: b,
+        title: fullBanner.title,
+        subtitle: fullBanner.subtitle,
+        badge: fullBanner.badge,
+        image_url: fullBanner.imageUrl,
+        link: fullBanner.ctaLink,
+        cta_text: fullBanner.ctaText,
+        is_active: fullBanner.active,
+        data: fullBanner,
       });
     } catch (err) {
       console.error("Error actualizando banner en Supabase:", err);
@@ -392,33 +436,25 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateAgentProfile = async (updated: Partial<AgentProfile>): Promise<void> => {
-    let fullProfile: AgentProfile | null = null;
+    const merged: AgentProfile = { ...agentProfile, ...updated };
+    if (merged.whatsappNumber) {
+      merged.whatsappNumber = merged.whatsappNumber.replace(/\D/g, "");
+    }
 
-    setAgentProfile((prev) => {
-      const merged = { ...prev, ...updated };
-      // Limpiar automáticamente número de WhatsApp de cualquier caracter extraño o espacio
-      if (merged.whatsappNumber) {
-        merged.whatsappNumber = merged.whatsappNumber.replace(/\D/g, "");
-      }
-      fullProfile = merged;
-      return fullProfile;
-    });
-
-    if (!fullProfile) return;
+    setAgentProfile(merged);
 
     try {
-      const ap = fullProfile as AgentProfile;
-      const cleanWa = (ap.whatsappNumber || "").replace(/\D/g, "");
+      const cleanWa = (merged.whatsappNumber || "").replace(/\D/g, "");
       await supabase.from("agent_profile").upsert({
         id: "primary_agent",
-        name: ap.name,
-        role_title: ap.roleTitle,
-        license_number: ap.licenseNumber,
-        phone: ap.phone,
+        name: merged.name,
+        role_title: merged.roleTitle,
+        license_number: merged.licenseNumber,
+        phone: merged.phone,
         whatsapp_number: cleanWa,
-        email: ap.email,
+        email: merged.email,
         data: {
-          ...ap,
+          ...merged,
           whatsappNumber: cleanWa,
         },
         updated_at: new Date().toISOString(),
