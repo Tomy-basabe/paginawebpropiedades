@@ -1,17 +1,17 @@
 # Graph Report - Venta Inmobiliaria  (2026-10-09)
 
 ## Corpus Check
-- 53 files · ~161,551 words
+- 53 files · ~162,203 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 4 file(s) not represented in the graph (top: (none) 2, .example 1, .css 1)
 
 ## Summary
-- 239 nodes · 602 edges · 18 communities (9 shown, 9 thin omitted)
+- 240 nodes · 604 edges · 15 communities (8 shown, 7 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a0964eda`
+- Built from commit: `4cb04e65`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -27,8 +27,7 @@
 - postcss.config.mjs
 - DataContext.tsx
 - ÁUREA | Consultoría Inmobiliaria & Desarrollos
-- auth.ts
-- ShareSiteModal.tsx
+- next
 
 ## God Nodes (most connected - your core abstractions)
 1. `useData()` - 35 edges
@@ -57,7 +56,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (18 total, 9 thin omitted)
+## Communities (15 total, 7 thin omitted)
 
 ### Community 1 - "package.json"
 Cohesion: 0.05
@@ -68,52 +67,48 @@ Cohesion: 0.33
 Nodes (10): PropertyDetailPage(), PropiedadesContent(), PropiedadesPage(), PropertyCard(), PropertyDetailModal(), formatCurrencyPrice(), formatPropertyRef(), getPropertyShareData() (+2 more)
 
 ### Community 3 - "99propiedades/page.tsx"
-Cohesion: 0.10
-Nodes (33): AdminModule, AdminModuleConfig, AdminSecretPage(), AdminUser, ALL_ADMIN_MODULES, DEFAULT_USERS, getGoogleMapsEmbedUrl(), getGoogleMapsExternalLink() (+25 more)
+Cohesion: 0.11
+Nodes (31): AdminModule, AdminModuleConfig, AdminSecretPage(), AdminUser, ALL_ADMIN_MODULES, DEFAULT_USERS, getGoogleMapsEmbedUrl(), getGoogleMapsExternalLink() (+23 more)
 
 ### Community 5 - "compilerOptions"
 Cohesion: 0.11
 Nodes (17): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+9 more)
 
 ### Community 8 - "useData"
-Cohesion: 0.18
-Nodes (27): lucide-react, next, react, ContactoContent(), ContactoPage(), FinanciamientoPage(), HomePage(), SobreMiPage() (+19 more)
+Cohesion: 0.17
+Nodes (29): lucide-react, react, ContactoContent(), ContactoPage(), FinanciamientoPage(), HomePage(), SobreMiPage(), BankRatesTable() (+21 more)
 
 ### Community 11 - "DataContext.tsx"
-Cohesion: 0.18
-Nodes (15): metadata, RootLayout(), PropertyCardProps, PropertyDetailModalProps, DataContext, DataContextType, DataProvider(), INITIAL_AGENT_PROFILE (+7 more)
+Cohesion: 0.21
+Nodes (14): PropertyCardProps, PropertyDetailModalProps, DataContext, DataContextType, INITIAL_AGENT_PROFILE, INITIAL_BANK_RATES, INITIAL_FEATURED_BANNERS, INITIAL_PROPERTIES (+6 more)
 
 ### Community 12 - "ÁUREA | Consultoría Inmobiliaria & Desarrollos"
 Cohesion: 0.50
 Nodes (3): 🏛️ Características Principales, 🚀 Puesta en Marcha, ÁUREA | Consultoría Inmobiliaria & Desarrollos
 
-### Community 14 - "auth.ts"
-Cohesion: 0.09
-Nodes (25): @supabase/supabase-js, supabase, clearAttempts(), isRateLimited(), loginAttempts, POST(), recordFailedAttempt(), safeCompare() (+17 more)
-
-### Community 16 - "ShareSiteModal.tsx"
-Cohesion: 0.67
-Nodes (3): ShareSiteModal(), ShareSiteModalProps, getSiteShareData()
+### Community 14 - "next"
+Cohesion: 0.07
+Nodes (30): next, @supabase/supabase-js, supabase, clearAttempts(), isRateLimited(), loginAttempts, POST(), recordFailedAttempt() (+22 more)
 
 ## Knowledge Gaps
 - **77 isolated node(s):** `nextConfig`, `name`, `version`, `private`, `dev` (+72 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 96 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `next` connect `useData` to `package.json`, `[id]/page.tsx`, `99propiedades/page.tsx`, `DataContext.tsx`, `admin/page.tsx`, `auth.ts`, `logout/route.ts`?**
-  _High betweenness centrality (0.252) - this node is a cross-community bridge._
+- **Why does `next` connect `next` to `package.json`, `[id]/page.tsx`, `99propiedades/page.tsx`, `useData`, `DataContext.tsx`?**
+  _High betweenness centrality (0.253) - this node is a cross-community bridge._
 - **What connects `nextConfig`, `name`, `version` to the rest of the system?**
   _77 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `package.json` be split into smaller, more focused modules?**
   _Cohesion score 0.05405405405405406 - nodes in this community are weakly interconnected._
-- **Why does `react` connect `useData` to `package.json`, `[id]/page.tsx`, `99propiedades/page.tsx`, `DataContext.tsx`, `ShareSiteModal.tsx`?**
-  _High betweenness centrality (0.079) - this node is a cross-community bridge._
+- **Why does `react` connect `useData` to `DataContext.tsx`, `package.json`, `[id]/page.tsx`, `99propiedades/page.tsx`?**
+  _High betweenness centrality (0.078) - this node is a cross-community bridge._
 - **Should `99propiedades/page.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.10241820768136557 - nodes in this community are weakly interconnected._
-- **Why does `lucide-react` connect `useData` to `ShareSiteModal.tsx`, `package.json`, `[id]/page.tsx`, `99propiedades/page.tsx`?**
-  _High betweenness centrality (0.054) - this node is a cross-community bridge._
+  _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
+- **Why does `lucide-react` connect `useData` to `package.json`, `[id]/page.tsx`, `99propiedades/page.tsx`?**
+  _High betweenness centrality (0.053) - this node is a cross-community bridge._
 - **Should `compilerOptions` be split into smaller, more focused modules?**
   _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
